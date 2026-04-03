@@ -12,7 +12,8 @@ const StudentSchema = new Schema<IStudentDocument>(
       index: true,
     },
     name: { type: String, required: true, trim: true },
-    birthYear: { type: Number, required: true },
+    birthDate: { type: Date, required: true },
+    gender: { type: String, enum: ["male", "female"], required: true },
     phone: { type: String },
     guardianName: { type: String, trim: true },
     guardianPhone: { type: String, required: true },
@@ -28,7 +29,7 @@ const StudentSchema = new Schema<IStudentDocument>(
     enrollments: {
       type: [String],
       enum: ["quran", "tarbiya", "tajweed", "maqraa", "playground"],
-      default: ["quran", "tarbiya", "playground"],
+      default: [],
     },
     trackIbadah: { type: Boolean, default: false },
     currentSurah: { type: String },

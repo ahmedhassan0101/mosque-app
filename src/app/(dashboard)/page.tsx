@@ -1,13 +1,9 @@
-import React from "react";
-// import page from "../(auth)/login/page";
-// import { BugReportForm } from "@/components/form-fields/BugReportForm";
+import { FormExamples } from "@/components/form/FormExamples";
 
 export default function Home() {
   return (
     <div>
-      {/* <BugReportForm /> */}
+      <FormExamples />
     </div>
   );
 }
-
-

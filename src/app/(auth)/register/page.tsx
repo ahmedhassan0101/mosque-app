@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { FieldGroup } from "@/components/ui/field";
-import { ControlledInput } from "@/components/form-fields/ControlledInput";
+import { FormInput } from "@/components/form/FormInput";
 import { useRegister, RegisterForm, registerSchema } from "@/hooks/useAuth"; // استيراد الهوك
 
 export default function RegisterPage() {
@@ -101,7 +101,7 @@ export default function RegisterPage() {
             </div>
 
             <FieldGroup>
-              <ControlledInput
+              <FormInput
                 control={control}
                 name="mosqueName"
                 label="اسم المسجد"
@@ -109,13 +109,13 @@ export default function RegisterPage() {
                 placeholder="مسجد النور"
               />
               <div className="grid grid-cols-2 gap-3">
-                <ControlledInput
+                <FormInput
                   control={control}
                   name="address"
                   label="العنوان"
                   placeholder="القاهرة"
                 />
-                <ControlledInput
+                <FormInput
                   control={control}
                   name="phone"
                   label="رقم التليفون"
@@ -133,14 +133,14 @@ export default function RegisterPage() {
             </div>
 
             <FieldGroup>
-              <ControlledInput
+              <FormInput
                 control={control}
                 name="adminName"
                 label="الاسم"
                 required
                 placeholder="أحمد محمد"
               />
-              <ControlledInput
+              <FormInput
                 control={control}
                 name="email"
                 label="البريد الإلكتروني"
@@ -151,7 +151,7 @@ export default function RegisterPage() {
               />
 
               <div className="grid grid-cols-2 gap-3">
-                <ControlledInput
+                <FormInput
                   control={control}
                   name="password"
                   label="كلمة المرور"
@@ -159,7 +159,7 @@ export default function RegisterPage() {
                   required
                   dir="ltr"
                 />
-                <ControlledInput
+                <FormInput
                   control={control}
                   name="confirmPassword"
                   label="تأكيد المرور"

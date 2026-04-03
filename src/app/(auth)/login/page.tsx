@@ -16,7 +16,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
-import { ControlledInput } from "@/components/form-fields/ControlledInput";
+import { FormInput } from "@/components/form/FormInput";
 import { useLogin, LoginForm, loginSchema } from "@/hooks/useAuth";
 
 export default function LoginPage() {
@@ -66,7 +66,7 @@ export default function LoginPage() {
             noValidate
           >
             <FieldGroup>
-              <ControlledInput
+              <FormInput
                 control={control}
                 name="email"
                 label="البريد الإلكتروني"
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 placeholder="admin@mosque.com"
               />
 
-              <ControlledInput
+              <FormInput
                 control={control}
                 name="password"
                 label="كلمة المرور"

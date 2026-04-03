@@ -1,8 +1,14 @@
 import { Types } from "mongoose";
 
-export type ActivityType = "quran" | "tarbiya" | "tajweed" | "maqraa" | "playground";
+export type ActivityType =
+  | "quran"
+  | "tarbiya"
+  | "tajweed"
+  | "maqraa"
+  | "playground";
 export type StudentLevel = "beginner" | "intermediate" | "advanced";
 export type AchievementLevel = "weak" | "average" | "good" | "excellent";
+export type UserRole = "superadmin" | "admin" | "sheikh" | "supervisor";
 
 export interface IMosque {
   _id: Types.ObjectId;
@@ -14,11 +20,11 @@ export interface IMosque {
 
 export interface IUser {
   _id: Types.ObjectId;
-  mosqueId: Types.ObjectId;
+  mosqueId: Types.ObjectId | null;
   name: string;
   email: string;
   password: string;
-  role: "admin" | "sheikh" | "supervisor";
+  role: UserRole;
   createdAt: Date;
 }
 
@@ -26,7 +32,8 @@ export interface IStudent {
   _id: Types.ObjectId;
   mosqueId: Types.ObjectId;
   name: string;
-  birthYear: number;
+  birthDate: Date;
+  gender: "male" | "female";
   phone?: string;
   guardianName?: string;
   guardianPhone: string;

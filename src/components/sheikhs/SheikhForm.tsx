@@ -1,0 +1,84 @@
+// src/components/sheikhs/SheikhForm.tsx
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormTextarea } from "../form/FormTextarea";
+import { useSheikhMutation } from "@/hooks/useSheikhMutation";
+import { FormInput } from "../form/FormInput";
+
+const schema = z.object({
+  name: z.string().min(2, "الاسم مطلوب"),
+  phone: z.string().optional(),
+  notes: z.string().optional(),
+});
+type SheikhFormData = z.infer<typeof schema>;
+
+interface Props {
+  defaultValues?: Partial<SheikhFormData>;
+  sheikhId?: string;
+}
+
+export function SheikhForm({ defaultValues, sheikhId }: Props) {
+  const router = useRouter();
+  const isEdit = !!sheikhId;
+  const { mutateAsync, isPending } = useSheikhMutation(sheikhId);
+
+  const form = useForm<SheikhFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      notes: "",
+      ...defaultValues,
+    },
+  });
+
+  const onSubmit = async (data: SheikhFormData) => {
+    await mutateAsync(data);
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">بيانات الشيخ</CardTitle>
+        </CardHeader>
+        
+        <CardContent className="space-y-4">
+          <FormInput
+            control={form.control}
+            name="name"
+            label="الاسم"
+            placeholder="الشيخ أحمد"
+            required
+          />
+          <FormInput
+            control={form.control}
+            name="phone"
+            label="رقم التليفون"
+            placeholder="01xxxxxxxxx"
+            dir="ltr"
+          />
+          <FormTextarea control={form.control} name="notes" label="ملاحظات" />
+        </CardContent>
+      </Card>
+
+      <div className="flex gap-3 justify-end">
+        <Button type="button" variant="outline" onClick={() => router.back()}>
+          إلغاء
+        </Button>
+        <Button type="submit" disabled={isPending}>
+          {isPending && <Loader2 size={14} className="animate-spin ml-2" />}
+          {isEdit ? "حفظ" : "إضافة"}
+        </Button>
+      </div>
+    </form>
+  );
+}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+
 import {
   LayoutDashboard,
   Users,
@@ -12,7 +13,7 @@ import {
   CalendarDays,
   MessageSquare,
   Settings,
-  ChevronLeft,
+  // ChevronLeft,
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,8 @@ const navItems = [
   { href: "/statistics", label: "الإحصائيات", icon: BarChart2 },
   { href: "/meetings", label: "الاجتماعات", icon: MessageSquare },
   { href: "/sheikhs", label: "المشايخ", icon: Star },
+    { href: "/groups", label: "المجموعات", icon: Star },
+
 ];
 
 export function Sidebar() {
@@ -74,3 +77,20 @@ export function Sidebar() {
     </aside>
   );
 }
+
+
+// في navItems — أضف الشرط ده
+// بعد ما تجيب الـ session في الـ Sidebar
+
+// حوّل الـ Sidebar لـ async server component
+// import { auth } from "@/lib/auth/options";
+
+// export async function Sidebar() {
+//   const session = await auth();
+//   const isSuperAdmin = session?.user.role === "superadmin";
+
+//   // أضف للـ navItems:
+//   // لو isSuperAdmin:
+//   { href: "/admin/mosques", label: "المساجد", icon: Building2 }
+//   // ...
+// }

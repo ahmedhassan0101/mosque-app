@@ -1,10 +1,15 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import { IUser } from "@/types/index";
 import bcrypt from "bcryptjs";
+import type { UserRole } from "@/types";
 
 // npm install bcryptjs @types/bcryptjs
 
-export interface IUserDocument extends Omit<IUser, "_id">, Document {
+export interface IUserDocument extends Document {
+  mosqueId: mongoose.Types.ObjectId | null;
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
   comparePassword(candidate: string): Promise<boolean>;
 }
 
@@ -13,7 +18,8 @@ const UserSchema = new Schema<IUserDocument>(
     mosqueId: {
       type: Schema.Types.ObjectId,
       ref: "Mosque",
-      required: true,
+      // required: true,
+      default: null,
       index: true,
     },
     name: { type: String, required: true, trim: true },
@@ -32,7 +38,7 @@ const UserSchema = new Schema<IUserDocument>(
     },
     role: {
       type: String,
-      enum: ["admin", "sheikh", "supervisor"],
+   enum:    ["superadmin", "admin", "sheikh", "supervisor"],
       default: "supervisor",
     },
   },

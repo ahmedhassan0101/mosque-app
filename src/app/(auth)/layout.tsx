@@ -1,4 +1,8 @@
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* Left panel — decorative (hidden on mobile) */}
@@ -12,7 +16,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         <blockquote className="space-y-2">
           <p className="text-2xl font-medium leading-relaxed">
-            "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ"
+            {"خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ"}
           </p>
           <footer className="text-primary-foreground/70 text-sm">
             رواه البخاري
@@ -25,9 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* Right panel — form */}
-      <div className="flex items-center justify-center p-6">
-        {children}
-      </div>
+      <div className="flex items-center justify-center p-6">{children}</div>
     </div>
   );
 }
