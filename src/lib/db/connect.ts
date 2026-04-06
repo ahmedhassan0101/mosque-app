@@ -59,7 +59,7 @@ if (!global.mongooseCache) {
   global.mongooseCache = cached;
 }
 
-async function connectDB(): Promise<Connection> {
+export async function connectDB(): Promise<Connection> {
   if (cached.conn) {
     return cached.conn;
   }
@@ -86,4 +86,4 @@ async function connectDB(): Promise<Connection> {
   return cached.conn;
 }
 
-export default connectDB;
+// export default connectDB;

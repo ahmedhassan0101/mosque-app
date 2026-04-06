@@ -19,7 +19,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { FieldGroup } from "@/components/ui/field";
 import { FormInput } from "@/components/form/FormInput";
-import { useRegister, RegisterForm, registerSchema } from "@/hooks/useAuth"; // استيراد الهوك
+import {
+  useRegister,
+  RegisterForm,
+  registerSchema,
+} from "@/hooks/mutations/useAuth"; // استيراد الهوك
 
 export default function RegisterPage() {
   const router = useRouter();

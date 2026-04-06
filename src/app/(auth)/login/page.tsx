@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import { FormInput } from "@/components/form/FormInput";
-import { useLogin, LoginForm, loginSchema } from "@/hooks/useAuth";
+import { useLogin, LoginForm, loginSchema } from "@/hooks/mutations/useAuth";
 
 export default function LoginPage() {
   const router = useRouter();

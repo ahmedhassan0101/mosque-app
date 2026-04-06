@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
 import { requireMosque } from "@/lib/auth/get-context";
 import { studentSchema } from "@/lib/validations/student";
@@ -8,7 +8,7 @@ type Params = { params: { id: string } };
 
 export async function GET(_: NextRequest, { params }: Params) {
   try {
-    const mosqueId  = await requireMosque();
+    const mosqueId = await requireMosque();
     await connectDB();
     const student = await Student.findOne({ _id: params.id, mosqueId }).lean();
     if (!student)
@@ -26,7 +26,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
     const parsed = studentSchema.partial().safeParse(body);
     if (!parsed.success)
       return NextResponse.json(
-        { error: parsed.error.flatten() },
+        { error: "بيانات غير صحيحة", details: parsed.error.flatten() },
         { status: 400 },
       );
 
@@ -34,7 +34,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
     const student = await Student.findOneAndUpdate(
       { _id: params.id, mosqueId },
       { $set: parsed.data },
-      { new: true },
+      { new: true, runValidators: true },
     ).lean();
 
     if (!student)
@@ -50,10 +50,15 @@ export async function DELETE(_: NextRequest, { params }: Params) {
     const mosqueId = await requireMosque();
     await connectDB();
     // Soft delete
-    await Student.findOneAndUpdate(
+    const student = await Student.findOneAndUpdate(
       { _id: params.id, mosqueId },
       { isActive: false },
+      { new: true },
     );
+
+    if (!student)
+      return NextResponse.json({ error: "الطالب غير موجود" }, { status: 404 });
+
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });

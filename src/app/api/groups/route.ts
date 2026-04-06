@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// src\app\api\groups\route.ts
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Group from "@/models/Group";
 import { requireMosque } from "@/lib/auth/get-context";
 import { z } from "zod";

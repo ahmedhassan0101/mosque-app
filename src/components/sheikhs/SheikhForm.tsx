@@ -10,31 +10,28 @@ import { Button } from "@/components/ui/button";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormTextarea } from "../form/FormTextarea";
-import { useSheikhMutation } from "@/hooks/useSheikhMutation";
+import { useSheikhMutation } from "@/hooks/mutations/useSheikhMutation";
 import { FormInput } from "../form/FormInput";
+import { sheikhSchema } from "@/lib/validations/sheikh";
+import { FormImageUpload } from "../form/FormImageUpload";
 
-const schema = z.object({
-  name: z.string().min(2, "الاسم مطلوب"),
-  phone: z.string().optional(),
-  notes: z.string().optional(),
-});
-type SheikhFormData = z.infer<typeof schema>;
+type SheikhFormData = z.infer<typeof sheikhSchema>;
 
 interface Props {
   defaultValues?: Partial<SheikhFormData>;
   sheikhId?: string;
 }
-
 export function SheikhForm({ defaultValues, sheikhId }: Props) {
   const router = useRouter();
   const isEdit = !!sheikhId;
   const { mutateAsync, isPending } = useSheikhMutation(sheikhId);
 
   const form = useForm<SheikhFormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(sheikhSchema),
     defaultValues: {
       name: "",
       phone: "",
+      photo: "",
       notes: "",
       ...defaultValues,
     },
@@ -50,8 +47,12 @@ export function SheikhForm({ defaultValues, sheikhId }: Props) {
         <CardHeader className="pb-3">
           <CardTitle className="text-base">بيانات الشيخ</CardTitle>
         </CardHeader>
-        
         <CardContent className="space-y-4">
+          <FormImageUpload
+            control={form.control}
+            name="photo"
+            label="صورة الشيخ"
+          /> 
           <FormInput
             control={form.control}
             name="name"

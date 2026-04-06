@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Mosque from "@/models/Mosque";
 import Student from "@/models/Student";
 import Sheikh from "@/models/Sheikh";

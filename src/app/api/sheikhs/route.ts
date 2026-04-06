@@ -1,49 +1,59 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// src\app\api\sheikhs\route.ts
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Sheikh from "@/models/Sheikh";
 import { requireMosque } from "@/lib/auth/get-context";
-import { z } from "zod";
+import { sheikhSchema } from "@/lib/validations/sheikh";
 
-const sheikhSchema = z.object({
-  name: z.string().min(2),
-  phone: z.string().optional(),
-  groupId: z.string().optional(),
-  notes: z.string().optional(),
-});
-
-export async function GET(_: NextRequest) {
+/**
+ * GET /api/sheikhs
+ * Fetch all sheikhs for the current mosque
+ * Protected by mosqueId from the middleware
+ */
+export async function GET() {
   try {
-    const mosqueId = await requireMosque(); 
+    const mosqueId = await requireMosque();
     await connectDB();
+
     const sheikhs = await Sheikh.find({ mosqueId })
       .populate("groupId", "name activity")
       .sort({ name: 1 })
       .lean();
     return NextResponse.json({ sheikhs });
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  } catch (e) {
+    return handleError(e);
   }
 }
 
+/**
+ * POST /api/sheikhs
+ * Create a new sheikh — mosqueId attached automatically
+ */
 export async function POST(req: NextRequest) {
   try {
-    console.log(123);
-
     const mosqueId = await requireMosque();
-    console.log(456);
     const body = await req.json();
+
     const parsed = sheikhSchema.safeParse(body);
     if (!parsed.success)
       return NextResponse.json(
-        { error: parsed.error.flatten() },
+        { error: "بيانات غير صحيحة", details: parsed.error.flatten() },
         { status: 400 },
       );
 
     await connectDB();
     const sheikh = await Sheikh.create({ ...parsed.data, mosqueId });
     return NextResponse.json({ sheikh }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  } catch (e) {
+    return handleError(e);
   }
+}
+
+function handleError(e: unknown): NextResponse {
+  if (e instanceof Error) {
+    if (e.message === "UNAUTHORIZED")
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  console.error("[/api/sheikhs]", e);
+  return NextResponse.json({ error: "Server error" }, { status: 500 });
 }

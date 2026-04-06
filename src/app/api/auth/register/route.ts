@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Mosque from "@/models/Mosque";
 import User from "@/models/User";
 import { z } from "zod";
@@ -14,7 +14,6 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-
   try {
     const body = await req.json();
     const parsed = schema.safeParse(body);
@@ -48,7 +47,6 @@ export async function POST(req: NextRequest) {
       password: parsed.data.password, // hashed by pre-save hook in User model
       role: "admin",
     });
-    
 
     return NextResponse.json(
       { message: "تم إنشاء الحساب بنجاح", mosqueId: mosque._id },

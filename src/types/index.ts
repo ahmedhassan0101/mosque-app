@@ -56,6 +56,8 @@ export interface ISheikh {
   mosqueId: Types.ObjectId;
   name: string;
   phone?: string;
+  photo?: string;
+  notes?: string;
   groupId?: Types.ObjectId;
   createdAt: Date;
 }
@@ -67,6 +69,7 @@ export interface IGroup {
   sheikhId: Types.ObjectId;
   activity: ActivityType;
   studentIds: Types.ObjectId[];
+  notes?: string;
   createdAt: Date;
 }
 

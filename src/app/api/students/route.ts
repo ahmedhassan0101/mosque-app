@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
 import { studentSchema } from "@/lib/validations/student";
 import { requireMosque } from "@/lib/auth/get-context";
@@ -60,7 +60,6 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
     const student = await Student.create({ ...parsed.data, mosqueId });
-
 
     return NextResponse.json({ student }, { status: 201 });
   } catch (e: any) {

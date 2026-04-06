@@ -10,8 +10,6 @@ export const ACTIVITIES = [
 
 export const studentSchema = z.object({
   name: z.string().min(2, "الاسم يجب أن يكون حرفين على الأقل").max(100),
-  // birthDate: z.date(),
-  // birthDate: z.union([z.date(), z.number()]),
   birthDate: z.coerce.date({
     message: "تاريخ الميلاد مطلوب",
   }),
@@ -21,6 +19,7 @@ export const studentSchema = z.object({
   guardianPhone: z.string().min(10, "رقم ولي الأمر مطلوب"),
   guardianPhone2: z.string().optional(),
   address: z.string().optional(),
+  photo: z.string().optional(),
   level: z.enum(["beginner", "intermediate", "advanced"]),
   enrollments: z.array(z.enum(ACTIVITIES)).min(1, "اختر نشاط واحد على الأقل"),
   trackIbadah: z.boolean(),

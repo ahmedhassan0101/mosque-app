@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -98,9 +98,9 @@ export function StudentsTable({ students, total, page, limit }: Props) {
       />
 
       <div className="rounded-lg border overflow-hidden">
-        <Table >
-          <TableHeader >
-            <TableRow >
+        <Table>
+          <TableHeader>
+            <TableRow>
               <TableHead>الطالب</TableHead>
               <TableHead>السن</TableHead>
               <TableHead>المستوى</TableHead>
@@ -131,10 +131,10 @@ export function StudentsTable({ students, total, page, limit }: Props) {
               // console.log("Student age:", currentYear - s.birthDate);
               return (
                 <TableRow key={s._id} className="hover:bg-muted/30">
-
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="w-8 h-8">
+                        <AvatarImage src={s.photo} alt={s.name} />
                         <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
                           {s.name.slice(0, 2)}
                         </AvatarFallback>
@@ -142,7 +142,6 @@ export function StudentsTable({ students, total, page, limit }: Props) {
                       <span className="font-medium text-sm">{s.name}</span>
                     </div>
                   </TableCell>
-
                   <TableCell className="text-sm text-muted-foreground">
                     {age} سنة
                     {/* {ageText} */}
@@ -206,7 +205,6 @@ export function StudentsTable({ students, total, page, limit }: Props) {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
-
                 </TableRow>
               );
             })}

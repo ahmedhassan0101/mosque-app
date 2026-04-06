@@ -15,10 +15,11 @@ import { FormCheckboxGroup } from "@/components/form/FormCheckboxGroup";
 import { FormSwitch } from "@/components/form/FormSwitch";
 import { FormTextarea } from "@/components/form/FormTextarea";
 
-import { useStudentMutation } from "@/hooks/useStudentMutation";
+import { useStudentMutation } from "@/hooks/mutations/useStudentMutation";
 import { FormDatePicker } from "../form/FormDatePicker";
 import { SURAH_OPTIONS } from "@/lib/quran";
 import { FormSelect } from "../form/FormSelect";
+import { FormImageUpload } from "../form/FormImageUpload";
 
 interface Props {
   defaultValues?: Partial<StudentFormData>;
@@ -47,22 +48,26 @@ export function StudentForm({ defaultValues, studentId }: Props) {
 
   const form = useForm<StudentFormData>({
     resolver: zodResolver(studentSchema),
-// Type 'Resolver<{ name: string; birthDate: unknown; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, any, { ...; }>'.
-//   Types of parameters 'options' and 'options' are incompatible.
-//     Type 'ResolverOptions<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }>' is not assignable to type 'ResolverOptions<{ name: string; birthDate: unknown; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }>'.
-//       Types of property 'names' are incompatible.
-//         Type 'string[] | undefined' is not assignable to type '("name" | "birthDate" | "gender" | "phone" | "guardianName" | "guardianPhone" | "guardianPhone2" | "address" | "level" | "enrollments" | "trackIbadah" | "currentSurah" | "currentAyah" | "notes")[] | undefined'.
-//           Type 'string[]' is not assignable to type '("name" | "birthDate" | "gender" | "phone" | "guardianName" | "guardianPhone" | "guardianPhone2" | "address" | "level" | "enrollments" | "trackIbadah" | "currentSurah" | "currentAyah" | "notes")[]'.
-//             Type 'string' is not assignable to type '"name" | "birthDate" | "gender" | "phone" | "guardianName" | "guardianPhone" | "guardianPhone2" | "address" | "level" | "enrollments" | "trackIbadah" | "currentSurah" | "currentAyah" | "notes"'.ts(2322)
     defaultValues: {
+      // name: "",
+      // birthDate: undefined,
+      // phone: "",
+      // address: "",
+      // // level: "beginner",
+      // enrollments: [],
+      // trackIbadah: false,
+      // currentSurah: "",
+      // ...defaultValues,
       name: "",
-      birthDate: undefined,
       phone: "",
+      guardianName: "",
+      guardianPhone: "",
       address: "",
-      // level: "beginner",
+      level: "beginner",
       enrollments: [],
       trackIbadah: false,
       currentSurah: "",
+      photo: "",
       ...defaultValues,
     },
   });
@@ -74,10 +79,20 @@ export function StudentForm({ defaultValues, studentId }: Props) {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      {/* Argument of type '(data: StudentFormData) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
-  Types of parameters 'data' and 'data' are incompatible.
-    Type 'TFieldValues' is not assignable to type '{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }'.
-      Type 'FieldValues' is missing the following properties from type '{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }': name, birthDate, gender, guardianPhone, and 5 more.ts(2345) */}
+      {/* ── الصورة الشخصية ── */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">الصورة الشخصية</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FormImageUpload
+            control={form.control}
+            name="photo"
+            label="صورة الطالب"
+          />
+        </CardContent>
+      </Card>
+
       {/* ── البيانات الأساسية ── */}
       <Card>
         <CardHeader className="pb-3">
@@ -95,20 +110,11 @@ export function StudentForm({ defaultValues, studentId }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormDatePicker
               control={form.control}
-//               "playground")[]; ... 7 more ...; notes?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, any, { ...; }> | undefined'.
-//       Type 'Resolver<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, any, { ...; }>'.
-//         Type 'ResolverResult<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, TFieldValues> | Promise<...>' is not assignable to type 'ResolverResult<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, { ...; }> | Promise<...>'.
-//           Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }, { ...; }> | Promise<...>'.
-//             Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }>'.
-//               Type 'TFieldValues' is not assignable to type '{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }'.
-//                 Type 'FieldValues' is missing the following properties from type '{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; enrollments: ("quran" | "tarbiya" | "tajweed" | "maqraa" | "playground")[]; ... 7 more ...; notes?: string | undefined; }': name, birthDate, gender, guardianPhone, and 5 more.ts(2322)
-// FormDatePicker.tsx(19, 3): The expected type comes from property 'control' which is declared here on type 'IntrinsicAttributes & FormDatePickerProps<{ name: string; birthDate: Date; gender: "male" | "female"; guardianPhone: string; level: "beginner" | "intermediate" | "advanced"; ... 8 more ...; notes?: string | undefined; }>'
               name="birthDate"
               label="تاريخ الميلاد"
               required
               placeholder="2012"
             />
-        
             <FormInput
               control={form.control}
               name="phone"
@@ -225,8 +231,8 @@ export function StudentForm({ defaultValues, studentId }: Props) {
             <FormSwitch
               control={form.control}
               name="trackIbadah"
-              label="تفعيل متابعة العبادات"
-              description="متابعة أداء الصلوات والسنن اليومية للطالب"
+              label="متابعة العبادات"
+              description="تفعيل متابعة الصلاة والعبادات لهذا الطالب"
             />
           </div>
         </CardContent>
@@ -241,7 +247,7 @@ export function StudentForm({ defaultValues, studentId }: Props) {
           <FormTextarea
             control={form.control}
             name="notes"
-            label=""
+            label="ملاحظات"
             placeholder="اكتب أي ملاحظات سلوكية أو تعليمية تخص الطالب..."
           />
         </CardContent>

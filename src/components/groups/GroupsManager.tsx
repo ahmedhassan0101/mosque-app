@@ -169,6 +169,7 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                       {g.sheikh.name}
                     </p>
                   </div>
+
                   <div className="flex gap-1">
                     <Button
                       variant="ghost"
@@ -187,6 +188,7 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                       <Trash2 size={12} />
                     </Button>
                   </div>
+                  
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground">

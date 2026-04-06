@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { signIn } from "next-auth/react";
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api/axios";
 import { z } from "zod";
 
 // --- Types (يمكن نقلها لملف منفصل) ---
@@ -10,20 +10,21 @@ export const loginSchema = z.object({
 });
 export type LoginForm = z.infer<typeof loginSchema>;
 
-export const registerSchema = z.object({
-  mosqueName: z.string().min(3, "اسم المسجد 3 أحرف على الأقل"),
-  address: z.string().optional(),
-  phone: z.string().optional(),
-  adminName: z.string().min(2, "اسم المسؤول مطلوب"),
-  email: z.email("بريد إلكتروني غير صحيح"),
-  password: z.string().min(8, "كلمة المرور 8 أحرف على الأقل"),
-  confirmPassword: z.string(),
-}).refine((d) => d.password === d.confirmPassword, {
-  message: "كلمتا المرور غير متطابقتين",
-  path: ["confirmPassword"],
-});
+export const registerSchema = z
+  .object({
+    mosqueName: z.string().min(3, "اسم المسجد 3 أحرف على الأقل"),
+    address: z.string().optional(),
+    phone: z.string().optional(),
+    adminName: z.string().min(2, "اسم المسؤول مطلوب"),
+    email: z.email("بريد إلكتروني غير صحيح"),
+    password: z.string().min(8, "كلمة المرور 8 أحرف على الأقل"),
+    confirmPassword: z.string(),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: "كلمتا المرور غير متطابقتين",
+    path: ["confirmPassword"],
+  });
 export type RegisterForm = z.infer<typeof registerSchema>;
-
 
 // --- Hooks ---
 
@@ -36,7 +37,9 @@ export const useLogin = () => {
       });
 
       if (result?.error) {
-        throw new Error(result.error || "البريد الإلكتروني أو كلمة المرور غير صحيحة");
+        throw new Error(
+          result.error || "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        );
       }
       return result;
     },

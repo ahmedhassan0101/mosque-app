@@ -1,7 +1,8 @@
 // import { Suspense } from "react";
+// src\app\(dashboard)\students\page.tsx
 import Link from "next/link";
 import { auth } from "@/lib/auth/options";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
