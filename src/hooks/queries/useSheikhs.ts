@@ -20,22 +20,22 @@ export interface SheikhItem {
  * Fetch all sheikhs — accepts initialData from server component
  * to avoid unnecessary requests on initial load
  */
-export function useSheikhs(initialData?: { sheikhs: SheikhItem[] }) {
+export function useSheikhs() {
   return useQuery<{ sheikhs: SheikhItem[] }, AppError>({
     queryKey: ["sheikhs"],
     queryFn: async () => {
       const { data } = await api.get("/api/sheikhs");
       return data;
     },
-    initialData,
+    // initialData,
     staleTime: 60_000,
   });
 }
-
+// initialData?: { sheikhs: SheikhItem[] }
 /**
  * Fetch a single sheikh by id
  */
-export function useSheikh(id: string, initialData?: { sheikh: SheikhItem }) {
+export function useSheikh(id: string) {
   return useQuery<{ sheikh: SheikhItem }, AppError>({
     queryKey: ["sheikhs", id],
     queryFn: async () => {
@@ -43,7 +43,8 @@ export function useSheikh(id: string, initialData?: { sheikh: SheikhItem }) {
       return data;
     },
     enabled: !!id,
-    initialData,
+    // initialData,
     staleTime: 60_000,
   });
 }
+// , initialData?: { sheikh: SheikhItem }

@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import Group from "@/models/Group";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 import { z } from "zod";
 
 const groupSchema = z.object({
@@ -16,7 +16,7 @@ const groupSchema = z.object({
 
 export async function GET(_: NextRequest) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
     const groups = await Group.find({ mosqueId })
       .populate("sheikhId", "name phone")
@@ -31,7 +31,7 @@ export async function GET(_: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     const parsed = groupSchema.safeParse(await req.json());
     if (!parsed.success)
       return NextResponse.json(

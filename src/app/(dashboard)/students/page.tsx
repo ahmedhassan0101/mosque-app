@@ -1,7 +1,6 @@
 // import { Suspense } from "react";
 // src\app\(dashboard)\students\page.tsx
 import Link from "next/link";
-import { auth } from "@/lib/auth/options";
 import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { UserPlus, Search } from "lucide-react";
 import { StudentsTable } from "@/components/students/StudentsTable";
+import { getMosqueId } from "@/lib/auth/get-context";
 
 export const metadata = { title: "الطلاب" };
 
@@ -17,9 +17,7 @@ export default async function StudentsPage({
 }: {
   searchParams: { search?: string; activity?: string; page?: string };
 }) {
-  const session = await auth();
-  const mosqueId = session?.user.mosqueId;
-  if (!mosqueId) return null;
+   const mosqueId = await getMosqueId();
 
   await connectDB();
 

@@ -148,7 +148,7 @@
 // }
 import { auth } from "@/lib/auth/options";
 import { redirect } from "next/navigation";
-import connectDB from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Mosque from "@/models/Mosque";
 import Student from "@/models/Student";
 import Sheikh from "@/models/Sheikh";

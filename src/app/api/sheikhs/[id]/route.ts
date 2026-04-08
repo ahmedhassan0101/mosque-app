@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import Sheikh from "@/models/Sheikh";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 import { sheikhSchema } from "@/lib/validations/sheikh";
 
 type Params = { params: Promise<{ id: string }> };
@@ -15,7 +15,7 @@ type Params = { params: Promise<{ id: string }> };
 export async function GET(_: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
 
     const sheikh = await Sheikh.findOne({ _id: id, mosqueId }) // mosqueId guard = multi-tenant safety
@@ -37,7 +37,7 @@ export async function GET(_: NextRequest, { params }: Params) {
 export async function PUT(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     const body = await req.json();
 
     const parsed = sheikhSchema.partial().safeParse(body);
@@ -70,10 +70,10 @@ export async function PUT(req: NextRequest, { params }: Params) {
 export async function DELETE(_: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
-    
-     const sheikh = await Sheikh.findOneAndDelete({ _id: id, mosqueId });
+
+    const sheikh = await Sheikh.findOneAndDelete({ _id: id, mosqueId });
     if (!sheikh)
       return NextResponse.json({ error: "الشيخ غير موجود" }, { status: 404 });
 

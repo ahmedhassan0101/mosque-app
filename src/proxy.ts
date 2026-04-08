@@ -159,17 +159,17 @@ export default auth((req) => {
    */
   const response = NextResponse.next();
 
-  if (req.auth?.user) {
-    const user = req.auth.user as any;
+  // if (req.auth?.user) {
+  //   const user = req.auth.user as any;
 
-    /**
-     * Inject server-trusted headers
-     * These should NEVER come from client
-     */
-    response.headers.set("x-mosque-id", user.mosqueId || "");
-    response.headers.set("x-user-id", user.id || "");
-    response.headers.set("x-user-role", user.role || "");
-  }
+  //   /**
+  //    * Inject server-trusted headers
+  //    * These should NEVER come from client
+  //    */
+  //   response.headers.set("x-mosque-id", user.mosqueId || "");
+  //   response.headers.set("x-user-id", user.id || "");
+  //   response.headers.set("x-user-role", user.role || "");
+  // }
 
   return response;
 });

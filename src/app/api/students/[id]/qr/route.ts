@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import  {connectDB}  from "@/lib/db/connect";
+import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 import QRCode from "qrcode";
 
 type Params = { params: { id: string } };
 
 export async function GET(_: NextRequest, { params }: Params) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
 
     const student = await Student.findOne({ _id: params.id, mosqueId })

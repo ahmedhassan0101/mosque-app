@@ -67,32 +67,35 @@ export function FormImageUpload<T extends FieldValues>({
     <div className="space-y-2">
       {label && <Label>{label}</Label>}
 
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4">
         {/* Preview */}
-        <div className="relative w-24 h-24 rounded-full border-2 border-dashed border-border overflow-hidden flex items-center justify-center bg-muted shrink-0">
-          {preview ? (
-            <>
+        <div className="relative">
+          <div className="relative w-25 h-25 rounded-full border-2 border-dashed border-border overflow-hidden flex items-center justify-center bg-muted shrink-0">
+            {preview ? (
               <Image
                 src={preview}
                 alt="صورة الطالب"
                 fill
                 className="object-cover"
               />
-              <Button
-                type="button"
-                onClick={handleClear}
-                className="absolute top-0 right-0 bg-destructive text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:opacity-90"
-              >
-                <X size={10} />
-              </Button>
-            </>
-          ) : (
-            <User size={32} className="text-muted-foreground" />
-          )}
-          {isPending && (
-            <div className="absolute inset-0 bg-background/70 flex items-center justify-center">
-              <Loader2 size={20} className="animate-spin text-primary" />
-            </div>
+            ) : (
+              <User size={32} className="text-muted-foreground" />
+            )}
+
+            {isPending && (
+              <div className="absolute inset-0 bg-background/70 flex items-center justify-center">
+                <Loader2 size={20} className="animate-spin text-primary" />
+              </div>
+            )}
+          </div>
+          {preview && (
+            <Button
+              type="button"
+              onClick={handleClear}
+              className="absolute top-1 right-1 bg-destructive text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:opacity-90cursor-pointer"
+            >
+              <X />
+            </Button>
           )}
         </div>
 

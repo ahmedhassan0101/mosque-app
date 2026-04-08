@@ -51,6 +51,8 @@ export const authConfig: NextAuthConfig = {
     // Session callback
     // Runs when calling auth()
     async session({ session, token }) {
+   
+      
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;

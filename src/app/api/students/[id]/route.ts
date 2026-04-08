@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 import { studentSchema } from "@/lib/validations/student";
 
 type Params = { params: { id: string } };
 
 export async function GET(_: NextRequest, { params }: Params) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
     const student = await Student.findOne({ _id: params.id, mosqueId }).lean();
     if (!student)
@@ -21,7 +21,7 @@ export async function GET(_: NextRequest, { params }: Params) {
 
 export async function PUT(req: NextRequest, { params }: Params) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     const body = await req.json();
     const parsed = studentSchema.partial().safeParse(body);
     if (!parsed.success)
@@ -47,7 +47,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
 export async function DELETE(_: NextRequest, { params }: Params) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
     // Soft delete
     const student = await Student.findOneAndUpdate(

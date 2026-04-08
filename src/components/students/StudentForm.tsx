@@ -21,7 +21,7 @@ import { SURAH_OPTIONS } from "@/lib/quran";
 import { FormSelect } from "../form/FormSelect";
 import { FormImageUpload } from "../form/FormImageUpload";
 
-interface Props {
+interface StudentFormProps {
   defaultValues?: Partial<StudentFormData>;
   studentId?: string;
 }
@@ -40,7 +40,7 @@ const LEVEL_OPTIONS = [
   { label: "متقدم", value: "advanced" },
 ];
 
-export function StudentForm({ defaultValues, studentId }: Props) {
+export function StudentForm({ defaultValues, studentId }: StudentFormProps) {
   const router = useRouter();
   const isEdit = !!studentId;
 
@@ -49,15 +49,7 @@ export function StudentForm({ defaultValues, studentId }: Props) {
   const form = useForm<StudentFormData>({
     resolver: zodResolver(studentSchema),
     defaultValues: {
-      // name: "",
-      // birthDate: undefined,
-      // phone: "",
-      // address: "",
-      // // level: "beginner",
-      // enrollments: [],
-      // trackIbadah: false,
-      // currentSurah: "",
-      // ...defaultValues,
+
       name: "",
       phone: "",
       guardianName: "",
@@ -73,7 +65,6 @@ export function StudentForm({ defaultValues, studentId }: Props) {
   });
 
   const onSubmit = async (data: StudentFormData) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     await mutateAsync(data);
   };
 

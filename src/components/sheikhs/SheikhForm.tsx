@@ -10,21 +10,23 @@ import { Button } from "@/components/ui/button";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormTextarea } from "../form/FormTextarea";
-import { useSheikhMutation } from "@/hooks/mutations/useSheikhMutation";
 import { FormInput } from "../form/FormInput";
 import { sheikhSchema } from "@/lib/validations/sheikh";
 import { FormImageUpload } from "../form/FormImageUpload";
+import { useTransition } from "react";
+import { saveSheikhAction } from "@/lib/services/sheikh.actions";
+import { toast } from "sonner";
 
 type SheikhFormData = z.infer<typeof sheikhSchema>;
 
-interface Props {
+interface SheikhFormProps {
   defaultValues?: Partial<SheikhFormData>;
   sheikhId?: string;
 }
-export function SheikhForm({ defaultValues, sheikhId }: Props) {
+export function SheikhForm({ defaultValues, sheikhId }: SheikhFormProps) {
   const router = useRouter();
   const isEdit = !!sheikhId;
-  const { mutateAsync, isPending } = useSheikhMutation(sheikhId);
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<SheikhFormData>({
     resolver: zodResolver(sheikhSchema),
@@ -37,8 +39,16 @@ export function SheikhForm({ defaultValues, sheikhId }: Props) {
     },
   });
 
-  const onSubmit = async (data: SheikhFormData) => {
-    await mutateAsync(data);
+  const onSubmit = (data: SheikhFormData) => {
+    startTransition(async () => {
+      const result = await saveSheikhAction(data, sheikhId);
+
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success(isEdit ? "تم تحديث البيانات بنجاح" : "تمت الإضافة بنجاح");
+      }
+    });
   };
 
   return (
@@ -52,7 +62,7 @@ export function SheikhForm({ defaultValues, sheikhId }: Props) {
             control={form.control}
             name="photo"
             label="صورة الشيخ"
-          /> 
+          />
           <FormInput
             control={form.control}
             name="name"

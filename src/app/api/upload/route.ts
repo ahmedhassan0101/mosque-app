@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { cloudinary, UPLOAD_CONFIG } from "@/lib/cloudinary/config";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 
 export async function POST(req: NextRequest) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;

@@ -39,17 +39,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // 2. Connect to DB
         await connectDB();
-        
+
         // 3. Find user
-        const user = await User.findOne({ email: parsed.data.email }).select(
-          "+password",
-        );
-        if (!user) return null;
+        const user = await User.findOne({ email: parsed.data.email })
+          .select("+password");
+          if (!user) return null;
+          
+          console.log("🚀 ~ user2442456:", user)
 
         // 4. Check password
         const valid = await user.comparePassword(parsed.data.password);
         if (!valid) return null;
-
+   
+  
         // 5. Return user data → goes to JWT callback
         return {
           id: user._id.toString(),
@@ -62,6 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
 });
+
 
 // export const { handlers, auth, signIn, signOut } = NextAuth({
 //    ...authConfig,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import Group from "@/models/Group";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 import { z } from "zod";
 
 type Params = { params: { id: string } };
@@ -15,7 +15,7 @@ const updateSchema = z.object({
 
 export async function GET(_: NextRequest, { params }: Params) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
     const group = await Group.findOne({ _id: params.id, mosqueId })
       .populate("sheikhId", "name phone")
@@ -31,7 +31,7 @@ export async function GET(_: NextRequest, { params }: Params) {
 
 export async function PUT(req: NextRequest, { params }: Params) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     const parsed = updateSchema.safeParse(await req.json());
     if (!parsed.success)
       return NextResponse.json(
@@ -55,7 +55,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
 export async function DELETE(_: NextRequest, { params }: Params) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
     await Group.findOneAndDelete({ _id: params.id, mosqueId });
     return NextResponse.json({ ok: true });

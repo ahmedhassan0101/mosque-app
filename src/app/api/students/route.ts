@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
 import { studentSchema } from "@/lib/validations/student";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 // import { headers } from "next/headers";
 
 export async function GET(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     // const mosqueId = headersList.get("x-mosque-id");
     // if (!mosqueId)
     //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
 
     await connectDB();
 
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     const body = await req.json();
     const parsed = studentSchema.safeParse(body);
 

@@ -33,7 +33,13 @@
 
 // lib/mongodb.ts
 import mongoose, { Connection } from "mongoose";
-
+import "@/models/Sheikh";
+import "@/models/Attendance";
+import "@/models/Group";
+import "@/models/Session";
+import "@/models/Student";
+import "@/models/User";
+import "@/models/Mosque";
 const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {

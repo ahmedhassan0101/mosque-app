@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { auth } from "@/lib/auth/options";
 import { connectDB } from "@/lib/db/connect";
 import Group from "@/models/Group";
 import Sheikh from "@/models/Sheikh";
 import { GroupsManager } from "@/components/groups/GroupsManager";
 import "@/models/Student";
+import { getMosqueId } from "@/lib/auth/get-context";
 export const metadata = { title: "المجموعات" };
 
 const ACT_LABELS = {
@@ -16,9 +16,7 @@ const ACT_LABELS = {
 };
 
 export default async function GroupsPage() {
-  const session = await auth();
-  const mosqueId = session?.user.mosqueId;
-  if (!mosqueId) return null;
+  const mosqueId = await getMosqueId();
 
   await connectDB();
 
@@ -30,10 +28,12 @@ export default async function GroupsPage() {
       .lean(),
     Sheikh.find({ mosqueId }).select("name").sort({ name: 1 }).lean(),
   ]);
-const serialized = groups.map((g) => {
-    // 1. تأمين قراءة بيانات الشيخ (لو محذوف هيرجع فاضي بدل ما يضرب)
+
+
+  
+  const serialized = groups.map((g) => {
     const sheikhData = g.sheikhId as any;
-    
+
     return {
       _id: g._id.toString(),
       name: g.name,

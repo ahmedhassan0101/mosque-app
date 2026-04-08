@@ -24,8 +24,7 @@ const navItems = [
   { href: "/statistics", label: "الإحصائيات", icon: BarChart2 },
   { href: "/meetings", label: "الاجتماعات", icon: MessageSquare },
   { href: "/sheikhs", label: "المشايخ", icon: Star },
-    { href: "/groups", label: "المجموعات", icon: Star },
-
+  { href: "/groups", label: "المجموعات", icon: Star },
 ];
 
 export function Sidebar() {
@@ -77,7 +76,6 @@ export function Sidebar() {
     </aside>
   );
 }
-
 
 // في navItems — أضف الشرط ده
 // بعد ما تجيب الـ session في الـ Sidebar

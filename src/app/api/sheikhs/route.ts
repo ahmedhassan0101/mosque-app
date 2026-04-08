@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import Sheikh from "@/models/Sheikh";
-import { requireMosque } from "@/lib/auth/get-context";
+import { getMosqueId } from "@/lib/auth/get-context";
 import { sheikhSchema } from "@/lib/validations/sheikh";
 
 /**
@@ -12,7 +12,7 @@ import { sheikhSchema } from "@/lib/validations/sheikh";
  */
 export async function GET() {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     await connectDB();
 
     const sheikhs = await Sheikh.find({ mosqueId })
@@ -31,7 +31,7 @@ export async function GET() {
  */
 export async function POST(req: NextRequest) {
   try {
-    const mosqueId = await requireMosque();
+    const mosqueId = await getMosqueId();
     const body = await req.json();
 
     const parsed = sheikhSchema.safeParse(body);

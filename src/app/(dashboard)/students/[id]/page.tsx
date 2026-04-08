@@ -1,5 +1,4 @@
 // src\app\(dashboard)\students\[id]\page.tsx
-import { auth } from "@/lib/auth/options";
 import { connectDB } from "@/lib/db/connect";
 import Student from "@/models/Student";
 import { notFound } from "next/navigation";
@@ -19,6 +18,7 @@ import {
   // QrCode,
 } from "lucide-react";
 import { StudentQRButton } from "@/components/students/StudentQRButton";
+import { getMosqueId } from "@/lib/auth/get-context";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -51,11 +51,7 @@ const ACT_MAP: Record<string, string> = {
 export default async function StudentProfilePage({ params }: PageProps) {
   const { id } = await params;
 
-  const session = await auth();
-  const mosqueId = session?.user.mosqueId;
-
-  if (!mosqueId) return null;
-
+  const mosqueId = await getMosqueId();
   await connectDB();
   const student = await Student.findOne({ _id: id, mosqueId }).lean();
 
@@ -63,7 +59,7 @@ export default async function StudentProfilePage({ params }: PageProps) {
   if (!student) {
     console.log("❌ Student not found! Check if ID or MosqueID is correct.");
     console.log("-> Searching for ID:", id, "| MosqueID:", mosqueId);
-    notFound(); // دي اللي كانت بتوديك للـ 404
+    notFound();
   }
   const age = student.birthDate
     ? new Date().getFullYear() - new Date(student.birthDate).getFullYear()

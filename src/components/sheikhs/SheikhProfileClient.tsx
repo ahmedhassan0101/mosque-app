@@ -15,6 +15,8 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import ProfileImage from "../global/profileImage";
+import EditButton from "../global/EditButton";
 
 const ACT_MAP: Record<string, { label: string; color: string }> = {
   quran: {
@@ -83,50 +85,25 @@ export function SheikhProfileClient({ data, sheikhId }: Props) {
       <div
         className="
         relative rounded-2xl overflow-hidden border border-border
-        bg-gradient-to-br from-primary/5 via-background to-[var(--gold-light)]
+        bg-linear-to-br from-primary/5 via-background to-gold-light
       "
       >
         {/* Islamic pattern top bar */}
-        <div className="h-2 bg-gradient-to-r from-primary via-[var(--gold)] to-primary" />
+        <div className="h-2 bg-linear-to-r from-primary via-gold to-primary" />
 
         <div className="p-6 flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             {/* Avatar */}
-            <div
-              className="
-              relative w-20 h-20 rounded-2xl overflow-hidden shrink-0
-              border-2 border-primary/20 bg-primary/8
-              flex items-center justify-center shadow-sm
-            "
-            >
-              {sheikh.photo ? (
-                <Image
-                  src={sheikh.photo}
-                  alt={sheikh.name}
-                  fill
-                  className="object-cover"
-                  sizes="80px"
-                  priority
-                />
-              ) : (
-                <span className="text-2xl font-bold text-primary/50">
-                  {sheikh.name.charAt(0)}
-                </span>
-              )}
-            </div>
-
+            <ProfileImage photo={sheikh.photo} name={sheikh.name} />
             {/* Info */}
             <div>
               <h1 className="text-xl font-bold">{sheikh.name}</h1>
+
               {sheikh.phone && (
-                <a
-                  href={`tel:${sheikh.phone}`}
-                  className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mt-1"
-                  dir="ltr"
-                >
-                  <Phone size={13} />
+                <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-1.5 font-medium">
+                  <Phone size={12} className="text-emerald-500" />
                   {sheikh.phone}
-                </a>
+                </p>
               )}
               <p className="text-xs text-muted-foreground mt-1.5">
                 {groups.length > 0
@@ -135,13 +112,7 @@ export function SheikhProfileClient({ data, sheikhId }: Props) {
               </p>
             </div>
           </div>
-
-          <Button asChild variant="outline" size="sm" className="shrink-0">
-            <Link href={`/sheikhs/${sheikhId}/edit`}>
-              <Pencil size={13} className="ml-1.5" />
-              تعديل
-            </Link>
-          </Button>
+          <EditButton href={`/sheikhs/${sheikhId}/edit`} />
         </div>
       </div>
 
@@ -155,8 +126,8 @@ export function SheikhProfileClient({ data, sheikhId }: Props) {
           {groups.map((group) => {
             const act = ACT_MAP[group.activity];
             const isOpen = expandedGroup === group._id;
-            const preview = group.students.slice(0, 4);
-            const rest = group.students.length - preview.length;
+            // const preview = group.students.slice(0, 4);
+            // const rest = group.students.length - preview.length;
 
             return (
               <Card key={group._id} className="overflow-hidden">

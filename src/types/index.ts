@@ -113,3 +113,18 @@ export interface IAttendance {
   date: Date;
   present: boolean;
 }
+
+export type GroupMinimal = {
+  _id: string;
+  name: string;
+  activity: string;
+  studentCount: number;
+};
+
+export type SheikhWithGroups = {
+  _id: string;
+  name: string;
+  phone?: string;
+  photo?: string;
+  groups: GroupMinimal[];
+};
