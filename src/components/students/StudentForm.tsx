@@ -15,11 +15,13 @@ import { FormCheckboxGroup } from "@/components/form/FormCheckboxGroup";
 import { FormSwitch } from "@/components/form/FormSwitch";
 import { FormTextarea } from "@/components/form/FormTextarea";
 
-import { useStudentMutation } from "@/hooks/mutations/useStudentMutation";
 import { FormDatePicker } from "../form/FormDatePicker";
 import { SURAH_OPTIONS } from "@/lib/quran";
 import { FormSelect } from "../form/FormSelect";
 import { FormImageUpload } from "../form/FormImageUpload";
+import { useTransition } from "react";
+import { saveStudentAction } from "@/lib/services/student.actions";
+import { toast } from "sonner";
 
 interface StudentFormProps {
   defaultValues?: Partial<StudentFormData>;
@@ -44,12 +46,12 @@ export function StudentForm({ defaultValues, studentId }: StudentFormProps) {
   const router = useRouter();
   const isEdit = !!studentId;
 
-  const { mutateAsync, isPending } = useStudentMutation(studentId);
+  const [isPending, startTransition] = useTransition();
+
 
   const form = useForm<StudentFormData>({
     resolver: zodResolver(studentSchema),
     defaultValues: {
-
       name: "",
       phone: "",
       guardianName: "",
@@ -65,7 +67,16 @@ export function StudentForm({ defaultValues, studentId }: StudentFormProps) {
   });
 
   const onSubmit = async (data: StudentFormData) => {
-    await mutateAsync(data);
+    // await mutateAsync(data);
+    startTransition(async () => {
+      const result = await saveStudentAction(data, studentId);
+
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success(isEdit ? "تم تحديث البيانات بنجاح" : "تمت الإضافة بنجاح");
+      }
+    });
   };
 
   return (

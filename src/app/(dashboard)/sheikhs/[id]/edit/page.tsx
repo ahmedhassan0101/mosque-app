@@ -3,13 +3,12 @@ import { notFound } from "next/navigation";
 import { SheikhForm } from "@/components/sheikhs/SheikhForm";
 import { getSheikhById } from "@/lib/services/sheikh.service";
 
-type PageProps = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ id: string }> };
 
 export const metadata = { title: "تعديل بيانات الشيخ" };
 
-export default async function EditSheikhPage({ params }: PageProps) {
+export default async function EditSheikhPage({ params }: Props) {
   const { id } = await params;
-
   const sheikh = await getSheikhById(id);
   if (!sheikh) notFound();
 

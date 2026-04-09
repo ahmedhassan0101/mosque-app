@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Trash2, Trash2Icon } from "lucide-react";
-import { toast } from "sonner"; // مهم جداً التوست يكون هنا عشان الريوزابيلتي
+import { toast } from "sonner"; 
 
 import {
   AlertDialog,
@@ -28,7 +28,6 @@ interface DeleteButtonProps {
   deletedItem: "student" | "sheikh" | "group";
 }
 
-// استخراج الأوبجيكت بره الكمبوننت عشان ميتعملوش Re-create مع كل ريندر (Performance)
 const ITEM_LABELS = {
   student: "الطالب",
   sheikh: "الشيخ",
@@ -41,12 +40,12 @@ export function DeleteButton({
   handleDelete,
   deletedItem,
 }: DeleteButtonProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const label = ITEM_LABELS[deletedItem];
-
-  const onDelete = (e: React.MouseEvent) => {
-    e.preventDefault();
+// e: React.MouseEvent
+  const onDelete = () => {
+    // e.preventDefault();
 
     startTransition(async () => {
       const result = await handleDelete(id);
@@ -55,13 +54,14 @@ export function DeleteButton({
         toast.error(result.error);
       } else {
         toast.success(`تم حذف ${label} بنجاح`);
-        setIsOpen(false); 
+        // setIsOpen(false); 
       }
     });
   };
-
+//  open={isOpen} onOpenChange={setIsOpen}
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+
+    <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="destructive" size="sm">
           <Trash2 size={14} className="ml-1" />

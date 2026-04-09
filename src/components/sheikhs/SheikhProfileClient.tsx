@@ -3,21 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-// import { Badge }    from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Pencil,
-  Phone,
-  Users,
-  //  User,
-  BookOpen,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Phone, Users, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import ProfileImage from "../global/profileImage";
 import EditButton from "../global/EditButton";
-
+import type { SheikhProfile } from "@/types/serialized";
 const ACT_MAP: Record<string, { label: string; color: string }> = {
   quran: {
     label: "القرآن",
@@ -47,29 +37,30 @@ const LEVEL_MAP: Record<string, string> = {
   advanced: "متقدم",
 };
 
-interface Student {
-  _id: string;
-  name: string;
-  level: string;
-  photo?: string | null;
-}
-interface Group {
-  _id: string;
-  name: string;
-  activity: string;
-  students: Student[];
-}
-interface Sheikh {
-  _id: string;
-  name: string;
-  phone?: string;
-  photo?: string;
-  notes?: string;
-  createdAt: string;
-}
+// interface Student {
+//   _id: string;
+//   name: string;
+//   level: string;
+//   photo?: string | null;
+// }
+// interface Group {
+//   _id: string;
+//   name: string;
+//   activity: string;
+//   students: Student[];
+// }
+// interface Sheikh {
+//   _id: string;
+//   name: string;
+//   phone?: string;
+//   photo?: string;
+//   notes?: string;
+//   createdAt: string;
+// }
+
 
 interface Props {
-  data: { sheikh: Sheikh; groups: Group[] };
+  data: SheikhProfile;
   sheikhId: string;
 }
 
