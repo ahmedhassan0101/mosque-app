@@ -22,7 +22,7 @@ export default async function StudentsPage({ searchParams }: Props) {
     search: params.search,
     activity: params.activity,
     page: Number(params.page || 1),
-    limit: Number(params.limit || 20),
+    limit: Number(params.limit || 10),
   });
 
   return (
@@ -45,6 +45,15 @@ export default async function StudentsPage({ searchParams }: Props) {
             إضافة طالب جديد
           </Link>
         </Button>
+        <Button
+          asChild
+          className="bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-emerald-200 transition-all rounded-xl h-12 px-6"
+        >
+          <Link href="/students/import">
+            <UserPlus size={18} className="ml-2" />
+            إضافة طلاب جدد
+          </Link>
+        </Button>
       </div>
 
       <StudentFilters />
@@ -55,9 +64,8 @@ export default async function StudentsPage({ searchParams }: Props) {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <StudentsTable
             students={students}
-            total={totalPages}
+            totalPages={totalPages}
             page={Number(params.page || 1)}
-            limit={Number(params.limit || 20)}
           />
         </div>
       </Suspense>

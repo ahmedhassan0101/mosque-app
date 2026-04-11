@@ -78,18 +78,17 @@ const LEVEL_LABELS: Record<
 // }
 interface Props {
   students: StudentSerialized[];
-  total: number;
+  totalPages: number;
   page: number;
-  limit: number;
 }
 // --- Main Component ---
-export function StudentsTable({ students, total, page, limit }: Props) {
+export function StudentsTable({ students, totalPages, page }: Props) {
   const router = useRouter();
   const [qrId, setQrId] = useState<string | null>(null);
   const [qrName, setQrName] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const totalPages = Math.ceil(total / limit);
+  // const totalPages = Math.ceil(total / limit);
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`هل أنت متأكد من حذف بيانات الطالب "${name}" بشكل نهائي؟`))

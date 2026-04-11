@@ -2,14 +2,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import type {  IGroup } from "@/types";
 
 export interface IGroupDocument extends Omit<IGroup, "_id">, Document {}
-// export interface IGroupDocument extends Document {
-//   mosqueId:   mongoose.Types.ObjectId;
-//   name:       string;
-//   activity:   ActivityType;
-//   sheikhId:   mongoose.Types.ObjectId;
-//   studentIds: mongoose.Types.ObjectId[];
-//   notes?:     string;
-// }
+
 
 const GroupSchema = new Schema<IGroupDocument>(
   {

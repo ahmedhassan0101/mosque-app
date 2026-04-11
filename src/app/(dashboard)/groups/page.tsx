@@ -41,8 +41,8 @@ export default async function GroupsPage() {
       activityLabel:
         ACT_LABELS[g.activity as keyof typeof ACT_LABELS] ?? g.activity,
       sheikh: {
-        _id: sheikhData?._id?.toString() ?? "", // <-- التعديل هنا
-        name: sheikhData?.name ?? "شيخ محذوف / غير محدد", // <-- التعديل هنا
+        _id: sheikhData?._id?.toString() ?? "",
+        name: sheikhData?.name ?? "شيخ محذوف / غير محدد", 
       },
       // 2. تأمين قراءة الطلاب (فلترة أي طالب محذوف راجع بـ null)
       students: (g.studentIds as any[])

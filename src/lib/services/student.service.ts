@@ -97,7 +97,7 @@ export async function getStudents(query: {
   const mosqueId = await getMosqueId();
   await connectDB();
 
-  const { search, activity, page = 1, limit = 20 } = query;
+  const { search, activity, page = 1, limit = 10 } = query;
   const skip = (page - 1) * limit;
 
   // Typed filter — no any
