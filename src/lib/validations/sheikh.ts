@@ -9,3 +9,4 @@ export const sheikhSchema = z.object({
 });
 
 export type SheikhFormData = z.infer<typeof sheikhSchema>;
+

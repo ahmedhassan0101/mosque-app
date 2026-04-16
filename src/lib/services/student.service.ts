@@ -129,6 +129,7 @@ export const getStudentById = cache(
     await connectDB();
 
     const s = await Student.findOne({ _id: id, mosqueId }).lean();
+    
     if (!s) return null;
     return serializeStudent(s);
   },

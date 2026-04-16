@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { getMosqueId } from "@/lib/auth/get-context";
-import { connectDB } from "@/lib/db/connect";
-import Student from "@/models/Student";
+// import { connectDB } from "@/lib/db/connect";
+// import Student from "@/models/Student";
 import { parseImportFile } from "@/lib/import/parser";
-import { validateRows } from "@/lib/import/validator";
+// import { validateRows } from "@/lib/import/validator";
 import { generateImportTemplate } from "@/lib/import/template";
+import { processStudentImport } from "@/lib/services/import-service";
 
 /**
  * GET /api/students/import
@@ -93,47 +94,51 @@ export async function POST(req: NextRequest) {
     }
 
     // ── 3. Validate all rows ─────────────────────────────────────────
-    const results = validateRows(rawRows);
-    const valid = results.filter((r) => r.status === "valid");
-    const invalid = results.filter((r) => r.status === "invalid");
+    const result = await processStudentImport(rawRows, mosqueId);
 
-    // If ALL rows fail — return immediately
-    if (valid.length === 0) {
-      return NextResponse.json(
-        {
-          inserted: 0,
-          failed: invalid.length,
-          errors: invalid.map((r) => ({
-            row: r.row,
-            errors: r.status === "invalid" ? r.errors : [],
-          })),
-        },
-        { status: 422 },
-      );
-    }
+    // const results = validateRows(rawRows);
+    // const valid = results.filter((r) => r.status === "valid");
+    // const invalid = results.filter((r) => r.status === "invalid");
+
+    // // If ALL rows fail — return immediately
+    // if (valid.length === 0) {
+    //   return NextResponse.json(
+    //     {
+    //       inserted: 0,
+    //       failed: invalid.length,
+    //       errors: invalid.map((r) => ({
+    //         row: r.row,
+    //         errors: r.status === "invalid" ? r.errors : [],
+    //       })),
+    //     },
+    //     { status: 422 },
+    //   );
+    // }
 
     // ── 4. Bulk insert valid rows ────────────────────────────────────
-    await connectDB();
+    // await connectDB();
 
-    const docs = valid
-      .map((r) => {
-        if (r.status !== "valid") return null;
-        return { ...r.data, mosqueId, isActive: true };
-      })
-      .filter(Boolean);
+    // const docs = valid
+    //   .map((r) => {
+    //     if (r.status !== "valid") return null;
+    //     return { ...r.data, mosqueId, isActive: true };
+    //   })
+    //   .filter(Boolean);
 
     // insertMany with ordered:false — continues even if some fail
-    await Student.insertMany(docs, { ordered: false });
+    // await Student.insertMany(docs, { ordered: false });
 
     // ── 5. Return structured result ──────────────────────────────────
-    return NextResponse.json({
-      inserted: valid.length,
-      failed: invalid.length,
-      errors: invalid.map((r) => ({
-        row: r.row,
-        errors: r.status === "invalid" ? r.errors : [],
-      })),
-    });
+    // return NextResponse.json({
+    //   inserted: valid.length,
+    //   failed: invalid.length,
+    //   errors: invalid.map((r) => ({
+    //     row: r.row,
+    //     errors: r.status === "invalid" ? r.errors : [],
+    //   })),
+    // });
+    const status = result.inserted === 0 ? 422 : 200;
+    return NextResponse.json(result, { status });
   } catch (e: any) {
     if (e.message === "UNAUTHORIZED") {
       return NextResponse.json({ error: "غير مصرح" }, { status: 401 });

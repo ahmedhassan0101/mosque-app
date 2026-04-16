@@ -73,6 +73,9 @@ export interface IGroup {
   createdAt: Date;
 }
 
+
+
+
 export interface ISession {
   _id: Types.ObjectId;
   mosqueId: Types.ObjectId;

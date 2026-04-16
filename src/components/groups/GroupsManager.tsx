@@ -216,6 +216,8 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+
             <div className="space-y-1.5">
               <Label>
                 اسم المجموعة <span className="text-destructive">*</span>
@@ -227,6 +229,7 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                 </p>
               )}
             </div>
+
             <div className="space-y-1.5">
               <Label>
                 النشاط <span className="text-destructive">*</span>
@@ -247,6 +250,8 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                 </SelectContent>
               </Select>
             </div>
+
+
             <div className="space-y-1.5">
               <Label>
                 الشيخ <span className="text-destructive">*</span>
@@ -272,10 +277,15 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                 </p>
               )}
             </div>
+
+
+
             <div className="space-y-1.5">
               <Label>ملاحظات</Label>
               <Textarea rows={2} {...register("notes")} />
             </div>
+
+
             <DialogFooter>
               <Button
                 type="button"
@@ -289,6 +299,8 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                 {editing ? "حفظ" : "إنشاء"}
               </Button>
             </DialogFooter>
+
+            
           </form>
         </DialogContent>
       </Dialog>

@@ -36,3 +36,5 @@ export const studentSchema = z.object({
 });
 
 export type StudentFormData = z.input<typeof studentSchema>;
+
+ 

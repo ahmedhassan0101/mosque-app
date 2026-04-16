@@ -1,12 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Enable React strict mode for better DX */
+  reactStrictMode: true,
+  /* Experimental features */
+  experimental: {
+    /* Turbopack is enabled via CLI flag `next dev --turbopack` */
+  },
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // Google OAuth avatars
         pathname: "/**",
       },
     ],
