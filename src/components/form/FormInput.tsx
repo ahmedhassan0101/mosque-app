@@ -11,7 +11,7 @@ interface FormInputProps<T extends FieldValues> {
   name: Path<T>;
   label: string;
   placeholder?: string;
-  type?: string;
+  type?: React.HTMLInputTypeAttribute;
   dir?: "ltr" | "rtl";
   required?: boolean;
 }
@@ -45,6 +45,7 @@ export function FormInput<T extends FieldValues>({
               id={name}
               type={inputType}
               placeholder={placeholder}
+              autoComplete={type === "password" ? "current-password" : "on"}
               value={field.value ?? ""}
               dir={dir}
               aria-invalid={fieldState.invalid}

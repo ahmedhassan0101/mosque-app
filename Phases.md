@@ -68,4 +68,112 @@ Build a comprehensive, highly secure, and modular Authentication and Onboarding 
 
 Present code logically separated by files. Provide the DB Connection, Models, Auth Config, Middleware, Server Actions, and the Reusable Form Component. End with a short Manual Testing Checklist.
 
------------------------------------------------
+## Role: Tech Lead Code Review
+
+Great effort on the Auth and Middleware logic, but during code review and running the application on Next.js 16.2.1, I noticed several critical architectural flaws, Edge Runtime errors, and unoptimized repetitive code.
+
+Please address the following points and provide the refactored code:
+
+## 1. Next.js 16 Proxy Convention & Edge Runtime Crash
+
+- **Error:** `The edge runtime does not support Node.js 'stream' module` and `The "middleware" file convention is deprecated. Please use "proxy" instead.`
+- **Task:** Next.js 16 deprecated `middleware.ts`. Rewrite the middleware logic using the new `proxy.ts` file convention.
+- **CRITICAL FIX:** Inside `proxy.ts`, you MUST use "Approach Two" from Auth.js docs (using `authConfig` wrapper) to avoid pulling Node.js dependencies (Mongoose via `auth.ts`) into the Edge runtime. Do NOT import `auth.ts` inside `proxy.ts`.
+  - Use this pattern:
+    `import { authConfig } from "./auth.config";`
+    `const { auth } = NextAuth(authConfig);`
+    `export default auth((req) => { ...routing logic... });`
+
+## 2. Client-Side Routing Bug (`window.location.href`)
+
+- **Error:** In `LoginForm`, `RegisterForm`, `JoinMosqueForm`, and `CreateMosqueForm`, you used `window.location.href = "/dashboard"`, which throws `Error: This value cannot be modified` during React strict mode rendering.
+- **Task:** Refactor all these form components to use Next.js `useRouter` from `next/navigation`. Use `router.push('/dashboard')` and `router.refresh()` instead of modifying the window object directly. Also, remove any unused variables (like the unused `router` in `RegisterForm`).
+
+## 3. Zod Error Typing (`TS2339`)
+
+- **Error:** In your server actions, `parsed.error.errors[0].message` throws an error because `errors` does not exist directly on the `ZodError` object.
+- **Task:** Refactor all Zod error extractions in server actions to use `parsed.error.issues[0].message` or `.flatten().fieldErrors`.
+
+## 4. DRY Principle: JSend Action Responses
+
+- **Issue:** You are manually writing `{ status: "success", data, message }` in every server action.
+- **Task:** Create a central utility file (e.g., `lib/response-utils.ts`) with helper functions: `successResponse(data?, message?)`, `failResponse(message)`, and `errorResponse(message)`. Refactor all server actions to use these helpers instead of raw objects.
+
+## 5. Missing UI for Password Reset
+
+- **Issue:** You wrote the `requestPasswordReset` and `resetPassword` server actions, but forgot to implement the UI components.
+- **Task:** Provide the React components for:
+  - `ForgotPasswordForm` (collects email and calls the action).
+  - `ResetPasswordForm` (reads the token from the URL, collects new password, and calls the action).
+
+**Output:** Provide the fully corrected `proxy.ts`, the new `lib/response-utils.ts`, the corrected server actions, and the updated/new UI Form components. Ensure no TypeScript errors persist.
+
+
+
+
+## Role: Tech Lead / Architectural Review
+
+Hello! I have tested the authentication, onboarding, and middleware logic you built. The overall structure is looking solid, but during runtime and code review, I encountered several specific errors and architectural friction points.
+
+Instead of me dictating the fixes, I want to present these issues to you. Please analyze them, think step-by-step about the best approach considering the architecture you've built, and then propose the optimal refactoring.
+
+Great effort on the Auth and Middleware logic, but during code review and running the application on Next.js 16.2.1, I noticed several critical architectural flaws, Edge Runtime errors, and unoptimized repetitive code.
+
+Please address the following points and provide the refactored code:
+
+Here is the detailed report of the issues:
+
+### 1. Next.js 16 Middleware Deprecation & Edge Runtime Crash
+
+**The Errors:**
+
+- `The "middleware" file convention is deprecated. Please use "proxy" instead.`
+- `Both the middleware file "./src/middleware.ts" and the proxy file "./src/proxy.ts" are detected.`
+- `Error: The edge runtime does not support Node.js 'stream' module.` (This crashed the app completely).
+**My thoughts:** We are on Next.js 16, which uses `proxy.ts`. Also, it seems our NextAuth implementation is leaking Node.js dependencies (like Mongoose) into the Edge runtime through the proxy. How should we restructure `proxy.ts` and our Auth configuration to cleanly separate Edge logic from Node logic?
+
+### 2. Client-Side Routing in React Strict Mode
+
+**The Error:** `Error: This value cannot be modified` pointing to `window.location.href = "/dashboard";` in `LoginForm`, `CreateMosqueForm`, and `JoinMosqueForm`.
+**My thoughts:** Directly mutating `window.location.href` inside a React component's `onSubmit` seems to clash with Next.js App Router and React strict mode. Also, I noticed in `RegisterForm`, `useRouter` is declared but never used. What is the Next.js best practice for client-side navigation after a server action mutation?
+
+### 3. Missing `<SessionProvider />` Context
+
+**The Error:** `[next-auth]: useSession must be wrapped in a <SessionProvider /> at UserDropdown`
+**My thoughts:** The `UserDropdown` component uses `useSession`, but we haven't wrapped our app or layout in a provider. In the App Router context, where is the most optimal place to inject this provider without unnecessarily turning entire layouts into Client Components?
+
+### 4. Zod Error Typing (`TS2339`)
+
+**The Error:** `Property 'errors' does not exist on type 'ZodError<...>'` occurring at `parsed.error.errors[0].message` in the Server Actions.
+**My thoughts:** It seems we are accessing the Zod error object incorrectly. How should we accurately extract the first error message from Zod's safeParse result?
+
+### 5. DRY Principle / JSend Boilerplate in Server Actions
+
+**The Issue:** In every server action, we are manually typing out the return objects: `{ status: "success", data, message }` or `{ status: "error", message: "..." }`.
+**My thoughts:** This feels repetitive and prone to typos. Can we create a centralized utility or class to standardize these responses across all our actions?
+
+### 6. Separation of Concerns (UI vs. Logic)
+
+**The Issue:** We have data fetching/mutating logic inside the `onSubmit` handlers of our Client Components, but our `SettingsPage` (Server Component) handles data fetching directly.
+**My thoughts:** Given your current architecture, is having the `onSubmit` act as a bridge to Server Actions the best pattern? Please briefly evaluate if this is optimal or if we should tweak it.
+
+### 6. Data Access Layer & Serialization Logic (Clean Code)
+
+**The Issue:** In the current SettingsPage, the data fetching and serialization (mapping MongoDB _id to string, etc.) are written directly inside the Server Component.
+**My thoughts:** I want to move towards a more decoupled architecture. Instead of having the logic inside the component, I'm considering creating dedicated data fetching functions (e.g., getMosqueSettingsData()) that handle the DB connection, fetching, and serialization, then returning clean, plain objects to the component.
+**Question for you: >**
+
+- Is it better to keep the SettingsPage as a thin wrapper that calls these functions?
+
+Regarding the onSubmit in Client Components (like `CreateMosqueForm`): is the current approach of handling toasts, sessions, and redirects within the component optimal, or should we offload more of that logic to keep the UI components focused only on rendering? Please provide a pattern that balances "Clean Code" with Next.js 16 best practices.
+
+### 7. Missing UI Components
+
+**The Issue:** You built excellent Server Actions for `requestPasswordReset` and `resetPassword`, but the UI components for them (the forms/pages) were not generated.
+
+---
+
+### Your Task
+
+1. **Analyze:** Take a moment to think out loud about each point. Discuss the pros and cons of potential solutions based on our stack (Next.js 16 App Router, Auth.js v5, Mongoose).
+2. **Refactor:** After your analysis, provide the corrected and refactored code files (e.g., `proxy.ts`, updated Form components, new utility files, layout updates, and the missing password reset UI).

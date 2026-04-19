@@ -2,7 +2,8 @@ import { ThemeToggle } from "./theme-toggle";
 import { MobileSidebarTrigger } from "./mobile-sidebar-trigger";
 import NavbarSearch from "./navbar-search";
 import Notifications from "./notifications";
-import UserDropdown from "./user-dropdown";
+import { UserDropdown } from "./user-dropdown";
+
 
 /**
  * Navbar is the top header for the dashboard layout.

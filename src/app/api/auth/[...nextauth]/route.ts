@@ -1,5 +1,10 @@
 // src\app\api\auth\[...nextauth]\route.ts
-import { handlers } from "@/lib/auth/options";
+
+import { handlers } from "@/lib/auth/auth";
+
+export const { GET, POST } = handlers;
+
+// import { handlers } from "@/lib/auth/options";
 /**
  * NextAuth route handlers
  *
@@ -12,4 +17,4 @@ import { handlers } from "@/lib/auth/options";
  *
  * You don't need to manually define them.
  */
-export const { GET, POST } = handlers;
+// export const { GET, POST } = handlers;

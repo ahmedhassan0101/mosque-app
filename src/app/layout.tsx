@@ -9,6 +9,8 @@ import { Readex_Pro } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { auth } from "@/lib/auth/auth";
+import { Providers } from "@/components/providers/providers";
 
 /* ─────────────────────────────────────────────
    Arabic Font — Readex Pro
@@ -64,11 +66,13 @@ export const viewport: Viewport = {
 /* ─────────────────────────────────────────────
    Root Layout
 ───────────────────────────────────────────── */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Pre-fetch session on the server for instant client hydration (no loading flash)
+  const session = await auth();
   return (
     <html
       lang="ar"
@@ -77,26 +81,28 @@ export default function RootLayout({
       className={readexPro.variable}
     >
       <body className="font-(family-name:--font-readex) antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange  // ={false}
-          storageKey="masjid-erp-theme"
-        >
-          {children}
-          <Toaster
-            position="top-center"
-            richColors
-            closeButton
-            dir="rtl"
-            toastOptions={{
-              style: {
-                fontFamily: "var(--font-readex)",
-              },
-            }}
-          />
-        </ThemeProvider>
+        <Providers session={session}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange // ={false}
+            storageKey="masjid-erp-theme"
+          >
+            {children}
+            <Toaster
+              position="top-center"
+              richColors
+              closeButton
+              dir="rtl"
+              toastOptions={{
+                style: {
+                  fontFamily: "var(--font-readex)",
+                },
+              }}
+            />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

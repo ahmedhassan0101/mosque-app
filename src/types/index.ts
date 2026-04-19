@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 
+/** Shared application-wide types */
 export type ActivityType =
   | "quran"
   | "tarbiya"
@@ -8,7 +9,12 @@ export type ActivityType =
   | "playground";
 export type StudentLevel = "beginner" | "intermediate" | "advanced";
 export type AchievementLevel = "weak" | "average" | "good" | "excellent";
-export type UserRole = "superadmin" | "admin" | "sheikh" | "supervisor";
+// export type UserRole = "superadmin" | "admin" | "sheikh" | "supervisor";
+
+export type UserRole = "SUPER_ADMIN" | "ADMIN" | "SUPERVISOR";
+export type Provider = "credentials" | "google";
+/** Standard JSend-style API response */
+
 
 export interface IMosque {
   _id: Types.ObjectId;

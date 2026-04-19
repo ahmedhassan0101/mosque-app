@@ -1,12 +1,3 @@
-// import { FormExamples } from "@/components/form/FormExamples";
-
-// export default function Home() {
-//   return (
-//     <div>
-//       <FormExamples />
-//     </div>
-//   );
-// }
 import type { Metadata } from "next";
 import {
   Users,
@@ -17,7 +8,6 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FormInput } from "@/components/form/FormInput";
 
 export const metadata: Metadata = {
   title: "لوحة التحكم",
@@ -123,7 +113,7 @@ export default function DashboardPage() {
                   {stat.label}
                 </p>
               </div>
-              <div className="mt-3 flex items-center gap-1 text-xs text-(--success)">
+              <div className="mt-3 flex items-center gap-1 text-xs text-success">
                 <TrendingUp className="h-3.5 w-3.5" />
                 {stat.change}
               </div>
