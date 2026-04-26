@@ -58,7 +58,6 @@ const LEVEL_MAP: Record<string, string> = {
 //   createdAt: string;
 // }
 
-
 interface Props {
   data: SheikhProfile;
   sheikhId: string;
@@ -92,7 +91,7 @@ export function SheikhProfileClient({ data, sheikhId }: Props) {
 
               {sheikh.phone && (
                 <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-1.5 font-medium">
-                  <Phone size={12} className="text-emerald-500" />
+                  <Phone size={12} className="text-primary" />
                   {sheikh.phone}
                 </p>
               )}

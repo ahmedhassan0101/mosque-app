@@ -108,9 +108,6 @@ Please address the following points and provide the refactored code:
 
 **Output:** Provide the fully corrected `proxy.ts`, the new `lib/response-utils.ts`, the corrected server actions, and the updated/new UI Form components. Ensure no TypeScript errors persist.
 
-
-
-
 ## Role: Tech Lead / Architectural Review
 
 Hello! I have tested the authentication, onboarding, and middleware logic you built. The overall structure is looking solid, but during runtime and code review, I encountered several specific errors and architectural friction points.
@@ -177,3 +174,48 @@ Regarding the onSubmit in Client Components (like `CreateMosqueForm`): is the cu
 
 1. **Analyze:** Take a moment to think out loud about each point. Discuss the pros and cons of potential solutions based on our stack (Next.js 16 App Router, Auth.js v5, Mongoose).
 2. **Refactor:** After your analysis, provide the corrected and refactored code files (e.g., `proxy.ts`, updated Form components, new utility files, layout updates, and the missing password reset UI).
+
+--------------------------------
+
+# Role
+
+You are an elite UX/UI Designer and a Senior Next.js/React Frontend Engineer specializing in Framer Motion, Tailwind CSS, and Shadcn UI. You are known for creating peerless, high-converting, and emotionally resonant SaaS landing pages with modern, calm, and highly polished aesthetics.
+
+# Task
+
+Build a breathtaking landing page (`/app/page.tsx`) for a free ERP/SaaS platform designed specifically for Mosques, Quran Memorization Centers, and Islamic Educational Institutions. The goal is to convince institution managers to abandon chaotic paper/spreadsheet management and adopt this modern, streamlined system. 
+
+# Context & Vibe
+Project Name: The platform is named "Masjid ERP". Use this name in the Navbar logo and throughout the copywriting where appropriate to build brand identity.
+- The target audience includes educators, youth mentors, and administrators. 
+- The tone should be highly professional, eloquent (Classical Arabic influence but accessible), and emotionally engaging. 
+- The UI must have a "Calm & Modern Islamic" aesthetic. DO NOT use heavy, outdated, or clunky traditional patterns. Instead, use subtle glassmorphism, glowing gradients (calm emeralds, deep blues, or soft golds), and ultra-smooth animations. It should look like an elite tech product (e.g., Vercel, Linear) but with a subtle spiritual/educational soul.
+
+# Strict Constraints
+1. **Layout & Direction:** Must be strictly RTL (Right-to-Left) with `dir="rtl"`.
+2. **Tech Stack:** Next.js (App Router), Tailwind CSS, Framer Motion (crucial for scroll animations and floating effects), `lucide-react` for icons, and Shadcn UI components.
+3. **Themes:** Full support for Dark and Light modes using standard Tailwind `dark:` classes or CSS variables.
+4. **Code Completeness:** Provide a complete, single-file representation (or break down components logically) that I can copy-paste. Include all necessary Framer Motion variants.
+5. **Aesthetics:** Use a calm, modern aesthetic. Avoid aggressive colors. 
+6. **Advanced Animation:** For the "Inside the System" tabbed interface, you MUST use Framer Motion’s layoutId prop. This should create a seamless, fluid transition (magic motion) when switching between tabs, making the UI feel ultra-fast, premium, and deeply integrated.
+
+# Page Anatomy (Implement these sections):
+1. **Navbar (Transparent to Solid on scroll):** Logo, "المميزات", "لمن هذا النظام؟", and Login/Register buttons.
+2. **Hero Section:** - Headline: "تفرغ لرسالتك.. ودع لنا عبء الإدارة." (Focus on your mission.. leave the management to us).
+   - Sub-headline: The ultimate cloud platform for managing educational centers.
+   - CTA Buttons.
+   - A floating, 3D-angled mock-up graphic (use an elegant placeholder `div` with glassmorphism) to represent the dashboard. Animate this with Framer Motion floating effect.
+3. **Features (Bento Grid):** Use a modern asymmetrical Bento Grid layout to display 3-4 features (e.g., Automated Financial Tracking, Student Gamification/Incentive Systems, Progress Dashboards).
+
+4. **Platform Preview (Dashboard Show):** Create a high-end section called "Inside the System". Use a "Scroll-Driven Carousel" or a "Tabbed Interface" to showcase different views (e.g., Student Progress View, Financial Dashboard, Attendance Sheet). Use stylized mockups with glassmorphism, subtle shadows, and glowing borders. Each view should have a brief caption explaining its benefit.
+
+5. **Pain vs. Solution:** A visually striking section comparing the old way (scattered papers) to the new way (one unified, calm dashboard).
+6. **Bottom CTA:** A beautiful gradient background section urging them to start for free.
+6. **Dashboard Showcase:** A tabbed interface showing "Management View", "Student View", and "Financial View" with elegant UI mockups.
+7. **Trust & Values Section:** A brief, soul-touching area about the mission of supporting Quran memorization through technology.
+8. **FAQ Section:** Simple accordion-style FAQ to address security and ease of use.
+
+# Arabic Copywriting
+Provide highly persuasive, grammatically flawless Arabic text for all placeholders. The language should reflect deep understanding of their needs (tracking attendance, rewarding students, generating quick reports).
+
+Think deeply before coding. Plan the Framer Motion choreographies (staggered children, fade-in-up) to ensure the first impression is absolute perfection.

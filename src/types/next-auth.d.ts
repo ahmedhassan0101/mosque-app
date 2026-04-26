@@ -11,6 +11,7 @@ declare module "next-auth" {
       id: string;
       role: UserRole;
       mosqueId: string | null;
+      emailVerified: Date | null;
     };
   }
 
@@ -18,6 +19,7 @@ declare module "next-auth" {
     id: string;
     role: UserRole;
     mosqueId: string | null;
+    emailVerified?: Date | null;
   }
 }
 
@@ -27,6 +29,7 @@ declare module "next-auth/jwt" {
     id: string;
     role: UserRole;
     mosqueId: string | null;
+    emailVerified: Date | null;
   }
 }
 

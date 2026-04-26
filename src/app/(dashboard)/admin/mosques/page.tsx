@@ -146,7 +146,7 @@
 //     </div>
 //   );
 // }
-import { auth } from "@/lib/auth/options";
+import { auth } from "@/temp/options";
 import { redirect } from "next/navigation";
 import { connectDB } from "@/lib/db/connect";
 import Mosque from "@/models/Mosque";

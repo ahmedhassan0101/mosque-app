@@ -34,9 +34,21 @@ export const resetPasswordFormSchema = z
     path: ["confirmPassword"],
   });
 
+  /** Used to validate the raw token string from the URL */
+export const verifyEmailSchema = z.object({
+  token: z.string().uuid("رمز التحقق غير صالح"),
+});
+
+/** Used internally in the resend action */
+export const resendVerificationSchema = z.object({
+  email: z.email("بريد إلكتروني غير صالح"),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type ResetPasswordFormInput = z.infer<typeof resetPasswordFormSchema>;
+export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
+export type ResendVerificationInput = z.infer<typeof resendVerificationSchema>;

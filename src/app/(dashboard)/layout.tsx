@@ -1,66 +1,40 @@
-// import { Sidebar } from "@/components/layout/sidebar";
-// import { Header } from "@/components/layout/Header";
-// import { auth } from "@/lib/auth/options";
-// import { redirect } from "next/navigation";
-
-// export default async function DashboardLayout({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   const session = await auth();
-//   if (!session || !session.user) redirect("/login");
-
-//   return (
-//     <div className="flex min-h-screen bg-mosque-bg">
-//       <Sidebar />
-//       <div className="flex-1 mr-64 flex flex-col">
-//         {/* */}
-//         <Header user={session.user} />
-//         <main className="flex-1 p-6 overflow-auto">{children}</main>
-//       </div>
-//     </div>
-//   );
-// }
-
-// import { Sidebar } from "@/components/layout/sidebar";
-import { Navbar } from "@/components/layout/navbar";
+// app/(dashboard)/layout.tsx
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth/auth";
+import { connectDB } from "@/lib/db/db";
+import { User } from "@/models/user.model";
 import { Sidebar } from "@/components/layout/sidebar";
+import { Navbar } from "@/components/layout/navbar";
 
-/**
- * DashboardLayout wraps all protected dashboard routes.
- *
- * Structure:
- * ┌──────────┬─────────────────────────┐
- * │          │      Navbar             │  ← sticky top
- * │ Sidebar  ├─────────────────────────┤
- * │ (fixed)  │      <children />       │  ← scrollable main
- * │          │                         │
- * └──────────┴─────────────────────────┘
- *
- * RTL: Sidebar is on the RIGHT, content flows LEFT.
- * On mobile: Sidebar is hidden and accessible via Sheet overlay.
- */
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
+  if (session?.user?.id) {
+    await connectDB();
+    const dbUser = await User.findById(session.user.id).select("mosqueId");
+    if (!dbUser?.mosqueId) redirect("/onboarding");
+  }
+
+  const userRole = session?.user?.role ?? "SUPERVISOR";
   return (
-    <div className="flex h-screen w-full bg-background overflow-hidden">
-      {/* ── Sidebar (hidden on mobile, shown md+) ── */}
-      <div className="hidden md:block shrink-0">
-        <Sidebar />
-      </div>
 
-      {/* ── Main area ── */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Navbar />
+    <div className="flex h-dvh w-full overflow-hidden bg-background">
+      {/* Sidebar: hidden below md, fixed width above */}
+      <Sidebar role={userRole} className="hidden md:flex" />
 
-        {/* ── Scrollable page content ── */}
+      {/* Right column: navbar + scrollable page */}
+      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
+        <Navbar session={session} />
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto p-4 md:p-6 animate-fade-up"
+          tabIndex={-1}
+          className="flex-1 overflow-y-auto scroll-smooth
+                     px-4 py-5 md:px-7 md:py-6
+                     focus-visible:outline-none animate-fade-up"
         >
           {children}
         </main>

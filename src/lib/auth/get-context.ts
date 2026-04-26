@@ -1,5 +1,5 @@
 // src\lib\auth\get-context.ts
-import { auth } from "@/lib/auth/options";
+import { auth } from "@/temp/options";
 import { redirect } from "next/navigation";
 
 export async function getMosqueId(): Promise<string> {
@@ -19,5 +19,5 @@ export async function getSessionContext() {
 }
 export async function requireSuperAdmin(): Promise<void> {
   const session = await auth();
-  if (session?.user?.role !== "superadmin") throw new Error("FORBIDDEN");
+  if (session?.user?.role !== "SUPER_ADMIN") throw new Error("FORBIDDEN");
 }

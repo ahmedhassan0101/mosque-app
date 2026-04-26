@@ -1,95 +1,9 @@
-// // /* eslint-disable @typescript-eslint/no-unused-vars */
-
-// /**
-//  * @file auth.config.ts
-//  * @description Edge-compatible Auth.js configuration.
-//  * ⚠️  CRITICAL: This file must NEVER import Mongoose, bcrypt, or any Node.js module.
-//  *               It runs in the Edge Runtime (proxy.ts / middleware).
-//  *               Keep it pure: only JWT callbacks and provider metadata.
-//  */
-
-// import type { NextAuthConfig } from "next-auth";
-// import Google from "next-auth/providers/google";
-
-// /**
-//  * Routes that are always publicly accessible (no auth required).
-//  */
-// export const PUBLIC_ROUTES = [
-//   "/",
-//   "/login",
-//   "/register",
-//   "/forgot-password",
-//   "/reset-password",
-// ] as const;
-
-// /**
-//  * Routes that authenticated users should be redirected AWAY from.
-//  */
-// export const AUTH_ROUTES = ["/login", "/register"] as const;
-
-// /** The default redirect path after successful login. */
-export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
-
-// /**
-//  * Minimal, Edge-safe Auth.js configuration.
-//  * Callbacks that need DB access (e.g., signIn, session enrichment)
-//  * live in the full `auth.ts` — NOT here.
-//  */
-// export const authConfig: NextAuthConfig = {
-//   providers: [
-//     Google({
-//       clientId: process.env.GOOGLE_CLIENT_ID!,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-//     }),
-//   ],
-
-//   pages: {
-//     signIn: "/login",
-//     error: "/login",
-//   },
-
-//   callbacks: {
-//     /**
-//      * Edge-safe authorized callback.
-//      * Determines if a request is allowed to proceed based on session & route.
-//      */
-//     authorized({ auth, request: { nextUrl } }) {
-//       const isLoggedIn = !!auth?.user;
-//       const pathname = nextUrl.pathname;
-
-//       const isPublic = PUBLIC_ROUTES.some(
-//         (route) => pathname === route || pathname.startsWith(`${route}/`),
-//       );
-//       const isAuthRoute = (AUTH_ROUTES as readonly string[]).includes(pathname);
-
-//       // Redirect logged-in users away from auth pages
-//       if (isAuthRoute && isLoggedIn) {
-//         return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-//       }
-
-//       // Allow public routes without auth
-//       if (isPublic) return true;
-
-//       // Block unauthenticated access to protected routes
-//       if (!isLoggedIn) {
-//         const loginUrl = new URL("/login", nextUrl);
-//         loginUrl.searchParams.set("callbackUrl", pathname);
-//         return Response.redirect(loginUrl);
-//       }
-
-//       return true;
-//     },
-//   },
-
-//   session: { strategy: "jwt" },
-// };
-
-// // src\auth.config.ts
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// src\auth.config.ts
 
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-// 'loginSchema' is declared but its value is never read.
 /**
  * Auth configuration safe for Edge Runtime.
  * Must NOT import Mongoose, bcrypt, or any Node.js-only module.
@@ -119,34 +33,47 @@ export const authConfig: NextAuthConfig = {
      * Runs on the Edge — keep it free of DB queries.
      */
     authorized({ auth, request }) {
-      const { nextUrl } = request;
-      const isLoggedIn = !!auth?.user;
-      const hasMosque = !!auth?.user?.mosqueId;
+      
+      // const { nextUrl } = request;
+      // const isLoggedIn = !!auth?.user;
+      // const hasMosque = !!auth?.user?.mosqueId;
+      // const isEmailVerified = !!auth?.user?.emailVerified;
 
-      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-      const isOnOnboarding = nextUrl.pathname.startsWith("/onboarding");
-      const isOnAuth =
-        nextUrl.pathname.startsWith("/login") ||
-        nextUrl.pathname.startsWith("/register");
+      // const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+      // const isOnOnboarding = nextUrl.pathname.startsWith("/onboarding");
+      // const isOnAuth =
+      //   nextUrl.pathname.startsWith("/login") ||
+      //   nextUrl.pathname.startsWith("/register");
+      // const isOnWaiting = nextUrl.pathname.startsWith("/waiting-verification");
+      // const isOnVerify = nextUrl.pathname.startsWith("/verify-email");
 
-      if (isOnDashboard) {
-        if (!isLoggedIn) return false; // → redirect to /login
-        if (!hasMosque)
-          return Response.redirect(new URL("/onboarding", nextUrl));
-        return true;
-      }
+      // // Allow the verification pages for everyone
+      // if (isOnWaiting || isOnVerify) return true;
 
-      if (isOnOnboarding) {
-        if (!isLoggedIn) return false;
-        if (hasMosque) return Response.redirect(new URL("/dashboard", nextUrl));
-        return true;
-      }
+      // if (isOnDashboard) {
+      //   if (!isLoggedIn) return false; // → redirect to /login
+      //   // Block unverified credentials users
+      //   if (!isEmailVerified)
+      //     return Response.redirect(new URL("/waiting-verification", nextUrl));
+      //   if (!hasMosque)
+      //     return Response.redirect(new URL("/onboarding", nextUrl));
+      //   return true;
+      // }
 
-      if (isOnAuth && isLoggedIn) {
-        if (!hasMosque)
-          return Response.redirect(new URL("/onboarding", nextUrl));
-        return Response.redirect(new URL("/dashboard", nextUrl));
-      }
+      // if (isOnOnboarding) {
+      //   if (!isLoggedIn) return false;
+      //   if (!isEmailVerified)
+      //     return Response.redirect(new URL("/waiting-verification", nextUrl));
+      //   if (hasMosque) return Response.redirect(new URL("/dashboard", nextUrl));
+      //   return true;
+      // }
+
+      // if (isOnAuth && isLoggedIn) {
+      //   if (!isEmailVerified)
+      //     return Response.redirect(new URL("/waiting-verification", nextUrl));
+      //   const dest = hasMosque ? "/dashboard" : "/onboarding";
+      //   return Response.redirect(new URL(dest, nextUrl));
+      // }
 
       return true;
     },
@@ -158,12 +85,15 @@ export const authConfig: NextAuthConfig = {
         token.role = user.role;
         token.mosqueId = user.mosqueId;
         token.picture = user.image ?? token.picture;
+        // Persist emailVerified status in JWT
+        token.emailVerified = user.emailVerified ?? null;
       }
 
       // When update() is called from the client (after onboarding)
       if (trigger === "update" && session) {
         token.mosqueId = session.mosqueId ?? token.mosqueId;
         token.role = session.role ?? token.role;
+        token.emailVerified = session.emailVerified ?? token.emailVerified;
       }
 
       return token;
@@ -174,6 +104,8 @@ export const authConfig: NextAuthConfig = {
       session.user.role = token.role;
       session.user.mosqueId = token.mosqueId;
       session.user.image = token.picture as string | undefined;
+      session.user.emailVerified = token.emailVerified as Date | null;
+
       return session;
     },
   },

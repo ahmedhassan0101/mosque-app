@@ -38,7 +38,7 @@ export default async function StudentsPage({ searchParams }: Props) {
         </div>
         <Button
           asChild
-          className="bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-emerald-200 transition-all rounded-xl h-12 px-6"
+          className="bg-primary/90 hover:bg-emerald-700 shadow-lg hover:shadow-emerald-200 transition-all rounded-xl h-12 px-6"
         >
           <Link href="/students/new">
             <UserPlus size={18} className="ml-2" />
@@ -47,7 +47,7 @@ export default async function StudentsPage({ searchParams }: Props) {
         </Button>
         <Button
           asChild
-          className="bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-emerald-200 transition-all rounded-xl h-12 px-6"
+          className="bg-primary/90 hover:bg-emerald-700 shadow-lg hover:shadow-emerald-200 transition-all rounded-xl h-12 px-6"
         >
           <Link href="/students/import">
             <UserPlus size={18} className="ml-2" />

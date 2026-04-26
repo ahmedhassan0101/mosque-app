@@ -14,6 +14,6 @@ git push -u origin master
 ```bash
 git add .
 git commit -m "add new feature"
-git commit -m "refactor: set up layout"
+git commit -m "refactor: UI"
 git push
 ```

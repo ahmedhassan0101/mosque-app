@@ -8,7 +8,7 @@ import {
 } from "@/schemas/settings.schema";
 import { updateMosqueSettings } from "@/actions/settings.actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useTransition } from "react";
 import { FormInput } from "../form/FormInput";
@@ -43,29 +43,50 @@ export function MosqueDetailsForm({ mosque }: MosqueDetailsFormProps) {
   }
 
   return (
-    <Card>
+    <Card className="max-w-lg">
       <CardHeader>
         <CardTitle>بيانات المسجد</CardTitle>
+        <CardDescription>
+          المعلومات الأساسية التي تظهر لأعضاء المسجد والتقارير.
+        </CardDescription>
       </CardHeader>
+
       <CardContent>
         <form
+          id="mosque-details-form"
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4"
-          dir="rtl"
+          noValidate
         >
-          <FormInput control={form.control} name="name" label="اسم المسجد" />
-          <FormInput control={form.control} name="address" label="العنوان" />
+          <FormInput
+            control={form.control}
+            name="name"
+            label="اسم المسجد"
+            placeholder="مسجد النور"
+          />
+          <FormInput
+            control={form.control}
+            name="address"
+            label="العنوان"
+            placeholder="شارع الملك فهد، الرياض"
+          />
           <FormInput
             control={form.control}
             name="phone"
             label="رقم الهاتف"
             type="tel"
+            placeholder="0512345678"
+            dir="ltr"
           />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "جاري الحفظ..." : "حفظ التغييرات"}
-          </Button>
         </form>
       </CardContent>
+
+   
+      <CardFooter className="justify-start">
+        <Button type="submit" form="mosque-details-form" disabled={isPending}>
+          {isPending ? "جارٍ الحفظ..." : "حفظ التغييرات"}
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

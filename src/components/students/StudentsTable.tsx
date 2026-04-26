@@ -239,7 +239,7 @@ export function StudentsTable({ students, totalPages, page }: Props) {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50"
+                            className="h-8 w-8 text-gray-500 hover:text-primary hover:bg-emerald-50"
                           >
                             {isDeleting ? (
                               <Loader2 className="h-4 w-4 animate-spin" />
@@ -257,10 +257,7 @@ export function StudentsTable({ students, totalPages, page }: Props) {
                             className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-50"
                           >
                             <Link href={`/students/${s._id}`}>
-                              <Eye
-                                size={15}
-                                className="ml-2 text-emerald-600"
-                              />{" "}
+                              <Eye size={15} className="ml-2 text-primary" />{" "}
                               عرض الملف
                             </Link>
                           </DropdownMenuItem>

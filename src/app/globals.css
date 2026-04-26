@@ -5,14 +5,10 @@
 
 /* ─────────────────────────────────────────────
    MASJID ERP — Design System Tokens (OKLCH)
+   Palette: Emerald · Teal · Warm Slate (Dark)
+   Harmonized from Landing Page visual identity
 ───────────────────────────────────────────── */
 @theme inline {
-  /* Radius */
-  /* --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px); */
-
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -59,96 +55,182 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ── Extended Brand Tokens ──────────────────
+     Use these for manual accent overrides:
+     bg-[var(--emerald-glow)]  /  text-[var(--teal)]
+  ─────────────────────────────────────────── */
+  --color-emerald-glow: var(--emerald-glow);
+  --color-teal: var(--teal);
+  --color-amber-accent: var(--amber-accent);
+  --color-blue-accent: var(--blue-accent);
 }
 
+/* ╔══════════════════════════════════════════════╗
+   ║           LIGHT MODE  ( :root )              ║
+   ╚══════════════════════════════════════════════╝
+   Brand story:
+   • Background  → warm near-white with faint green hue (airy, clean)
+   • Card        → pure white (crisp panels)
+   • Primary     → Emerald 500 (oklch ≈ 0.696 0.17 162) — the brand hero
+   • Accent      → Teal tint (softer, secondary interactables)
+   • Muted       → cool light-green-grey surfaces & disabled text
+   • Foreground  → deep warm-slate for max readability
+*/
 :root {
   --radius: 0.75rem;
 
-  /* Light Mode Palette (Slate Teal & Sand) */
-  --background: oklch(0.98 0.005 200);
-  --foreground: oklch(0.25 0.02 210);
-  --primary: oklch(0.48 0.06 210);
-  --primary-foreground: oklch(0.98 0.005 200);
-  --accent: oklch(0.92 0.03 90);
-  --accent-foreground: oklch(0.35 0.05 90);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.02 210);
+  /* Surfaces */
+  --background: oklch(0.985 0.008 165); /* warm off-white, faint emerald tint */
+  --foreground: oklch(0.22 0.025 195); /* deep slate-green — very readable    */
+  --card: oklch(1 0 0); /* pure white cards                    */
+  --card-foreground: oklch(0.22 0.025 195);
 
-  /* Added Missing Light Mode Variables */
+  /* Popovers */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.02 210);
-  --secondary: oklch(0.94 0.008 210);
-  --secondary-foreground: oklch(0.3 0.02 210);
+  --popover-foreground: oklch(0.22 0.025 195);
 
-  --muted: oklch(0.94 0.008 210);
-  --muted-foreground: oklch(0.55 0.02 210);
-  --border: oklch(0.88 0.01 210);
-  --input: oklch(0.94 0.008 210);
-  --ring: oklch(0.48 0.06 210);
-  --destructive: oklch(0.55 0.18 25);
-  --success: oklch(0.55 0.12 145);
-  --warning: oklch(0.72 0.13 75);
+  /* ── Primary: Emerald 500 ──
+     Used for: buttons, active tabs, progress bars, CTAs, logo accent
+     Tailwind classes: bg-primary  text-primary  border-primary  ring-primary
+  */
+  --primary: oklch(0.696 0.17 162); /* Emerald 500 */
+  --primary-foreground: oklch(1 0 0); /* white text on emerald */
 
-  /* Default Shadcn Charts for Data Viz */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* ── Secondary: Muted Teal-Green ──
+     Used for: secondary buttons, ghost states, subtle surfaces
+     Tailwind: bg-secondary  text-secondary-foreground
+  */
+  --secondary: oklch(0.935 0.03 162); /* faint emerald wash */
+  --secondary-foreground: oklch(0.35 0.06 162); /* mid emerald text  */
 
-  /* Sidebar specifics */
-  --sidebar: oklch(0.96 0.01 210);
-  --sidebar-foreground: oklch(0.3 0.02 210);
-  --sidebar-primary: oklch(0.48 0.06 210);
-  --sidebar-primary-foreground: oklch(0.98 0.005 200);
-  --sidebar-accent: oklch(0.9 0.02 210);
-  --sidebar-accent-foreground: oklch(0.3 0.02 210);
-  --sidebar-border: oklch(0.88 0.01 210);
-  --sidebar-ring: oklch(0.48 0.06 210);
+  /* ── Muted: Greyed backgrounds + helper text ──
+     Used for: nav bg, table rows alt, code blocks, disabled
+     Tailwind: bg-muted  text-muted-foreground
+  */
+  --muted: oklch(0.94 0.015 165);
+  --muted-foreground: oklch(0.52 0.025 175);
+
+  /* ── Accent: Soft Teal ──
+     Used for: hover highlights, badges bg, notification dots
+     Tailwind: bg-accent  text-accent-foreground
+  */
+  --accent: oklch(0.91 0.05 175); /* teal-tinged light surface */
+  --accent-foreground: oklch(0.3 0.07 175); /* dark teal text            */
+
+  /* ── Semantic ── */
+  --destructive: oklch(0.58 0.2 25); /* red-orange             */
+  --success: oklch(0.696 0.17 162); /* same as primary: emerald */
+  --warning: oklch(0.75 0.14 75); /* amber                  */
+
+  /* ── Borders & Inputs ── */
+  --border: oklch(0.88 0.02 165);
+  --input: oklch(0.94 0.015 165);
+  --ring: oklch(0.696 0.17 162); /* emerald focus ring */
+
+  /* ── Charts ──
+     Tuned to look natural alongside emerald primary
+  */
+  --chart-1: oklch(0.696 0.17 162); /* emerald — primary series      */
+  --chart-2: oklch(0.65 0.13 195); /* teal-blue — secondary series  */
+  --chart-3: oklch(0.75 0.14 75); /* amber                         */
+  --chart-4: oklch(0.6 0.15 255); /* indigo/blue                   */
+  --chart-5: oklch(0.65 0.18 25); /* warm coral                    */
+
+  /* ── Sidebar ── */
+  --sidebar: oklch(0.975 0.01 165);
+  --sidebar-foreground: oklch(0.28 0.025 195);
+  --sidebar-primary: oklch(0.696 0.17 162);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.91 0.05 175);
+  --sidebar-accent-foreground: oklch(0.3 0.07 175);
+  --sidebar-border: oklch(0.88 0.02 165);
+  --sidebar-ring: oklch(0.696 0.17 162);
+
+  /* ── Extended Brand Tokens ── */
+  --emerald-glow: oklch(
+    0.696 0.17 162 / 0.15
+  ); /* transparent emerald for glow divs */
+  --teal: oklch(0.66 0.14 190);
+  --amber-accent: oklch(0.75 0.14 75);
+  --blue-accent: oklch(0.6 0.15 255);
 }
 
+/* ╔══════════════════════════════════════════════╗
+   ║           DARK MODE  ( .dark )               ║
+   ╚══════════════════════════════════════════════╝
+   Brand story:
+   • Background  → very deep warm-slate (not pure black — warmer, premium)
+   • Card        → slightly elevated dark surface
+   • Primary     → Emerald 400-ish (lighter for contrast on dark)
+   • Accent      → dark teal tint
+   • Muted       → subtle dark surfaces and softer helper text
+*/
 .dark {
-  /* Dark Mode Palette (Deep Petrol & Sand) */
-  --background: oklch(0.18 0.015 210);
-  --foreground: oklch(0.92 0.01 210);
-  --primary: oklch(0.65 0.07 210);
-  --primary-foreground: oklch(0.15 0.02 210);
-  --accent: oklch(0.28 0.03 210);
-  --accent-foreground: oklch(0.85 0.03 90);
-  --card: oklch(0.22 0.02 210);
-  --card-foreground: oklch(0.92 0.01 210);
+  /* Surfaces */
+  --background: oklch(0.165 0.018 210); /* deep warm-slate, near-black     */
+  --foreground: oklch(0.93 0.012 180); /* soft warm-white, easy on eyes   */
+  --card: oklch(0.205 0.02 205); /* slightly lifted dark panel      */
+  --card-foreground: oklch(0.93 0.012 180);
 
-  /* Added Missing Dark Mode Variables */
-  --popover: oklch(0.22 0.02 210);
-  --popover-foreground: oklch(0.92 0.01 210);
-  --secondary: oklch(0.26 0.02 210);
-  --secondary-foreground: oklch(0.92 0.01 210);
+  /* Popovers */
+  --popover: oklch(0.205 0.02 205);
+  --popover-foreground: oklch(0.93 0.012 180);
 
-  --muted: oklch(0.26 0.02 210);
-  --muted-foreground: oklch(0.6 0.02 210);
-  --border: oklch(0.3 0.02 210);
-  --input: oklch(0.26 0.02 210);
-  --ring: oklch(0.65 0.07 210);
-  --destructive: oklch(0.65 0.18 25);
-  --success: oklch(0.65 0.12 145);
-  --warning: oklch(0.78 0.13 75);
+  /* ── Primary: Emerald 400 (lighter for dark bg) ──
+     Lightened so it pops on dark surfaces with WCAG AA contrast
+  */
+  --primary: oklch(0.76 0.16 162); /* Emerald ~400 on dark          */
+  --primary-foreground: oklch(
+    0.12 0.02 195
+  ); /* very dark text on bright btn  */
 
-  /* Default Shadcn Dark Charts */
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  /* ── Secondary ── */
+  --secondary: oklch(0.265 0.03 175); /* dark teal-green surface        */
+  --secondary-foreground: oklch(
+    0.88 0.03 165
+  ); /* light green text on secondary  */
 
-  /* Sidebar specifics */
-  --sidebar: oklch(0.15 0.02 210);
-  --sidebar-foreground: oklch(0.8 0.01 210);
-  --sidebar-primary: oklch(0.65 0.07 210);
-  --sidebar-primary-foreground: oklch(0.15 0.02 210);
-  --sidebar-accent: oklch(0.26 0.02 210);
-  --sidebar-accent-foreground: oklch(0.8 0.01 210);
-  --sidebar-border: oklch(0.28 0.02 210);
-  --sidebar-ring: oklch(0.65 0.07 210);
+  /* ── Muted ── */
+  --muted: oklch(0.248 0.022 200);
+  --muted-foreground: oklch(0.58 0.025 180);
+
+  /* ── Accent: Dark Teal Wash ── */
+  --accent: oklch(0.265 0.04 175);
+  --accent-foreground: oklch(0.88 0.05 165);
+
+  /* ── Semantic ── */
+  --destructive: oklch(0.65 0.2 25);
+  --success: oklch(0.76 0.16 162);
+  --warning: oklch(0.8 0.14 75);
+
+  /* ── Borders & Inputs ── */
+  --border: oklch(0.3 0.025 200);
+  --input: oklch(0.248 0.022 200);
+  --ring: oklch(0.76 0.16 162); /* emerald ring in dark           */
+
+  /* ── Charts ── */
+  --chart-1: oklch(0.76 0.16 162); /* emerald — primary        */
+  --chart-2: oklch(0.7 0.12 195); /* teal-blue                */
+  --chart-3: oklch(0.8 0.14 75); /* amber                    */
+  --chart-4: oklch(0.65 0.15 255); /* indigo                   */
+  --chart-5: oklch(0.68 0.18 25); /* coral                    */
+
+  /* ── Sidebar ── */
+  --sidebar: oklch(0.14 0.018 210);
+  --sidebar-foreground: oklch(0.82 0.015 180);
+  --sidebar-primary: oklch(0.76 0.16 162);
+  --sidebar-primary-foreground: oklch(0.12 0.02 195);
+  --sidebar-accent: oklch(0.248 0.03 175);
+  --sidebar-accent-foreground: oklch(0.82 0.03 165);
+  --sidebar-border: oklch(0.265 0.022 205);
+  --sidebar-ring: oklch(0.76 0.16 162);
+
+  /* ── Extended Brand Tokens ── */
+  --emerald-glow: oklch(0.76 0.16 162 / 0.12);
+  --teal: oklch(0.7 0.13 190);
+  --amber-accent: oklch(0.8 0.14 75);
+  --blue-accent: oklch(0.65 0.15 255);
 }
 
 /* ─────────────────────────────────────────────
@@ -263,6 +345,11 @@ body {
   }
   .focus-ring:focus-visible {
     outline-color: var(--ring);
+  }
+
+  /* ── Emerald glow helper (replaces raw emerald-500/10 divs) ── */
+  .bg-primary-glow {
+    background-color: var(--emerald-glow);
   }
 }
 

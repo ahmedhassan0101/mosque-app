@@ -15,7 +15,6 @@ const ACTIVITIES = [
   { label: "تجويد", value: "tajweed" },
   { label: "مقرأة", value: "maqraa" },
   { label: "ملعب", value: "playground" },
-
 ];
 
 export function StudentFilters() {
@@ -27,8 +26,9 @@ export function StudentFilters() {
 
   function updateFilter(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set(key, value); else params.delete(key);
-    params.set("page", "1"); 
+    if (value) params.set(key, value);
+    else params.delete(key);
+    params.set("page", "1");
 
     startTransition(() => {
       router.push(`/students?${params.toString()}`);
@@ -41,13 +41,13 @@ export function StudentFilters() {
         <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
         <Input
           placeholder="ابحث عن طالب..."
-          className="pr-10 h-11 rounded-xl shadow-sm focus-visible:ring-emerald-500"
+          className="pr-10 h-11 rounded-xl shadow-sm focus-visible:ring-primary"
           defaultValue={searchParams.get("search") || ""}
           onChange={(e) => updateFilter("search", e.target.value)}
         />
       </div>
 
-{/* <TableCell>
+      {/* <TableCell>
                       <div className="flex gap-1.5 flex-wrap">
                         {s.enrollments.map((act) => {
                           const config = ACTIVITY_LABELS[act];
@@ -81,7 +81,9 @@ export function StudentFilters() {
             key={act.value}
             variant={currentActivity === act.value ? "default" : "outline"}
             className={`cursor-pointer px-4 py-1.5 rounded-lg transition-all ${
-              currentActivity === act.value ? "bg-emerald-600 hover:bg-emerald-700 shadow-md scale-105" : "hover:border-emerald-200"
+              currentActivity === act.value
+                ? "bg-primary/90 hover:bg-emerald-700 shadow-md scale-105"
+                : "hover:border-emerald-200"
             }`}
             onClick={() => updateFilter("activity", act.value)}
           >

@@ -37,7 +37,7 @@ const STATS: StatCard[] = [
     change: "+١٢ هذا الشهر",
     positive: true,
     icon: Users,
-    colorClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+    colorClass: "text-(--blue-accent)/10 text-blue-600 dark:text-blue-400",
   },
   {
     label: "المعلمون",
@@ -45,7 +45,7 @@ const STATS: StatCard[] = [
     change: "+٢ هذا الشهر",
     positive: true,
     icon: GraduationCap,
-    colorClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    colorClass: "bg-primary/10 text-primary",
   },
   {
     label: "الحلقات النشطة",
@@ -53,7 +53,7 @@ const STATS: StatCard[] = [
     change: "بدون تغيير",
     positive: true,
     icon: BookOpen,
-    colorClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    colorClass: "bg-warning/10 -warning",
   },
   {
     label: "الإيرادات (ريال)",
@@ -198,7 +198,6 @@ export default function DashboardPage() {
                 {action}
               </button>
             ))}
-          
           </div>
         </div>
         <div className="glass-card rounded-xl p-5 shadow-sm">

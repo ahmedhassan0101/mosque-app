@@ -12,15 +12,18 @@ export interface IUser extends Document {
   role: UserRole;
   provider: Provider;
   mosqueId: Types.ObjectId | null;
+  // ─── Password Reset ───────────────────────────────
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+  // ─── Email Verification ───────────────────────────
+  emailVerified?: Date;
+  verifyToken?: string;
+  verifyTokenExpiry?: Date;
   createdAt: Date;
   updatedAt: Date;
   /** Compares plain-text password against stored hash */
   comparePassword(candidate: string): Promise<boolean>;
 }
-
-
 
 const userSchema = new Schema<IUser>(
   {
@@ -52,9 +55,12 @@ const userSchema = new Schema<IUser>(
       default: "credentials",
     },
     mosqueId: { type: Schema.Types.ObjectId, ref: "Mosque", default: null },
-    // resetTokens: { type: [resetTokenSchema], default: [] },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
+    // ─── Email Verification Fields ────────────────────
+    emailVerified: { type: Date, default: null },
+    verifyToken: { type: String, index: true },
+    verifyTokenExpiry: { type: Date },
   },
   {
     timestamps: true,
@@ -64,8 +70,8 @@ const userSchema = new Schema<IUser>(
         ret.id = ret._id.toString();
         delete (ret as any)._id;
         delete (ret as any).__v;
-        delete (ret as any).password;
-        delete (ret as any).resetTokens;
+        delete (ret as any).resetPasswordToken;
+        delete (ret as any).verifyToken;
       },
     },
   },

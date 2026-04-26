@@ -23,12 +23,16 @@ interface SettingsTabsProps {
   currentUserId: string;
 }
 
-export function SettingsTabs({ mosque, users, currentUserId }: SettingsTabsProps) {
+export function SettingsTabs({
+  mosque,
+  users,
+  currentUserId,
+}: SettingsTabsProps) {
   return (
     <Tabs defaultValue="details" dir="rtl">
-      <TabsList className="mb-6">
+      <TabsList className="mb-6 w-fit">
         <TabsTrigger value="details">بيانات المسجد</TabsTrigger>
-        <TabsTrigger value="users">إدارة المستخدمين</TabsTrigger>
+        <TabsTrigger value="users">المستخدمون</TabsTrigger>
         <TabsTrigger value="invite">رمز الدعوة</TabsTrigger>
       </TabsList>
 

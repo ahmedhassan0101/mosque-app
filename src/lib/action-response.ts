@@ -62,11 +62,17 @@ export function handleActionError(
 ): ActionResponse<never> {
   // 1. Log the error internally for the dev team
   console.error(`[Error in ${context}]:`, error);
+ 
 
   // 2. Handle Next.js Redirects (Crucial: Next.js uses errors to throw redirects)
   // If you ever use redirect() inside an action, you MUST re-throw the error.
   if (error instanceof Error && error.message === "NEXT_REDIRECT") {
     throw error;
+  }
+
+  // Handle the unverified email signal from the authorize callback
+  if (error instanceof Error && error.message === "EMAIL_NOT_VERIFIED") {
+    return fail("يرجى تأكيد بريدك الإلكتروني أولاً قبل تسجيل الدخول.");
   }
 
   // 3. Handle NextAuth specific errors

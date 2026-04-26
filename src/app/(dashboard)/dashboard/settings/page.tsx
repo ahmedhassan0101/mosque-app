@@ -13,14 +13,18 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4" dir="rtl">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold">إعدادات المسجد</h1>
-        <p className="text-muted-foreground text-sm">
+    <div dir="rtl" className="space-y-6">
+      {/* ── Page header ─────────────────────────────────────────── */}
+      <div>
+        <h1 className="text-xl font-bold tracking-tight text-foreground">
+          إعدادات المسجد
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           إدارة تفاصيل المسجد، الأعضاء، وصلاحيات الوصول.
         </p>
-      </header>
+      </div>
 
+      {/* ── Tabs ────────────────────────────────────────────────── */}
       <SettingsTabs
         mosque={data.mosque}
         users={data.users}

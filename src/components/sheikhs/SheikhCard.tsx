@@ -62,7 +62,7 @@ export function SheikhCard({ sheikh }: SheikhCardProps) {
             </h3>
             {sheikh.phone ? (
               <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-1.5 font-medium">
-                <Phone size={12} className="text-emerald-500" />
+                <Phone size={12} className="text-primary" />
                 {sheikh.phone}
               </p>
             ) : (
@@ -74,7 +74,7 @@ export function SheikhCard({ sheikh }: SheikhCardProps) {
         {/* ── المجموعات (Groups) ── */}
         <div className="bg-gray-50/50 rounded-xl p-3 border border-gray-100 min-h-22.5">
           <div className="flex items-center gap-2 mb-2.5 text-xs font-semibold text-gray-500">
-            <BookOpen size={13} className="text-amber-500" />
+            <BookOpen size={13} className="text-warning" />
             <span>المجموعات الحالية ({sheikh.groups.length})</span>
           </div>
 
@@ -112,7 +112,7 @@ export function SheikhCard({ sheikh }: SheikhCardProps) {
                 );
               })}
               {sheikh.groups.length > 3 && (
-                <p className="text-xs text-center text-emerald-600 font-medium pt-1">
+                <p className="text-xs text-center text-primary font-medium pt-1">
                   + {sheikh.groups.length - 3} مجموعات أخرى
                 </p>
               )}

@@ -1,3 +1,5 @@
+// constants/navigation.ts
+
 import {
   LayoutDashboard,
   Users,
@@ -10,26 +12,49 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-/** Represents a single navigation item in the sidebar */
-export interface NavItem {
-  /** Arabic display label */
+/* ─────────────────────────────────────────────────────────────
+   Types
+───────────────────────────────────────────────────────────── */
+
+export interface NavChild {
   label: string;
-  /** Route path */
   href: string;
-  /** Lucide icon component */
-  icon: LucideIcon;
-  /** Optional badge count */
-  badge?: number;
-  /** Nested sub-items */
-  children?: Omit<NavItem, "icon" | "children">[];
 }
 
-/** Represents a grouped section in the sidebar */
+export interface NavItem {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  /** Optional numeric badge (e.g. pending count) */
+  badge?: number;
+  /** Sub-routes rendered as indented leaf links */
+  children?: NavChild[];
+  /**
+   * Roles that can see this item.
+   * Omit (undefined) = visible to all roles.
+   * The Sidebar component enforces this at section level too.
+   */
+  roles?: string[];
+}
+
 export interface NavSection {
-  /** Arabic section title */
   title: string;
   items: NavItem[];
+  /**
+   * If set, the entire section is restricted to these roles.
+   * The Sidebar filters sections before rendering.
+   */
+  roles?: string[];
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Navigation Tree
+   
+   Architectural note:
+   Sections are the primary grouping unit. Role filtering happens
+   once at the section level in Sidebar, keeping nav data clean
+   and the component dumb about auth logic.
+───────────────────────────────────────────────────────────── */
 
 export const NAV_SECTIONS: NavSection[] = [
   {
@@ -42,6 +67,7 @@ export const NAV_SECTIONS: NavSection[] = [
       },
     ],
   },
+
   {
     title: "إدارة الأفراد",
     items: [
@@ -67,11 +93,12 @@ export const NAV_SECTIONS: NavSection[] = [
       },
     ],
   },
+
   {
     title: "إدارة التعليم",
     items: [
       {
-        label: "الدروس والحلقات",
+        label: "الحلقات والدروس",
         href: "/dashboard/circles",
         icon: BookOpen,
         children: [
@@ -87,8 +114,9 @@ export const NAV_SECTIONS: NavSection[] = [
       },
     ],
   },
+
   {
-    title: "الأنشطة والإعلانات",
+    title: "الأنشطة",
     items: [
       {
         label: "الفعاليات",
@@ -97,11 +125,13 @@ export const NAV_SECTIONS: NavSection[] = [
       },
     ],
   },
+
   {
-    title: "الإدارة المالية",
+    title: "المالية",
+    roles: ["ADMIN"],
     items: [
       {
-        label: "المالية",
+        label: "الإدارة المالية",
         href: "/dashboard/finance",
         icon: Banknote,
         children: [
@@ -112,11 +142,14 @@ export const NAV_SECTIONS: NavSection[] = [
       },
     ],
   },
+
   {
+    // Entire section gated to ADMIN — Sidebar filters this
     title: "الإعدادات",
+    roles: ["ADMIN"],
     items: [
       {
-        label: "الإعدادات",
+        label: "إعدادات النظام",
         href: "/dashboard/settings",
         icon: Settings,
       },
