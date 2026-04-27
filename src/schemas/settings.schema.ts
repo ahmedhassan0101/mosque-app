@@ -9,7 +9,6 @@ export const updateMosqueSchema = z.object({
 
 export const updateUserRoleSchema = z.object({
   userId: z.string().min(1),
-  // كتبت الرول يدوي عشان مش عايز السوبر ادمن
   newRole: z.enum(["ADMIN", "SUPERVISOR"] as const),
 });
 

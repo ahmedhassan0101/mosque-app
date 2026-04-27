@@ -1,11 +1,11 @@
 "use server";
 
-import { connectDB }       from "@/lib/db/connect";
-import Student             from "@/models/Student";
-import { getMosqueId }     from "@/lib/auth/get-context";
-import { studentSchema }   from "@/lib/validations/student";
-import { revalidatePath }  from "next/cache";
-import { redirect }        from "next/navigation";
+import { connectDB } from "@/lib/db/connect";
+import Student from "@/models/Student";
+import { getMosqueId } from "@/lib/auth/get-context";
+import { studentSchema } from "@/lib/validations/student";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import type { StudentFormData } from "@/lib/validations/student";
 
 type ActionResult = { error: string } | undefined;
@@ -17,7 +17,7 @@ type ActionResult = { error: string } | undefined;
  */
 export async function saveStudentAction(
   data: StudentFormData,
-  id?: string
+  id?: string,
 ): Promise<ActionResult> {
   const parsed = studentSchema.safeParse(data);
   if (!parsed.success) {
@@ -32,7 +32,7 @@ export async function saveStudentAction(
       const updated = await Student.findOneAndUpdate(
         { _id: id, mosqueId },
         { $set: parsed.data },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       );
       if (!updated) return { error: "الطالب غير موجود" };
     } else {
@@ -75,7 +75,6 @@ export async function deleteStudentAction(id: string): Promise<ActionResult> {
 // import { StudentFormData, studentSchema } from "../validations/student";
 // import { redirect } from "next/navigation";
 
-
 // export async function saveStudentAction(data: StudentFormData, id?: string) {
 //   try {
 //     const mosqueId = await getMosqueId();
@@ -105,7 +104,6 @@ export async function deleteStudentAction(id: string): Promise<ActionResult> {
 
 //   redirect("/students");
 // }
-
 
 // export async function deleteStudentAction(id: string) {
 //   try {

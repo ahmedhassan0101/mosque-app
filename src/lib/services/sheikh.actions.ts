@@ -57,29 +57,26 @@
 // }
 "use server";
 
-import { connectDB }      from "@/lib/db/connect";
-import Sheikh             from "@/models/Sheikh";
-import { getMosqueId }    from "@/lib/auth/get-context";
-import { sheikhSchema }   from "@/lib/validations/sheikh";
+import { connectDB } from "@/lib/db/connect";
+import Sheikh from "@/models/Sheikh";
+import { getMosqueId } from "@/lib/auth/get-context";
+import { sheikhSchema } from "@/lib/validations/sheikh";
 import { revalidatePath } from "next/cache";
-import { redirect }       from "next/navigation";
-import type { z }         from "zod";
+import { redirect } from "next/navigation";
+import type { z } from "zod";
 
-type SheikhInput  = z.infer<typeof sheikhSchema>;
+type SheikhInput = z.infer<typeof sheikhSchema>;
 type ActionResult = { error: string } | undefined;
 
 /**
  * saveSheikhAction
  * Creates or updates a sheikh.
  *
- * WHY redirect() is OUTSIDE try/catch:
- * redirect() internally throws a special Next.js error (NEXT_REDIRECT).
- * If placed inside catch{}, that throw gets caught and redirect never fires.
- * Correct pattern: do all DB work inside try/catch, then redirect after.
+
  */
 export async function saveSheikhAction(
   data: SheikhInput,
-  id?: string
+  id?: string,
 ): Promise<ActionResult> {
   // Validate before touching the DB
   const parsed = sheikhSchema.safeParse(data);
@@ -96,7 +93,7 @@ export async function saveSheikhAction(
       const updated = await Sheikh.findOneAndUpdate(
         { _id: id, mosqueId },
         { $set: parsed.data },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       );
       if (!updated) return { error: "الشيخ غير موجود" };
     } else {

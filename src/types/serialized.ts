@@ -2,7 +2,6 @@
 
 import type { Types } from "mongoose";
 import type { ISheikh, IStudent, IGroup } from "./index";
-
 /**
  * Serialize<T> — converts Mongoose types to JSON-safe primitives
  *
@@ -44,7 +43,18 @@ import type { ISheikh, IStudent, IGroup } from "./index";
 //           : // everything else (string, number, boolean, arrays) → unchanged
 //             T[K];
 // };
-type Serialize<T> = {
+// type Serialize<T> = {
+//   [K in keyof T]: T[K] extends Types.ObjectId
+//     ? string
+//     : T[K] extends Date
+//       ? string
+//       : T[K] extends Types.ObjectId | undefined
+//         ? string | undefined
+//         : T[K] extends Date | undefined
+//           ? string | undefined
+//           : T[K];
+// };
+export type Serialize<T> = {
   [K in keyof T]: T[K] extends Types.ObjectId
     ? string
     : T[K] extends Date
@@ -53,9 +63,10 @@ type Serialize<T> = {
         ? string | undefined
         : T[K] extends Date | undefined
           ? string | undefined
-          : T[K];
+          : T[K] extends Array<infer U>
+            ? Array<Serialize<U>>
+            : T[K];
 };
-
 
 // ─── Base serialized models ────────────────────────────────────────────────
 // Direct 1-to-1 mapping from the Mongoose interface
