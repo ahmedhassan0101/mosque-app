@@ -12,9 +12,10 @@ import { toast } from "sonner";
 import { saveTeacher } from "@/actions/teacher.actions";
 import { useRouter } from "next/navigation";
 import { FormImageUpload } from "../form/form-image-upload";
+import { TeacherSerialized } from "@/lib/data/teacher.data";
 
 type TeacherFormProps = {
-  initialData?: TeacherInput;
+  initialData?: TeacherSerialized;
   teacherId?: string;
 };
 
@@ -24,16 +25,15 @@ export default function TeacherForm({
 }: TeacherFormProps) {
   const isEdit = !!teacherId;
   const router = useRouter();
-
+  const { name = "", phone = "", image = "", notes = "" } = initialData || {};
   const [isPending, startTransition] = useTransition();
   const form = useForm<TeacherInput>({
     resolver: zodResolver(teacherSchema),
     defaultValues: {
-      name: "",
-      phone: "",
-      image: "",
-      notes: "",
-      ...initialData,
+      name,
+      phone,
+      image,
+      notes,
     },
   });
 

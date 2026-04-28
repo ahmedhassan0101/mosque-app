@@ -14,6 +14,7 @@ git push -u origin master
 ```bash
 git add .
 git commit -m "add new feature"
+git commit -m "feat: Add Student Model"
 git commit -m "refactor: UI"
 git push
 ```

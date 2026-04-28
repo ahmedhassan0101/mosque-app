@@ -4,11 +4,12 @@
 import { cache } from "react";
 import { getMosqueId } from "../auth/get-context";
 import { connectDB } from "../db/db";
-import Teacher from "@/models/teacher.mode";
-import { ITeacher } from "@/models/teacher.mode";
+import Teacher, { type ITeacher } from "@/models/teacher.mode";
+
 import { Serialize } from "@/types/serialized";
 
 export type TeacherSerialized = Serialize<ITeacher>;
+
 function serializeTeacher(doc: any): TeacherSerialized | null {
   if (!doc) return null;
 

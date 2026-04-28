@@ -12,6 +12,8 @@ export default async function EditTeacherPage({
 }: EditTeacherPageProps) {
   const { id } = await params;
   const teacher = await getTeacherById(id);
+  // the type of teacher
+
 
   if (!teacher) notFound();
 

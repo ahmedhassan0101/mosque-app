@@ -30,6 +30,7 @@ import {
   X,
   Sparkles,
 } from "lucide-react";
+import Link from "next/link";
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 
@@ -172,14 +173,14 @@ function Navbar() {
           >
             <div className="px-6 py-4 flex flex-col gap-4">
               {links.map((l) => (
-                <a
+                <Link
                   key={l.href}
                   href={l.href}
                   className="text-sm font-medium text-foreground"
                   onClick={() => setOpen(false)}
                 >
                   {l.label}
-                </a>
+                </Link>
               ))}
               <a
                 href="/register"

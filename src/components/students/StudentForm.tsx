@@ -1,40 +1,29 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-
-import { studentSchema, StudentFormData } from "@/lib/validations/student";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-import { FormInput } from "@/components/form/FormInput";
-import { FormRadioGroup } from "@/components/form/FormRadioGroup";
-import { FormCheckboxGroup } from "@/components/form/FormCheckboxGroup";
-import { FormSwitch } from "@/components/form/FormSwitch";
-import { FormTextarea } from "@/components/form/FormTextarea";
-
-import { FormDatePicker } from "../form/FormDatePicker";
-import { SURAH_OPTIONS } from "@/lib/quran";
-import { FormSelect } from "../form/FormSelect";
-import { FormImageUpload } from "../form/FormImageUpload";
 import { useTransition } from "react";
-import { saveStudentAction } from "@/lib/services/student.actions";
+import { useRouter } from "next/navigation";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-interface StudentFormProps {
-  defaultValues?: Partial<StudentFormData>;
+import { studentSchema, type StudentInput } from "@/schemas/student.schema";
+import { saveStudent } from "@/actions/student.actions";
+import { StudentSerialized } from "@/lib/data/student.data";
+
+import { Button } from "@/components/ui/button";
+import { FormInput } from "@/components/form/FormInput";
+import { FormRadioGroup } from "@/components/form/FormRadioGroup";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import { FormDatePicker } from "@/components/form/FormDatePicker";
+import { FormSelect } from "@/components/form/FormSelect";
+import { SURAH_OPTIONS } from "@/lib/quran";
+import { FormImageUpload } from "../form/form-image-upload";
+
+interface Props {
+  initialData?: StudentSerialized | null;
   studentId?: string;
 }
-
-const ACTIVITY_OPTIONS = [
-  { label: "حلقة القرآن", value: "quran" },
-  { label: "حلقة التربية", value: "tarbiya" },
-  { label: "حلقة التجويد", value: "tajweed" },
-  { label: "المقرأة", value: "maqraa" },
-  { label: "الملعب", value: "playground" },
-];
 
 const LEVEL_OPTIONS = [
   { label: "مبتدئ", value: "beginner" },
@@ -42,232 +31,202 @@ const LEVEL_OPTIONS = [
   { label: "متقدم", value: "advanced" },
 ];
 
-export function StudentForm({ defaultValues, studentId }: StudentFormProps) {
+export default function StudentForm({ initialData, studentId }: Props) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const isEdit = !!studentId;
 
-  const [isPending, startTransition] = useTransition();
-
-
-  const form = useForm<StudentFormData>({
+  // 1. إعداد الهوك
+  const form = useForm<StudentInput>({
     resolver: zodResolver(studentSchema),
+
     defaultValues: {
-      name: "",
-      phone: "",
-      guardianName: "",
-      guardianPhone: "",
-      address: "",
-      level: "beginner",
-      enrollments: [],
-      trackIbadah: false,
-      currentSurah: "",
-      photo: "",
-      ...defaultValues,
+      name: initialData?.name ?? "",
+
+      birthDate: initialData?.birthDate
+        ? new Date(initialData.birthDate)
+        : undefined,
+      gender: initialData?.gender ?? undefined,
+      level: initialData?.level ?? undefined,
+
+      guardians: initialData?.guardians ?? [{ relation: "أب", phone: "" }],
+      currentSurah: initialData?.currentSurah ?? "الفاتحة",
+      currentAyah: initialData?.currentAyah ?? 1,
+      image: initialData?.image ?? "",
+      notes: initialData?.notes ?? "",
+      phone: initialData?.phone ?? "",
+      address: initialData?.address ?? "",
     },
   });
 
-  const onSubmit = async (data: StudentFormData) => {
-    // await mutateAsync(data);
-    startTransition(async () => {
-      const result = await saveStudentAction(data, studentId);
+  // 2. التحكم في مصفوفة أولياء الأمور
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "guardians",
+  });
 
-      if (result?.error) {
-        toast.error(result.error);
+  // 3. معالج الإرسال
+  const onSubmit = (data: StudentInput) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
+
+    startTransition(async () => {
+      const result = await saveStudent(data, studentId);
+
+      if (result.status === "success") {
+        toast.success(result.message);
+        router.push("/dashboard/students");
+        router.refresh();
       } else {
-        toast.success(isEdit ? "تم تحديث البيانات بنجاح" : "تمت الإضافة بنجاح");
+        toast.error(result.message);
       }
     });
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      {/* ── الصورة الشخصية ── */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">الصورة الشخصية</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormImageUpload
-            control={form.control}
-            name="photo"
-            label="صورة الطالب"
-          />
-        </CardContent>
-      </Card>
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-8 bg-white p-6 rounded-lg border"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormImageUpload
+          control={form.control}
+          name="image"
+          label="صورة المعلم"
+          folderCategory="students"
+        />
+      </div>
 
-      {/* ── البيانات الأساسية ── */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">البيانات الأساسية للطالب</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <FormInput
-            control={form.control}
-            name="name"
-            label="الاسم كاملاً"
-            placeholder="أحمد محمد علي"
-            required
-          />
+      <FormInput
+        control={form.control}
+        name="name"
+        label="اسم الطالب"
+        required
+      />
+      <FormDatePicker
+        control={form.control}
+        name="birthDate"
+        label="تاريخ الميلاد"
+        required
+      />
+      <FormInput
+        control={form.control}
+        name="phone"
+        label="تليفون الطالب (إن وجد)"
+        placeholder="01xxxxxxxxx"
+        dir="ltr"
+      />
+   
+      <FormRadioGroup
+        control={form.control}
+        name="gender"
+        label="نوع الطالب"
+        orientation="horizontal"
+        options={[
+          { label: "ذكر", value: "male" },
+          { label: "أنثى", value: "female" },
+        ]}
+        required
+      />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormDatePicker
-              control={form.control}
-              name="birthDate"
-              label="تاريخ الميلاد"
-              required
-              placeholder="2012"
-            />
-            <FormInput
-              control={form.control}
-              name="phone"
-              label="تليفون الطالب (إن وجد)"
-              placeholder="01xxxxxxxxx"
-              dir="ltr"
-            />
+      <FormInput
+        control={form.control}
+        name="address"
+        label="العنوان"
+        placeholder="المنطقة / الشارع"
+      />
+      <FormRadioGroup
+        control={form.control}
+        name="level"
+        label="المستوى"
+        options={LEVEL_OPTIONS}
+      />
+
+      <hr />
+
+      {/* قسم أولياء الأمور (Dynamic Field Array) */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-medium">
+            بيانات التواصل (أولياء الأمور)
+          </h3>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => append({ relation: "", phone: "" })}
+          >
+            <Plus size={16} className="ml-1" /> إضافة ولي أمر
+          </Button>
+        </div>
+
+        {fields.map((field, index) => (
+          <div
+            key={field.id}
+            className="flex gap-4 items-end border p-4 rounded-md bg-gray-50"
+          >
+            <div className="flex-1">
+              <FormInput
+                control={form.control}
+                name={`guardians.${index}.relation`}
+                label="صلة القرابة"
+                placeholder="أب، أم، أخ..."
+              />
+            </div>
+            <div className="flex-1">
+              <FormInput
+                control={form.control}
+                name={`guardians.${index}.phone`}
+                label="رقم الهاتف"
+                placeholder="01xxxxxxxxx"
+              />
+            </div>
+            {fields.length > 1 && (
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => remove(index)}
+              >
+                <Trash2 size={18} />
+              </Button>
+            )}
           </div>
+        ))}
+      </div>
 
-          <FormInput
-            control={form.control}
-            name="address"
-            label="العنوان"
-            placeholder="المنطقة / الشارع"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormRadioGroup
-              control={form.control}
-              name="level"
-              label="مستوى الطالب"
-              orientation="horizontal"
-              options={LEVEL_OPTIONS}
-              required
-            />
-            <FormRadioGroup
-              control={form.control}
-              name="gender"
-              label="نوع الطالب"
-              orientation="horizontal"
-              options={[
-                { label: "ذكر", value: "male" },
-                { label: "أنثى", value: "female" },
-              ]}
-              required
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <hr />
 
-      {/* ── بيانات ولي الأمر ── */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">بيانات ولي الأمر</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <FormInput
-            control={form.control}
-            name="guardianName"
-            label="اسم ولي الأمر"
-            placeholder="محمد علي"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormInput
-              control={form.control}
-              name="guardianPhone"
-              label="تليفون ولي الأمر الرئيسي"
-              placeholder="01xxxxxxxxx"
-              dir="ltr"
-              required
-            />
-            <FormInput
-              control={form.control}
-              name="guardianPhone2"
-              label="تليفون احتياطي"
-              placeholder="01xxxxxxxxx"
-              dir="ltr"
-            />
-          </div>
-        </CardContent>
-      </Card>
+      {/* متابعة الحفظ */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormSelect
+          control={form.control}
+          name="currentSurah"
+          label="السورة الحالية"
+          options={SURAH_OPTIONS}
+        />
 
-      {/* ── الأنشطة المسجل فيها ── */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">الأنشطة والاشتراكات</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormCheckboxGroup
-            control={form.control}
-            name="enrollments"
-            label="الأنشطة المتاحة"
-            description="اختر الأنشطة التي يشارك فيها الطالب حالياً"
-            options={ACTIVITY_OPTIONS}
-            required
-          />
-        </CardContent>
-      </Card>
+        <FormInput
+          control={form.control}
+          name="currentAyah"
+          label="رقم الآية"
+          type="number"
+        />
+      </div>
 
-      {/* ── متابعة القرآن والعبادات ── */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">متابعة القرآن والعبادات</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormSelect
-              control={form.control}
-              name="currentSurah"
-              label="السورة الحالية"
-              placeholder="اختر السورة..."
-              options={SURAH_OPTIONS}
-              required
-            />
-            <FormInput
-              control={form.control}
-              name="currentAyah"
-              type="number"
-              label="رقم الآية"
-              placeholder="1"
-            />
-          </div>
+      <FormTextarea
+        control={form.control}
+        name="notes"
+        label="ملاحظات إضافية"
+      />
 
-          <div className="p-4 border rounded-md bg-muted/20">
-            <FormSwitch
-              control={form.control}
-              name="trackIbadah"
-              label="متابعة العبادات"
-              description="تفعيل متابعة الصلاة والعبادات لهذا الطالب"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* ── ملاحظات ── */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">ملاحظات إضافية</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormTextarea
-            control={form.control}
-            name="notes"
-            label="ملاحظات"
-            placeholder="اكتب أي ملاحظات سلوكية أو تعليمية تخص الطالب..."
-          />
-        </CardContent>
-      </Card>
-
-      {/* ── أزرار التحكم ── */}
-      <div className="flex gap-3 justify-end pb-10">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-          disabled={isPending}
-        >
+      {/* الأزرار */}
+      <div className="flex justify-end gap-3">
+        {/* <Button type="button" variant="ghost" onClick={() => router.back()}>
           إلغاء
-        </Button>
+        </Button> */}
         <Button type="submit" disabled={isPending}>
-          {isPending && <Loader2 size={14} className="animate-spin ml-2" />}
-          {isEdit ? "حفظ التعديلات" : "إضافة الطالب"}
+          {isPending && <Loader2 className="ml-2 animate-spin" size={16} />}
+          {isEdit ? "تحديث البيانات" : "تسجيل الطالب"}
         </Button>
       </div>
     </form>
