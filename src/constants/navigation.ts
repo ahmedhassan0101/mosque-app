@@ -98,13 +98,15 @@ export const NAV_SECTIONS: NavSection[] = [
     title: "إدارة التعليم",
     items: [
       {
-        label: "الحلقات والدروس",
-        href: "/dashboard/circles",
+        label: "المجموعات والحلقات",
+        href: "/dashboard/groups",
         icon: BookOpen,
         children: [
-          { label: "الحلقات القرآنية", href: "/dashboard/circles/quran" },
-          { label: "الدروس العلمية", href: "/dashboard/circles/lessons" },
-          { label: "المقررات الدراسية", href: "/dashboard/circles/curricula" },
+          { label: "حلقات القرآن", href: "/dashboard/groups/quran" },
+          { label: "جلسات التربية", href: "/dashboard/groups/tarbiya" },
+          { label: "دروس التجويد", href: "/dashboard/groups/tajweed" },
+          { label: "المقرأة", href: "/dashboard/groups/maqraa" },
+          { label: "الملعب", href: "/dashboard/groups/playground" },
         ],
       },
       {

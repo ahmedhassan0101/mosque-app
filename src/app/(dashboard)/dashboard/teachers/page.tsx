@@ -1,4 +1,4 @@
-import React from "react";
+// src\app\(dashboard)\dashboard\teachers\page.tsx
 
 export const metadata = { title: "إدارة المعلمين" };
 

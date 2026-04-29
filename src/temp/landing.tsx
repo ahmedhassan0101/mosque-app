@@ -988,7 +988,7 @@
 //       <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 via-teal-600/10 to-blue-600/15 pointer-events-none" />
 //       <div className="absolute inset-0 bg-background/60 pointer-events-none" />
 
-//       {/* Decorative circles */}
+//       {/* Decorative groups */}
 //       <div className="absolute top-1/2 right-0 w-96 h-96 bg-primary/15 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 //       <div className="absolute top-1/2 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
@@ -2363,7 +2363,7 @@
 //       <div className="absolute inset-0 bg-linear-to-br from-emerald-600/20 via-teal-600/10 to-blue-600/15 pointer-events-none" />
 //       <div className="absolute inset-0 bg-background/60 pointer-events-none" />
 
-//       {/* Decorative circles */}
+//       {/* Decorative groups */}
 //       <div className="absolute top-1/2 right-0 w-96 h-96 bg-primary/15 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 //       <div className="absolute top-1/2 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 

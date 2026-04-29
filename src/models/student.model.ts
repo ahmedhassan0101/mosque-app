@@ -23,7 +23,7 @@ export interface IStudent {
   image?: string;
   address?: string;
   level: StudentLevel;
-  groupId?: Types.ObjectId;
+  groupIds?: Types.ObjectId[];
   enrollments?: ActivityType[];
   currentSurah?: string;
   currentAyah?: number;
@@ -70,7 +70,7 @@ const studentSchema = new Schema<IStudentDocument>(
       enum: ["beginner", "intermediate", "advanced"],
       default: "beginner",
     },
-    groupId: { type: Schema.Types.ObjectId, ref: "Group" },
+    groupIds: [{ type: Schema.Types.ObjectId, ref: "Group" }],
     enrollments: {
       type: [String],
       enum: ["quran", "tarbiya", "tajweed", "maqraa", "playground"],

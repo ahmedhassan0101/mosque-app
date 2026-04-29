@@ -1,3 +1,4 @@
+// H:\mosque-app\src\schemas\teacher.schema.ts
 import z from "zod";
 
 export const teacherSchema = z.object({

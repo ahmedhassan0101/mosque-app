@@ -37,7 +37,7 @@
 import { cache } from "react";
 import { connectDB } from "@/lib/db/connect";
 import Sheikh from "@/models/Sheikh";
-import Group from "@/models/Group";
+import Group from "@/models/group.model";
 import { getMosqueId } from "@/lib/auth/get-context";
 import type {
   SheikhSerialized,

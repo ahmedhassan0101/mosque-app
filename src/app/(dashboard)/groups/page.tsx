@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { connectDB } from "@/lib/db/connect";
-import Group from "@/models/Group";
+import Group from "@/models/group.model";
 import Sheikh from "@/models/Sheikh";
 import { GroupsManager } from "@/components/groups/GroupsManager";
 import "@/models/Student";
@@ -29,8 +29,6 @@ export default async function GroupsPage() {
     Sheikh.find({ mosqueId }).select("name").sort({ name: 1 }).lean(),
   ]);
 
-
-  
   const serialized = groups.map((g) => {
     const sheikhData = g.sheikhId as any;
 
@@ -42,7 +40,7 @@ export default async function GroupsPage() {
         ACT_LABELS[g.activity as keyof typeof ACT_LABELS] ?? g.activity,
       sheikh: {
         _id: sheikhData?._id?.toString() ?? "",
-        name: sheikhData?.name ?? "شيخ محذوف / غير محدد", 
+        name: sheikhData?.name ?? "شيخ محذوف / غير محدد",
       },
       // 2. تأمين قراءة الطلاب (فلترة أي طالب محذوف راجع بـ null)
       students: (g.studentIds as any[])

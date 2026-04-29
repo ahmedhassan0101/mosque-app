@@ -29,7 +29,6 @@ export const studentSchema = z.object({
   currentSurah: z.string().min(1, "يرجى اختيار السورة"),
 
   currentAyah: z.number().min(1, "رقم الآية يبدأ من 1").optional(),
-  // .or(z.literal("").transform(() => undefined)),
 
   phone: z.string().optional(),
   address: z.string().optional(),

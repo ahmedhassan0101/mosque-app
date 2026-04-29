@@ -1,4 +1,5 @@
-import { Schema, model, models, Types, Document } from "mongoose";
+// src\models\teacher.model.ts
+import { Schema, model, models, Types, Document, Model } from "mongoose";
 
 export interface ITeacher {
   _id: Types.ObjectId; // تأكد أن الـ ID موجود هنا
@@ -31,7 +32,7 @@ const teacherSchema = new Schema<ITeacherDocument>(
   { timestamps: true },
 );
 
-const Teacher =
+const Teacher: Model<ITeacherDocument> =
   models.Teacher ?? model<ITeacherDocument>("Teacher", teacherSchema);
 
 export default Teacher;

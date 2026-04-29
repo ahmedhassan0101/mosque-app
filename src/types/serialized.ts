@@ -14,6 +14,7 @@ import type { ISheikh, IStudent, IGroup } from "./index";
  * - For each field, check its type and replace if needed
  * - Non-matching types pass through unchanged  →  : T[K]
  */
+
 /**
  * Serialize<T>
  * Converts Mongoose-specific types to JSON-safe primitives.
@@ -67,6 +68,17 @@ export type Serialize<T> = {
             ? Array<Serialize<U>>
             : T[K];
 };
+
+// export type Serialize<T> = T extends Date
+//   ? string
+//   : T extends Types.ObjectId
+//   ? string
+//   : T extends object
+//   ? {
+//       [K in keyof T]: Serialize<T[K]>;
+//     }
+//   : T;
+
 
 // ─── Base serialized models ────────────────────────────────────────────────
 // Direct 1-to-1 mapping from the Mongoose interface

@@ -1,16 +1,7 @@
+// src\lib\action-response.ts
 /**
  * @file action-response.ts
  * @description Centralized JSend-style response formatters and global error handler for Server Actions.
- */
-/**
- * @file action-response.ts
- * @description Factory helpers that eliminate JSend boilerplate in Server Actions.
- * Import and use these instead of manually constructing response objects.
- *
- * @example
- * return ok({ userId: user.id }, "تم التسجيل بنجاح");
- * return fail("البريد الإلكتروني مستخدم بالفعل");
- * return err("حدث خطأ غير متوقع");
  */
 import { AuthError } from "next-auth";
 import { ZodError } from "zod";

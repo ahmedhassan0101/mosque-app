@@ -6,14 +6,13 @@ import {
   firstZodIssue,
   handleActionError,
   ok,
+  type ActionResponse,
 } from "@/lib/action-response";
 import { getMosqueId } from "@/lib/auth/get-context";
 import { connectDB } from "@/lib/db/db";
-import Teacher from "@/models/teacher.mode";
+import Teacher from "@/models/teacher.model";
 import { TeacherInput, teacherSchema } from "@/schemas/teacher.schema";
 import { revalidatePath } from "next/cache";
-
-import type { ActionResponse } from "@/lib/action-response";
 
 export async function saveTeacher(
   data: TeacherInput,
@@ -62,12 +61,11 @@ export async function deleteTeacher(id: string): Promise<ActionResponse> {
     await connectDB();
 
     // 2. Execution
-    const deletedTeacher = await Teacher.findOneAndDelete({
+    const deleted = await Teacher.findOneAndDelete({
       _id: id,
       mosqueId,
     });
-    if (!deletedTeacher)
-      return fail("المعلم غير موجود أو لا تملك صلاحية حذفه.");
+    if (!deleted) return fail("المعلم غير موجود أو لا تملك صلاحية حذفه.");
 
     // 3. Cache Invalidation
     revalidatePath("/dashboard/teachers");

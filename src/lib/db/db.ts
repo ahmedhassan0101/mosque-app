@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
 
+import "@/models/user.model";
+import "@/models/mosque.model";
+import "@/models/teacher.model";
+import "@/models/student.model";
+import "@/models/group.model";
+
+
 const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {

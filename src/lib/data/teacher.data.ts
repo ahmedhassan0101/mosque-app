@@ -4,7 +4,7 @@
 import { cache } from "react";
 import { getMosqueId } from "../auth/get-context";
 import { connectDB } from "../db/db";
-import Teacher, { type ITeacher } from "@/models/teacher.mode";
+import Teacher, { type ITeacher } from "@/models/teacher.model";
 
 import { Serialize } from "@/types/serialized";
 
@@ -46,14 +46,19 @@ export const getTeacherById = cache(
 // 1. جلب قائمة المعلمين
 export const getTeachersList = cache(async (): Promise<TeacherSerialized[]> => {
   try {
+    console.log("getTeachersList 1");
+
     await connectDB();
     const mosqueId = await getMosqueId();
-
+    console.log("getTeachersList 2");
     const teachers = await Teacher.find({ mosqueId }).sort({ name: 1 }).lean();
+    console.log("🚀 ~ teachers:", teachers);
+
     return teachers
       .map(serializeTeacher)
       .filter(Boolean) as TeacherSerialized[];
   } catch (error) {
+    console.log("getTeachersList 5");
     console.error("[Data Fetching Error - getTeachersList]:", error);
     return [];
   }

@@ -43,7 +43,7 @@ export default async function StudentProfilePage({ params }: any) {
             </div>
           </div>
         </div>
-        {/* Decorative Circles */}
+        {/* Decorative groups */}
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
       </div>
 

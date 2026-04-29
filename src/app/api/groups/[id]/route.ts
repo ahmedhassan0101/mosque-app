@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
-import Group from "@/models/Group";
+import Group from "@/models/group.model";
 import { getMosqueId } from "@/lib/auth/get-context";
 import { z } from "zod";
 
