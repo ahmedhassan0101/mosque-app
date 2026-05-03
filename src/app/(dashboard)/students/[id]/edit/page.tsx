@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { StudentForm } from "@/components/students/StudentForm";
+import { StudentForm } from "@/components/students/student-form";
 import type { StudentFormData } from "@/lib/validations/student";
 import { getStudentById } from "@/lib/services/student.service";
 

@@ -1,29 +1,44 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // src\lib\data\teacher.data.ts
 import { cache } from "react";
-import { getMosqueId } from "../auth/get-context";
-import { connectDB } from "../db/db";
-import Teacher, { type ITeacher } from "@/models/teacher.model";
+import { getMosqueId } from "@/lib/auth/get-context";
+import { connectDB } from "@/lib/db/db";
+import Teacher from "@/models/teacher.model";
+import { serialize, serializeMany } from "@/lib/db/serialize";
+import type { TeacherSerialized } from "@/types/serialized";
+import { ActivityType } from "@/types";
+import Group from "@/models/group.model";
 
-import { Serialize } from "@/types/serialized";
+// Re-export for convenience so consumers import from one place
+export type { TeacherSerialized };
+// ─── Derived Types ───────────────────────────────────────────────────────────
 
-export type TeacherSerialized = Serialize<ITeacher>;
+/**
+ * A lightweight group summary shown on the teacher's profile.
+ * Contains only what's needed for display — no full student objects.
+ */
+export type TeacherGroupSummary = {
+  _id: string;
+  name: string;
+  activity: ActivityType;
+  appointment?: string;
+  studentCount: number;
+};
 
-function serializeTeacher(doc: any): TeacherSerialized | null {
-  if (!doc) return null;
+export type TeacherProfileData = {
+  teacher: TeacherSerialized;
+  groups: TeacherGroupSummary[];
+  /** Total students across all groups (may overlap — same student in multiple groups) */
+  totalStudents: number;
+};
 
-  return {
-    ...doc,
-    _id: doc._id.toString(),
-    mosqueId: doc.mosqueId?.toString(),
-    groupIds: Array.isArray(doc.groupIds)
-      ? doc.groupIds.map((id: any) => id.toString())
-      : [],
-    createdAt: doc.createdAt?.toISOString?.() || doc.createdAt,
-    updatedAt: doc.updatedAt?.toISOString?.() || doc.updatedAt,
-  } as TeacherSerialized;
-}
+/**
+ * Fetches a single teacher by ID, scoped to the current mosque.
+ * Returns null if not found or on error (safe default for notFound() handling).
+ *
+ * Uses React `cache()` to deduplicate calls within a single render pass
+ * (e.g., generateMetadata + page component both calling this).
+ */
 
 export const getTeacherById = cache(
   async (id: string): Promise<TeacherSerialized | null> => {
@@ -31,72 +46,121 @@ export const getTeacherById = cache(
       await connectDB();
       const mosqueId = await getMosqueId();
 
+      // .lean() returns a plain JS object — required before serialize()
       const teacher = await Teacher.findOne({ _id: id, mosqueId }).lean();
 
       if (!teacher) return null;
 
-      return serializeTeacher(teacher);
+      return serialize(teacher) as TeacherSerialized;
     } catch (error) {
-      console.error("[Data Fetching Error - getTeacherById]:", error);
+      console.error("[getTeacherById]:", error);
       return null;
     }
   },
 );
 
-// 1. جلب قائمة المعلمين
+/**
+ * Fetches all teachers for the current mosque, sorted alphabetically.
+ * Returns an empty array on error — never throws — so the page renders safely.
+ */
+
 export const getTeachersList = cache(async (): Promise<TeacherSerialized[]> => {
   try {
-    console.log("getTeachersList 1");
-
     await connectDB();
     const mosqueId = await getMosqueId();
-    console.log("getTeachersList 2");
-    const teachers = await Teacher.find({ mosqueId }).sort({ name: 1 }).lean();
-    console.log("🚀 ~ teachers:", teachers);
 
-    return teachers
-      .map(serializeTeacher)
-      .filter(Boolean) as TeacherSerialized[];
+    const teachers = await Teacher.find({ mosqueId }).sort({ name: 1 }).lean();
+
+    return serializeMany(teachers) as TeacherSerialized[];
   } catch (error) {
-    console.log("getTeachersList 5");
-    console.error("[Data Fetching Error - getTeachersList]:", error);
+    console.error("[getTeachersList]:", error);
     return [];
   }
 });
 
-// export const getTeacherProfile = cache(
-//   async (
-//     id: string,
-//   ): Promise<{ teacher: TeacherSerialized; groups: any[] } | null> => {
-//     try {
-//       await connectDB();
-//       const mosqueId = await getMosqueId();
-//       const teacher = await Teacher.findOne({ _id: id, mosqueId }).lean();
+/**
+ * Fetches a teacher's full profile including their associated groups.
+ * Composes getTeacherById to avoid duplicating the serialization logic.
+ *
+ * Returns null if the teacher doesn't exist.
+ *
+ * TODO: Populate `groups` once the Group data fetcher is ready.
+ */
 
-//       if (!teacher) return null;
+/**
+ * Fetches a teacher's full profile with all their groups and student counts.
+ *
+ * Design decisions:
+ * - We fetch groups directly by `teacherId` — NOT by `teacher.groupIds`.
+ *   The group document is the single source of truth for membership.
+ *   teacher.groupIds would require keeping it in sync manually (error-prone).
+ *
+ * - We return `studentCount` per group (array length), NOT the full student objects.
+ *   The profile page shows a summary card per group, not a full student list.
+ *   Full student list is fetched only when the user opens the group detail page.
+ *
+ * - `totalStudents` counts array lengths across groups (may double-count a student
+ *   in two groups). This is intentional — it reflects "slots", not unique students.
+ *   If you need unique count, use a Set on the IDs.
+ */
+export const getTeacherProfile = cache(
+  async (id: string): Promise<TeacherProfileData | null> => {
+    try {
+      await connectDB();
+      const mosqueId = await getMosqueId();
 
-//       return {
-//         teacher: serializeTeacher(teacher),
-//         groups: [],
-//       };
-//     } catch (error) {
-//       console.error("[Data Fetching Error - getTeacherProfile]:", error);
-//       return null;
-//     }
-//   },
-// );
+      // Parallel fetch: teacher + their groups
+      // Both are scoped to mosqueId for tenancy safety
+      const [teacher, groups] = await Promise.all([
+        Teacher.findOne({ _id: id, mosqueId }).lean(),
+        Group.find({ teacherId: id, mosqueId })
+          .sort({ createdAt: -1 })
+          .select("name activity appointment studentIds")
+          .lean(),
+      ]);
 
-export const getTeacherProfile = cache(async (id: string) => {
-  try {
-    const teacher = await getTeacherById(id);
-    if (!teacher) return null;
+      if (!teacher) return null;
 
-    return {
-      teacher, // النوع هنا تلقائياً TeacherSerialized
-      groups: [], // TODO: fetch groups for this teacher
-    };
-  } catch (error) {
-    console.error("[Data Fetching Error - getTeacherProfile]:", error);
-    return null;
-  }
-});
+      const groupSummaries: TeacherGroupSummary[] = groups.map((g) => ({
+        _id: g._id.toString(),
+        name: g.name,
+        activity: g.activity as ActivityType,
+        appointment: g.appointment,
+        studentCount: g.studentIds?.length ?? 0,
+      }));
+
+      const totalStudents = groupSummaries.reduce(
+        (sum, g) => sum + g.studentCount,
+        0,
+      );
+
+      return {
+        teacher: serialize(teacher) as TeacherSerialized,
+        groups: groupSummaries,
+        totalStudents,
+      };
+    } catch (error) {
+      console.error("[getTeacherProfile]:", error);
+      return null;
+    }
+  },
+);
+// export const getTeacherProfile = cache(async (id: string) => {
+//   try {
+//     // Reuses getTeacherById — React cache() deduplicates the DB call
+//     // if this is called in the same render as getTeacherById(id).
+//     const teacher = await getTeacherById(id);
+//     if (!teacher) return null;
+
+//     return {
+//       teacher,
+//       groups: [] as GroupSerialized[], // TODO: fetch via getGroupsByTeacherId(id)
+//     };
+//   } catch (error) {
+//     console.error("[getTeacherProfile]:", error);
+//     return null;
+//   }
+// });
+
+// // Temporary type until groups module is wired up
+// type GroupSerialized = { _id: string; name: string };

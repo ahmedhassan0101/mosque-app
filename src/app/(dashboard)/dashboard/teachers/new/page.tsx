@@ -1,9 +1,14 @@
-// src\app\(dashboard)\dashboard\teachers\new\page.tsx
-
+// src/app/(dashboard)/dashboard/teachers/new/page.tsx
 import TeacherForm from "@/components/teacher/teacher-form";
+import type { Metadata } from "next";
 
-export const metadata = { title: "إضافة معلم جديد" };
+export const metadata: Metadata = { title: "إضافة معلم جديد" };
 
 export default function NewTeacherPage() {
-  return <TeacherForm />;
+  return (
+    <div className="max-w-xl mx-auto py-6">
+      <h1 className="text-xl font-semibold mb-6">إضافة معلم جديد</h1>
+      <TeacherForm />
+    </div>
+  );
 }

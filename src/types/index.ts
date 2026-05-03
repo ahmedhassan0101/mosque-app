@@ -1,28 +1,34 @@
 import { Types } from "mongoose";
 
 /** Shared application-wide types */
-export type ActivityType =
-  | "quran"
-  | "tarbiya"
-  | "tajweed"
-  | "maqraa"
-  | "playground";
-export type StudentLevel = "beginner" | "intermediate" | "advanced";
+export const ACTIVITIES = [
+  "quran",
+  "tarbiya",
+  "tajweed",
+  "maqraa",
+  "playground",
+] as const;
+export type ActivityType = (typeof ACTIVITIES)[number];
+
+export const STUDENT_LEVEL = ["beginner", "intermediate", "advanced"] as const;
+export type StudentLevel = (typeof STUDENT_LEVEL)[number];
+
 export type AchievementLevel = "weak" | "average" | "good" | "excellent";
+
+export const ACTIVITY_LABELS: Record<ActivityType, string> = {
+  quran: "قرآن كريم",
+  tarbiya: "التربية",
+  tajweed: "التجويد",
+  maqraa: "المقرأة",
+  playground: "الأنشطة",
+};
+
+
 // export type UserRole = "superadmin" | "admin" | "sheikh" | "supervisor";
 
 export type UserRole = "SUPER_ADMIN" | "ADMIN" | "SUPERVISOR";
 export type Provider = "credentials" | "google";
 /** Standard JSend-style API response */
-
-
-export interface IMosque {
-  _id: Types.ObjectId;
-  name: string;
-  address?: string;
-  phone?: string;
-  createdAt: Date;
-}
 
 export interface IUser {
   _id: Types.ObjectId;
@@ -34,53 +40,68 @@ export interface IUser {
   createdAt: Date;
 }
 
+export interface IMosque {
+  _id: Types.ObjectId;
+  name: string;
+  address?: string;
+  phone?: string;
+  createdAt: Date;
+}
+
+/**
+ * ITeacher — The canonical interface for a Teacher document.
+ * Used as the single source of truth for typing across the app.
+ *
+ * NOTE: Keep this interface flat and DB-accurate.
+ * Serialized variants live in src/types/serialized.ts (TeacherSerialized).
+ */
+export interface ITeacher {
+  _id: Types.ObjectId;
+  mosqueId: Types.ObjectId;
+  name: string;
+  phone?: string;
+  image?: string;
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IGuardian {
+  relation: string;
+  phone: string;
+}
 export interface IStudent {
   _id: Types.ObjectId;
   mosqueId: Types.ObjectId;
   name: string;
   birthDate: Date;
   gender: "male" | "female";
+  guardians: IGuardian[];
   phone?: string;
-  guardianName?: string;
-  guardianPhone: string;
-  guardianPhone2?: string;
-  photo?: string;
+  image?: string;
   address?: string;
   level: StudentLevel;
-  groupId?: Types.ObjectId;
-  enrollments: ActivityType[];
-  trackIbadah: boolean;
+  enrollments?: ActivityType[];
   currentSurah?: string;
   currentAyah?: number;
   notes?: string;
   isActive: boolean;
   createdAt: Date;
-}
-
-export interface ISheikh {
-  _id: Types.ObjectId;
-  mosqueId: Types.ObjectId;
-  name: string;
-  phone?: string;
-  photo?: string;
-  notes?: string;
-  groupId?: Types.ObjectId;
-  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IGroup {
   _id: Types.ObjectId;
   mosqueId: Types.ObjectId;
   name: string;
-  sheikhId: Types.ObjectId;
+  teacherId: Types.ObjectId;
   activity: ActivityType;
   studentIds: Types.ObjectId[];
+  appointment: string;
   notes?: string;
   createdAt: Date;
+  updatedAt: Date;
 }
-
-
-
 
 export interface ISession {
   _id: Types.ObjectId;

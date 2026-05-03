@@ -1,37 +1,6 @@
+import { type IGuardian, type IStudent } from "@/types";
 import { Schema, model, models, Types, Document, Model } from "mongoose";
 
-export type ActivityType =
-  | "quran"
-  | "tarbiya"
-  | "tajweed"
-  | "maqraa"
-  | "playground";
-type StudentLevel = "beginner" | "intermediate" | "advanced";
-
-export interface IGuardian {
-  relation: string;
-  phone: string;
-}
-export interface IStudent {
-  _id: Types.ObjectId;
-  mosqueId: Types.ObjectId;
-  name: string;
-  birthDate: Date;
-  gender: "male" | "female";
-  guardians: IGuardian[];
-  phone?: string;
-  image?: string;
-  address?: string;
-  level: StudentLevel;
-  groupIds?: Types.ObjectId[];
-  enrollments?: ActivityType[];
-  currentSurah?: string;
-  currentAyah?: number;
-  notes?: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
 export interface IStudentDocument extends IStudent, Document {}
 
 const guardianSchema = new Schema<IGuardian>(
@@ -70,7 +39,7 @@ const studentSchema = new Schema<IStudentDocument>(
       enum: ["beginner", "intermediate", "advanced"],
       default: "beginner",
     },
-    groupIds: [{ type: Schema.Types.ObjectId, ref: "Group" }],
+
     enrollments: {
       type: [String],
       enum: ["quran", "tarbiya", "tajweed", "maqraa", "playground"],

@@ -1,31 +1,12 @@
+import { ACTIVITIES, IGroup } from "@/types";
 import { Schema, model, models, Types, Document, Model } from "mongoose";
-export type ActivityType =
-  | "quran"
-  | "tarbiya"
-  | "tajweed"
-  | "maqraa"
-  | "playground";
 
-export interface IGroup {
-  _id: Types.ObjectId;
-  mosqueId: Types.ObjectId;
-  name: string;
-  teacherId: Types.ObjectId;
-  activity: ActivityType;
-  appointment?: string;
-  studentIds: Types.ObjectId[];
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface IGroupDocument extends Omit<IGroup, "_id">, Document {}
-// export interface IGroupDocument extends IGroup, Document {}
+export interface IGroupDocument extends IGroup, Document {}
 
 const GroupSchema = new Schema<IGroupDocument>(
   {
     mosqueId: {
-      type: Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Mosque",
       required: true,
       index: true,
@@ -33,18 +14,24 @@ const GroupSchema = new Schema<IGroupDocument>(
     name: { type: String, required: true, trim: true },
     activity: {
       type: String,
-      enum: ["quran", "tarbiya", "tajweed", "maqraa", "playground"],
+      enum: ACTIVITIES,
       required: true,
     },
-    appointment: { type: String },
-    teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
-    studentIds: [{ type: Types.ObjectId, ref: "Student" }],
+    appointment: { type: String, required: true, trim: true },
+    teacherId: { type: Types.ObjectId, ref: "Teacher", required: true },
+    studentIds: [{ type: Types.ObjectId, ref: "Student", required: true }],
     notes: { type: String },
   },
   { timestamps: true },
 );
 
+// Compound index: fast filtering by mosque + activity type (main list query)
+GroupSchema.index({ mosqueId: 1, activity: 1 });
+
+// Scoped uniqueness: same group name allowed across different mosques
+GroupSchema.index({ mosqueId: 1, name: 1, activity: 1 }, { unique: true });
+
 const Group: Model<IGroupDocument> =
-  models.Group ?? model("Group", GroupSchema);
+  models.Group ?? model<IGroupDocument>("Group", GroupSchema);
 
 export default Group;

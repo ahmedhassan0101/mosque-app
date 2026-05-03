@@ -13,6 +13,7 @@ git push -u origin master
 
 ```bash
 git add .
+git add .
 git commit -m "add new feature"
 git commit -m "feat: Add Group Model"
 git commit -m "refactor: UI"

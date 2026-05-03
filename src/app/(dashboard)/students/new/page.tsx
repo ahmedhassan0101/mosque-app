@@ -1,4 +1,4 @@
-import { StudentForm } from "@/components/students/StudentForm";
+import { StudentForm } from "@/components/students/student-form";
 export const metadata = { title: "إضافة طالب" };
 
 export default function NewStudentPage() {

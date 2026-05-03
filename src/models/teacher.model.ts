@@ -1,17 +1,6 @@
 // src\models\teacher.model.ts
 import { Schema, model, models, Types, Document, Model } from "mongoose";
-
-export interface ITeacher {
-  _id: Types.ObjectId; // تأكد أن الـ ID موجود هنا
-  mosqueId: Types.ObjectId;
-  name: string;
-  phone?: string;
-  image?: string;
-  notes?: string;
-  groupIds: Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { type ITeacher } from "@/types";
 
 export interface ITeacherDocument extends ITeacher, Document {}
 
@@ -21,25 +10,24 @@ const teacherSchema = new Schema<ITeacherDocument>(
       type: Schema.Types.ObjectId,
       ref: "Mosque",
       required: true,
+      // Indexed for fast multi-tenant scoping queries
       index: true,
     },
     name: { type: String, required: true, trim: true },
-    phone: { type: String },
+    phone: { type: String, trim: true },
     image: { type: String },
     notes: { type: String },
-    groupIds: [{ type: Types.ObjectId, ref: "Group" }],
   },
   { timestamps: true },
 );
+
+// Compound index: fast lookup by mosque + name (also allows same name across mosques)
+teacherSchema.index({ mosqueId: 1, name: 1 });
 
 const Teacher: Model<ITeacherDocument> =
   models.Teacher ?? model<ITeacherDocument>("Teacher", teacherSchema);
 
 export default Teacher;
-
-
-
-
 
 // // src/models/entity-name.model.ts
 // import { Schema, model, models, Types, Document } from "mongoose";
@@ -55,7 +43,7 @@ export default Teacher;
 //   name: string;
 //   isActive: boolean;
 //   relatedId?: Types.ObjectId; // علاقة بموديل آخر (اختياري)
-//   tags: string[];             
+//   tags: string[];
 //   createdAt: Date;            // يتم إنشاؤه تلقائياً بواسطة timestamps
 //   updatedAt: Date;            // يتم إنشاؤه تلقائياً بواسطة timestamps
 // }

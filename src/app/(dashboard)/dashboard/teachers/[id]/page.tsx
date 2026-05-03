@@ -1,25 +1,61 @@
+// src/app/(dashboard)/dashboard/teachers/[id]/page.tsx
+import { Suspense } from "react";
+import Link from "next/link";
+import { ChevronLeft, Home } from "lucide-react";
+import type { Metadata } from "next";
+
 import { getTeacherById } from "@/lib/data/teacher.data";
+import { TeacherProfileContent } from "@/components/teacher/TeacherProfileContent";
+import { TeacherProfileSkeleton } from "@/components/teacher/TeacherProfileSkeleton";
 
-export const metadata = { title: "تفاصيل المعلم" };
+type TeacherProfilePageProps = {
+  params: Promise<{ id: string }>;
+};
 
-//  const dynamic = "force-dynamic"; // this page needs to be dynamic to fetch the teacher's data
-// export const revalidate = 0; // disable caching for this page to always show the latest data
-// export const fetchCache = "force-no-store"; // another way to disable caching for data fetching in this page
-//  انا مش متأكد أي طريقة أفضل، ممكن تجربهم وتشوف أي وحدة تشتغل بشكل أفضل مع بيانات المعلمين في تطبيقك.
-// كل اللي فوق دامن اقتراحات  الفى اس كود .. انا مش فاهم فيهم كتير، بس المهم إنك تضمن إن بيانات المعلم بتتحدث بشكل فوري لما يتم تعديلها في قاعدة البيانات.
-
-type TeacherProfileProps = { params: Promise<{ id: string }> };
-
-export async function generateMetadata({ params }: TeacherProfileProps) {
+export async function generateMetadata({
+  params,
+}: TeacherProfilePageProps): Promise<Metadata> {
   const { id } = await params;
+  // React cache() deduplicates this call with the one inside TeacherProfileContent
   const teacher = await getTeacherById(id);
-  return { title: teacher?.name ?? "المعلم" };
+  return { title: teacher ? `ملف: ${teacher.name}` : "المعلم" };
 }
+
 export default async function TeacherProfilePage({
   params,
-}: TeacherProfileProps) {
+}: TeacherProfilePageProps) {
   const { id } = await params;
-  console.log("🚀 ~ TeacherProfilePage ~ id:", id);
+  // Pre-fetch for breadcrumb name — deduplicated by React cache()
+  const teacher = await getTeacherById(id);
 
-  return <div>TeacherProfilePage: this is teacher {id} </div>;
+  return (
+    <main className="max-w-4xl mx-auto px-4 py-6 space-y-6" dir="rtl">
+      {/* ── Breadcrumb ── */}
+      <nav aria-label="مسار التنقل" className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Link
+          href="/dashboard"
+          className="hover:text-foreground transition-colors flex items-center gap-1"
+        >
+          <Home size={13} />
+          <span>الرئيسية</span>
+        </Link>
+        <ChevronLeft size={13} className="rotate-180" />
+        <Link
+          href="/dashboard/teachers"
+          className="hover:text-foreground transition-colors"
+        >
+          المعلمون
+        </Link>
+        <ChevronLeft size={13} className="rotate-180" />
+        <span className="text-foreground font-medium truncate max-w-45">
+          {teacher?.name ?? "الملف الشخصي"}
+        </span>
+      </nav>
+
+      {/* ── Profile content — streamed ── */}
+      <Suspense fallback={<TeacherProfileSkeleton />}>
+        <TeacherProfileContent id={id} />
+      </Suspense>
+    </main>
+  );
 }

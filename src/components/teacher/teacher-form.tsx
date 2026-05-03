@@ -16,7 +16,9 @@ import { FormImageUpload } from "../form/form-image-upload";
 import { TeacherSerialized } from "@/lib/data/teacher.data";
 
 type TeacherFormProps = {
+  /** Provided when editing an existing teacher. Undefined for create mode. */
   initialData?: TeacherSerialized;
+  /** The teacher's MongoDB ID. Undefined in create mode. */
   teacherId?: string;
 };
 
@@ -26,15 +28,16 @@ export default function TeacherForm({
 }: TeacherFormProps) {
   const isEdit = !!teacherId;
   const router = useRouter();
-  const { name = "", phone = "", image = "", notes = "" } = initialData || {};
   const [isPending, startTransition] = useTransition();
+
   const form = useForm<TeacherInput>({
     resolver: zodResolver(teacherSchema),
+
     defaultValues: {
-      name,
-      phone,
-      image,
-      notes,
+      name: initialData?.name ?? "",
+      phone: initialData?.phone ?? "",
+      image: initialData?.image ?? "",
+      notes: initialData?.notes ?? "",
     },
   });
 
@@ -43,12 +46,13 @@ export default function TeacherForm({
       const result = await saveTeacher(data, teacherId);
 
       if (result.status !== "success") {
-        toast.error(result.message);
+        toast.error(result.message ?? "حدث خطأ غير متوقع.");
         return;
       }
       toast.success(result.message);
+
+      // Navigate back to the list.
       router.push("/dashboard/teachers");
-      router.refresh();
     });
   };
 
@@ -56,9 +60,9 @@ export default function TeacherForm({
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <FormImageUpload
         control={form.control}
-        name="image" // اعتمدنا تسمية image
+        name="image"
         label="صورة المعلم"
-        folderCategory="teachers" // <-- التوجيه الديناميكي هنا
+        folderCategory="teachers"
       />
       <FormInput
         control={form.control}
@@ -70,11 +74,16 @@ export default function TeacherForm({
       <FormInput
         control={form.control}
         name="phone"
-        label="رقم التليفون"
+        label="رقم الهاتف"
         placeholder="01xxxxxxxxx"
         dir="ltr"
       />
-      <FormTextarea control={form.control} name="notes" label="ملاحظات" />
+      <FormTextarea
+        control={form.control}
+        name="notes"
+        label="ملاحظات"
+        placeholder="أي ملاحظات إضافية..."
+      />
       <Button type="submit" disabled={isPending}>
         {isPending && <Loader2 size={14} className="animate-spin ml-2" />}
         {isEdit ? "حفظ" : "إضافة"}

@@ -1,32 +1,57 @@
-import { Metadata } from "next";
+// src/app/(dashboard)/dashboard/groups/[type]/page.tsx
+import { Suspense } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-export const getTitleByType = (type: string) => {
-  const titles: Record<string, string> = {
-    quran: "حلقات القرآن",
-    tarbiya: "جلسات التربية",
-    tajweed: "دروس التجويد",
-    maqraa: "المقرأة",
-    playground: "الملعب",
-  };
-  return titles[type] || "المجموعات";
-};
+import { ACTIVITIES, ACTIVITY_LABELS, type ActivityType } from "@/types";
+import { Button } from "@/components/ui/button";
+import { GroupsGridContent } from "@/components/groups/GroupsGridContent";
+import { GroupsGridSkeleton } from "@/components/groups/GroupsGridSkeleton";
 
 type Props = { params: Promise<{ type: string }> };
 
+function assertActivityType(type: string): type is ActivityType {
+  return (ACTIVITIES as readonly string[]).includes(type);
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { type } = await params;
-  return { title: getTitleByType(type) };
+  if (!assertActivityType(type)) return { title: "غير موجود" };
+  return { title: ACTIVITY_LABELS[type] };
 }
 
 export default async function GroupsPage({ params }: Props) {
   const { type } = await params;
-  const title = getTitleByType(type);
+  if (!assertActivityType(type)) notFound();
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">{title}</h1>
-      {/* هنا نضع جدول المجموعات ونمرر له الـ type كـ Filter */}
-      {/* <GroupsTable type={type} /> */}
-    </div>
+    <main className="space-y-6 p-6" dir="rtl">
+      {/* ── Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {ACTIVITY_LABELS[type]}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            إدارة مجموعات {ACTIVITY_LABELS[type]}
+          </p>
+        </div>
+        <Button asChild>
+          <Link href={`/dashboard/groups/${type}/new`}>
+            <Plus size={16} className="ml-2" />
+            إنشاء مجموعة
+          </Link>
+        </Button>
+      </div>
+
+      {/* ── Grid — streamed ── */}
+      <section aria-label={`قائمة مجموعات ${ACTIVITY_LABELS[type]}`}>
+        <Suspense fallback={<GroupsGridSkeleton />}>
+          <GroupsGridContent type={type} />
+        </Suspense>
+      </section>
+    </main>
   );
 }
