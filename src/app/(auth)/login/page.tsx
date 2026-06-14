@@ -25,8 +25,8 @@
 // app/(auth)/login/page.tsx
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { AuthHeader } from "@/components/auth/auth-primitives";
-import { LoginForm } from "@/components/auth/login-form";
+import { AuthHeader } from "@/components/auth/AuthPrimitives";
+import { LoginForm } from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = { title: "تسجيل الدخول | مسجد ERP" };
 

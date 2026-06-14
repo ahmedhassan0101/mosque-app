@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { dateSchema, nameSchema } from "./global.schema";
 
 /**
  * Guardian sub-schema — represents a parent/guardian contact.
@@ -15,15 +16,9 @@ const guardianSchema = z.object({
 });
 
 export const studentSchema = z.object({
-  name: z
-    .string({ message: "اسم الطالب مطلوب." })
-    .min(2, "الاسم يجب أن يكون حرفين على الأقل.")
-    .max(100, "الاسم طويل جداً، الحد الأقصى 100 حرف.")
-    .trim(),
+  name: nameSchema,
 
-  birthDate: z
-    .date({ message: "تاريخ الميلاد مطلوب." })
-    .max(new Date(), { message: "تاريخ الميلاد لا يمكن أن يكون في المستقبل." }),
+  birthDate:dateSchema,
 
   gender: z.enum(["male", "female"], {
     message: "يرجى اختيار الجنس.",

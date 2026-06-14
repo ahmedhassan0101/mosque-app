@@ -1,10 +1,10 @@
 // app/(auth)/forgot-password/page.tsx
 import type { Metadata } from "next";
-import { AuthHeader } from "@/components/auth/auth-primitives";
- import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
+import { AuthHeader } from "@/components/auth/AuthPrimitives";
+import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 export const metadata: Metadata = { title: "استعادة كلمة المرور | مسجد ERP" };
- 
+
 export default function ForgotPasswordPage() {
   return (
     <>

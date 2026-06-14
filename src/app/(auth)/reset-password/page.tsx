@@ -1,8 +1,8 @@
 // app/(auth)/reset-password/page.tsx
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { AuthHeader } from "@/components/auth/auth-primitives";
-import { ResetPasswordForm } from "@/components/auth/reset-password-form";
+import { AuthHeader } from "@/components/auth/AuthPrimitives";
+import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 
 export const metadata: Metadata = { title: "تعيين كلمة مرور جديدة | مسجد ERP" };
 

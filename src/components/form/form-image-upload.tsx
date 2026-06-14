@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Loader2, Upload, X, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 interface Props<T extends FieldValues> {
   control: Control<T>;
@@ -59,8 +59,7 @@ export function FormImageUpload<T extends FieldValues>({
           setPreview("");
           field.onChange("");
         } else {
-  
-          field.onChange(result.data?.url); 
+          field.onChange(result.data?.url);
         }
 
         URL.revokeObjectURL(objectUrl);

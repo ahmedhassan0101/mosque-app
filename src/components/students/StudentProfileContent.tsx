@@ -14,24 +14,13 @@ import {
   Hash,
 } from "lucide-react";
 
-import { getStudentProfile } from "@/lib/data/student.data";
+import { getStudentProfile } from "@/queries/student.queries";
 import { calculateAge } from "@/lib/utils/age";
-import { ACTIVITY_LABELS } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DeleteStudentButton } from "./DeleteStudentButton";
-import type { StudentGroupSummary } from "@/lib/data/student.data";
-
-const LEVEL_LABELS = {
-  beginner: "مبتدئ",
-  intermediate: "متوسط",
-  advanced: "متقدم",
-} as const;
-
-const GENDER_LABELS = {
-  male: "ذكر",
-  female: "أنثى",
-} as const;
+import type { StudentGroupSummary } from "@/queries/student.queries";
+import { ACTIVITIES, GENDERS, LEVELS } from "@/constants";
 
 interface StudentProfileContentProps {
   id: string;
@@ -57,7 +46,7 @@ function GroupCard({ group }: { group: StudentGroupSummary }) {
         )}
       </div>
       <Badge variant="secondary" className="shrink-0 text-xs">
-        {ACTIVITY_LABELS[group.activity]}
+        {ACTIVITIES.labels[group.activity]}
       </Badge>
     </Link>
   );
@@ -67,7 +56,9 @@ function GroupCard({ group }: { group: StudentGroupSummary }) {
  * Async Server Component — fetches and renders the student's Bento Grid profile.
  * Calls notFound() if the student doesn't exist.
  */
-export async function StudentProfileContent({ id }: StudentProfileContentProps) {
+export async function StudentProfileContent({
+  id,
+}: StudentProfileContentProps) {
   const data = await getStudentProfile(id);
   if (!data) notFound();
 
@@ -84,7 +75,6 @@ export async function StudentProfileContent({ id }: StudentProfileContentProps) 
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4" dir="rtl">
-
       {/* ══ 1. Hero Card — spans 2 columns ══════════════════════════════ */}
       <section
         aria-label="البيانات الأساسية"
@@ -105,7 +95,9 @@ export async function StudentProfileContent({ id }: StudentProfileContentProps) 
                   priority
                 />
               ) : (
-                <span className="text-primary font-bold text-2xl">{initials}</span>
+                <span className="text-primary font-bold text-2xl">
+                  {initials}
+                </span>
               )}
             </div>
 
@@ -115,7 +107,7 @@ export async function StudentProfileContent({ id }: StudentProfileContentProps) 
                 <div>
                   <h2 className="text-xl font-bold">{student.name}</h2>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    {GENDER_LABELS[student.gender]} ·{" "}
+                    {GENDERS.labels[student.gender]} ·{" "}
                     {age !== null ? `${age} سنة` : "العمر غير محدد"}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
@@ -129,7 +121,7 @@ export async function StudentProfileContent({ id }: StudentProfileContentProps) 
                       {student.isActive ? "نشط" : "غير نشط"}
                     </Badge>
                     <Badge variant="outline">
-                      {LEVEL_LABELS[student.level]}
+                      {LEVELS.labels[student.level]}
                     </Badge>
                   </div>
                 </div>
@@ -183,7 +175,10 @@ export async function StudentProfileContent({ id }: StudentProfileContentProps) 
         {/* Address */}
         {student.address && (
           <div className="flex items-start gap-2 text-sm">
-            <MapPin size={13} className="text-muted-foreground shrink-0 mt-0.5" />
+            <MapPin
+              size={13}
+              className="text-muted-foreground shrink-0 mt-0.5"
+            />
             <span>{student.address}</span>
           </div>
         )}
@@ -209,7 +204,9 @@ export async function StudentProfileContent({ id }: StudentProfileContentProps) 
             {otherGuardians.map((g, i) => (
               <div key={i} className="space-y-0.5">
                 <p className="text-xs text-muted-foreground">{g.relation}</p>
-                <p className="text-sm" dir="ltr">{g.phone}</p>
+                <p className="text-sm" dir="ltr">
+                  {g.phone}
+                </p>
               </div>
             ))}
           </div>
@@ -283,7 +280,6 @@ export async function StudentProfileContent({ id }: StudentProfileContentProps) 
           </div>
         )}
       </section>
-
     </div>
   );
 }

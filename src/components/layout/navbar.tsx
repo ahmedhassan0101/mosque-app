@@ -24,7 +24,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { Sidebar } from "./sidebar";
+import { Sidebar } from "./Sidebar";
 import { logoutUser } from "@/actions/auth.actions";
 
 /* ─────────────────────────────────────────────────────────────

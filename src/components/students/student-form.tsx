@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 import { studentSchema, type StudentInput } from "@/schemas/student.schema";
 import { saveStudent } from "@/actions/student.actions";
-import { StudentSerialized } from "@/lib/data/student.data";
+import { StudentSerialized } from "@/queries/student.queries";
 
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/form/FormInput";
@@ -17,21 +17,9 @@ import { FormRadioGroup } from "@/components/form/FormRadioGroup";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { FormDatePicker } from "@/components/form/FormDatePicker";
 import { FormSelect } from "@/components/form/FormSelect";
-import { SURAH_OPTIONS } from "@/lib/quran";
+import { SURAH_OPTIONS } from "@/constants/quran";
 import { FormImageUpload } from "../form/form-image-upload";
-
-// ─── Constants ───────────────────────────────────────────────────────────────
-
-const LEVEL_OPTIONS = [
-  { label: "مبتدئ", value: "beginner" },
-  { label: "متوسط", value: "intermediate" },
-  { label: "متقدم", value: "advanced" },
-];
-
-const GENDER_OPTIONS = [
-  { label: "ذكر", value: "male" },
-  { label: "أنثى", value: "female" },
-];
+import { GENDERS, LEVELS } from "@/constants";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -80,7 +68,6 @@ export default function StudentForm({
   });
 
   const onSubmit = (data: StudentInput) => {
-
     startTransition(async () => {
       const result = await saveStudent(data, studentId);
 
@@ -146,7 +133,7 @@ export default function StudentForm({
           name="gender"
           label="النوع"
           orientation="horizontal"
-          options={GENDER_OPTIONS}
+          options={GENDERS.options}
           required
         />
 
@@ -155,7 +142,7 @@ export default function StudentForm({
           name="level"
           label="المستوى"
           orientation="horizontal"
-          options={LEVEL_OPTIONS}
+          options={LEVELS.options}
         />
       </section>
       ── أولياء الأمور ──

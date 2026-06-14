@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { verifyEmailToken } from "@/actions/auth.actions";
-import { RedirectTimer } from "@/components/auth/redirect-timer";
-import { AuthCard } from "@/components/auth/auth-primitives";
+import { RedirectTimer } from "@/components/auth/RedirectTimer";
+import { AuthCard } from "@/components/auth/AuthPrimitives";
 
 export const metadata: Metadata = {
   title: "تأكيد البريد الإلكتروني | مسجد ERP",

@@ -2,10 +2,10 @@
 import Link from "next/link";
 import { BookOpen, Plus } from "lucide-react";
 
-import { getGroupsList } from "@/lib/data/group.data";
-import { ACTIVITY_LABELS, type ActivityType } from "@/types";
+import { getGroupsList } from "@/queries/group.queries";
 import { Button } from "@/components/ui/button";
 import { GroupCard } from "./GroupCard";
+import { ACTIVITIES, ActivityType } from "@/constants";
 
 interface GroupsGridContentProps {
   type: ActivityType;
@@ -13,7 +13,7 @@ interface GroupsGridContentProps {
 
 export async function GroupsGridContent({ type }: GroupsGridContentProps) {
   const groups = await getGroupsList(type);
-  console.log("🚀 ~ GroupsGridContent ~ groups:", groups)
+  console.log("🚀 ~ GroupsGridContent ~ groups:", groups);
 
   if (groups.length === 0) {
     return (
@@ -22,7 +22,7 @@ export async function GroupsGridContent({ type }: GroupsGridContentProps) {
           <BookOpen size={28} className="text-muted-foreground" />
         </div>
         <h3 className="font-semibold text-lg mb-1">
-          لا توجد {ACTIVITY_LABELS[type]} بعد
+          لا توجد {ACTIVITIES.labels[type]} بعد
         </h3>
         <p className="text-sm text-muted-foreground mb-6">
           ابدأ بإنشاء أول مجموعة في هذا القسم

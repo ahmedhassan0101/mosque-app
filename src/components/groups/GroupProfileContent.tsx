@@ -12,18 +12,21 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-import { getGroupWithDetails } from "@/lib/data/group.data";
-import { ACTIVITY_LABELS, type ActivityType } from "@/types";
+import { getGroupWithDetails } from "@/queries/group.queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DeleteGroupAlert } from "./DeleteGroupAlert";
+import { ACTIVITIES, type ActivityType } from "@/constants";
 
 interface GroupProfileContentProps {
   id: string;
   type: ActivityType;
 }
 
-export async function GroupProfileContent({ id, type }: GroupProfileContentProps) {
+export async function GroupProfileContent({
+  id,
+  type,
+}: GroupProfileContentProps) {
   const group = await getGroupWithDetails(id);
 
   // Double guard — also catches activity mismatch
@@ -33,13 +36,12 @@ export async function GroupProfileContent({ id, type }: GroupProfileContentProps
 
   return (
     <div className="space-y-6" dir="rtl">
-
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <h1 className="text-2xl font-bold">{group.name}</h1>
           <Badge variant="secondary">
-            {ACTIVITY_LABELS[group.activity as ActivityType]}
+            {ACTIVITIES.labels[group.activity as ActivityType]}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
@@ -77,9 +79,14 @@ export async function GroupProfileContent({ id, type }: GroupProfileContentProps
             </div>
           ) : (
             <>
-              <p className="font-semibold text-foreground">{group.teacher!.name}</p>
+              <p className="font-semibold text-foreground">
+                {group.teacher!.name}
+              </p>
               {group.teacher!.phone && (
-                <p className="text-sm text-muted-foreground flex items-center gap-1.5" dir="ltr">
+                <p
+                  className="text-sm text-muted-foreground flex items-center gap-1.5"
+                  dir="ltr"
+                >
                   <Phone size={12} />
                   {group.teacher!.phone}
                 </p>
@@ -145,13 +152,22 @@ export async function GroupProfileContent({ id, type }: GroupProfileContentProps
             <table className="w-full text-sm" dir="rtl">
               <thead>
                 <tr className="bg-muted/40 border-b border-border">
-                  <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-right text-xs font-medium text-muted-foreground"
+                  >
                     الطالب
                   </th>
-                  <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-right text-xs font-medium text-muted-foreground"
+                  >
                     رقم الهاتف
                   </th>
-                  <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-muted-foreground sr-only">
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-right text-xs font-medium text-muted-foreground sr-only"
+                  >
                     إجراءات
                   </th>
                 </tr>

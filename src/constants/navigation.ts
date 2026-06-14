@@ -127,6 +127,21 @@ export const NAV_SECTIONS: NavSection[] = [
       },
     ],
   },
+  {
+    title: "الجلسات",
+    items: [
+      {
+        label: "الجلسات",
+        href: "/dashboard/sessions",
+        icon: Megaphone,
+      },
+      {
+        label: "جلسة جديدة",
+        href: "/dashboard/sessions/new",
+        icon: Megaphone,
+      },
+    ],
+  },
 
   {
     title: "المالية",

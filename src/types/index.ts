@@ -1,33 +1,9 @@
+import type { ActivityType, levelType, RolesType } from "@/constants";
 import { Types } from "mongoose";
 
 /** Shared application-wide types */
-export const ACTIVITIES = [
-  "quran",
-  "tarbiya",
-  "tajweed",
-  "maqraa",
-  "playground",
-] as const;
-export type ActivityType = (typeof ACTIVITIES)[number];
-
-export const STUDENT_LEVEL = ["beginner", "intermediate", "advanced"] as const;
-export type StudentLevel = (typeof STUDENT_LEVEL)[number];
-
-export type AchievementLevel = "weak" | "average" | "good" | "excellent";
-
-export const ACTIVITY_LABELS: Record<ActivityType, string> = {
-  quran: "قرآن كريم",
-  tarbiya: "التربية",
-  tajweed: "التجويد",
-  maqraa: "المقرأة",
-  playground: "الأنشطة",
-};
 
 
-// export type UserRole = "superadmin" | "admin" | "sheikh" | "supervisor";
-
-export type UserRole = "SUPER_ADMIN" | "ADMIN" | "SUPERVISOR";
-export type Provider = "credentials" | "google";
 /** Standard JSend-style API response */
 
 export interface IUser {
@@ -36,7 +12,7 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  role: UserRole;
+  role: RolesType;
   createdAt: Date;
 }
 
@@ -80,7 +56,7 @@ export interface IStudent {
   phone?: string;
   image?: string;
   address?: string;
-  level: StudentLevel;
+  level: levelType;
   enrollments?: ActivityType[];
   currentSurah?: string;
   currentAyah?: number;
@@ -103,32 +79,71 @@ export interface IGroup {
   updatedAt: Date;
 }
 
+// --------------------------------------------------------
+// --------------------------------------------------------
+// src/types/session.types.ts
+
+// ─── Behavior Tags ────────────────────────────────────────────────────────────
+
+export const BEHAVIOR_TAGS = [
+  "excellent", // ممتاز — سير الحلقة كان رائعاً
+  "good", // جيد
+  "average", // متوسط
+  "noisy", // كثير من الضوضاء / الشغب
+  "low_attendance", // إقبال ضعيف
+  "discipline", // مشكلات انضباط عامة
+  "late_start", // تأخر في بدء الجلسة
+] as const;
+
+export type BehaviorTag = (typeof BEHAVIOR_TAGS)[number];
+
+export const BEHAVIOR_TAG_LABELS: Record<BehaviorTag, string> = {
+  excellent: "ممتاز",
+  good: "جيد",
+  average: "متوسط",
+  noisy: "ضوضاء / شغب",
+  low_attendance: "إقبال ضعيف",
+  discipline: "مشكلات انضباط",
+  late_start: "تأخر في البدء",
+};
+
+export type SessionContent = {
+  title?: string;
+  book?: string;
+  fromSurah?: string;
+  fromAyah?: number;
+  toSurah?: string;
+  toAyah?: number;
+};
+
 export interface ISession {
   _id: Types.ObjectId;
   mosqueId: Types.ObjectId;
+  groupId: Types.ObjectId;
   activity: ActivityType;
   date: Date;
-  attendingSheikhIds: Types.ObjectId[];
+  teacherId: Types.ObjectId;
   recordedBy: Types.ObjectId;
-  presentStudentIds: Types.ObjectId[];
-  // Quran specific
-  quranFrom?: { surah: string; ayah: number };
-  quranTo?: { surah: string; ayah: number };
-  // Tarbiya specific
+  attendedStudentIds: Types.ObjectId[];
+  content: SessionContent;
+  behaviorTags: BehaviorTag[];
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ISession2 {
   lesson?: string;
   lessonBook?: string;
-  explainingSheikh?: Types.ObjectId;
-  participatingStudents?: Types.ObjectId[];
-  // Tajweed specific
-  tajweedLesson?: string;
-  // Playground specific
+
   playgroundTime?: string;
-  speechTopic?: string;
   playgroundIssues?: string[];
+
   mvpStudents?: Types.ObjectId[];
   // General
   positives?: string;
   negatives?: string;
+
   notes?: string;
   photos?: string[];
   createdAt: Date;
@@ -143,18 +158,3 @@ export interface IAttendance {
   date: Date;
   present: boolean;
 }
-
-export type GroupMinimal = {
-  _id: string;
-  name: string;
-  activity: string;
-  studentCount: number;
-};
-
-export type SheikhWithGroups = {
-  _id: string;
-  name: string;
-  phone?: string;
-  photo?: string;
-  groups: GroupMinimal[];
-};

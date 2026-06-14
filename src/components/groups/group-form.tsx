@@ -34,7 +34,7 @@ const ACTIVITY_LABELS: Record<GroupInput["activity"], string> = {
   tarbiya: "التربية",
   tajweed: "التجويد",
   maqraa: "المقرأة",
-  playground: "الأنشطة",
+  playground: "الملعب",
 };
 
 export default function GroupForm({

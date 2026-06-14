@@ -7,9 +7,9 @@ import {
   handleActionError,
   ok,
   type ActionResponse,
-} from "@/lib/action-response";
+} from "@/lib/utils/action-response";
 import { getMosqueId } from "@/lib/auth/get-context";
-import { connectDB } from "@/lib/db/db";
+import { connectDB } from "@/lib/db/client";
 import Group from "@/models/group.model";
 import Student from "@/models/student.model";
 import { studentSchema, type StudentInput } from "@/schemas/student.schema";

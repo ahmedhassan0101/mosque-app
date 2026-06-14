@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import bcrypt from "bcryptjs";
-import type { UserRole, Provider } from "@/types";
+import type { RolesType, Provider } from "@/constants";
 
 export interface IUser extends Document {
   id: string;
@@ -9,7 +9,7 @@ export interface IUser extends Document {
   email: string;
   password?: string;
   image?: string;
-  role: UserRole;
+  role: RolesType;
   provider: Provider;
   mosqueId: Types.ObjectId | null;
   // ─── Password Reset ───────────────────────────────

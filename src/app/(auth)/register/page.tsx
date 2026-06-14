@@ -22,8 +22,8 @@
 
 // app/(auth)/register/page.tsx
 import type { Metadata } from "next";
-import { AuthHeader } from "@/components/auth/auth-primitives";
-import { RegisterForm } from "@/components/auth/register-form";
+import { AuthHeader } from "@/components/auth/AuthPrimitives";
+import { RegisterForm } from "@/components/auth/RegisterForm";
 
 export const metadata: Metadata = { title: "إنشاء حساب | مسجد ERP" };
 

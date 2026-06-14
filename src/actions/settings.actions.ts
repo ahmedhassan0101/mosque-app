@@ -6,14 +6,14 @@
  */
 
 import { auth } from "@/lib/auth/auth";
-import { connectDB } from "@/lib/db/db";
+import { connectDB } from "@/lib/db/client";
 import {
   ok,
   fail,
   firstZodIssue,
   handleActionError,
-} from "@/lib/action-response";
-import type { ActionResponse } from "@/lib/action-response";
+} from "@/lib/utils/action-response";
+import type { ActionResponse } from "@/lib/utils/action-response";
 
 import { Mosque } from "@/models/mosque.model";
 import { User } from "@/models/user.model";
@@ -24,7 +24,7 @@ import {
   updateUserRoleSchema,
   type UpdateMosqueInput,
 } from "@/schemas/settings.schema";
-import type { UserRole } from "@/types";
+import { RolesType } from "@/constants";
 
 // ─── Shared Authorization Helper ─────────────────────────────────────────────
 
@@ -79,7 +79,7 @@ export async function refreshInviteCode(
 export async function updateUserRole(
   mosqueId: string,
   userId: string,
-  newRole: UserRole,
+  newRole: RolesType,
 ): Promise<ActionResponse> {
   const parsed = updateUserRoleSchema.safeParse({ userId, newRole });
   if (!parsed.success) return fail(firstZodIssue(parsed.error));

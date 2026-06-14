@@ -7,7 +7,7 @@ import { Trash2, Loader2, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { deleteGroup } from "@/actions/group.actions";
-import type { ActivityType } from "@/types";
+import type { ActivityType } from "@/constants";
 import {
   AlertDialog,
   AlertDialogAction,

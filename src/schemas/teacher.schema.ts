@@ -12,6 +12,7 @@
 
 // src/schemas/teacher.schema.ts
 import { z } from "zod";
+import { nameSchema } from "./global.schema";
 
 /**
  * Teacher form validation schema.
@@ -26,11 +27,7 @@ import { z } from "zod";
  *   types it manually.
  */
 export const teacherSchema = z.object({
-  name: z
-    .string({ message: "اسم المعلم مطلوب." })
-    .min(2, "الاسم يجب أن يكون حرفين على الأقل.")
-    .max(100, "الاسم طويل جداً، الحد الأقصى 100 حرف.")
-    .trim(),
+  name: nameSchema,
 
   phone: z
     .string()

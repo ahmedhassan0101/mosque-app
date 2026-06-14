@@ -1,15 +1,11 @@
 // src\schemas\group.schema.ts
-import { ACTIVITIES } from "@/types";
+import { ACTIVITIES } from "@/constants";
 import z from "zod";
+import { nameSchema } from "./global.schema";
 
 export const groupSchema = z.object({
-  name: z
-    .string({ message: "اسم المجموعة مطلوب." })
-    .min(2, "اسم المجموعة يجب أن يكون حرفين على الأقل.")
-    .max(100, "اسم المجموعة طويل جداً.")
-    .trim(),
-
-  activity: z.enum(ACTIVITIES, {
+  name: nameSchema,
+  activity: z.enum(ACTIVITIES.values, {
     message: "يرجى اختيار نوع النشاط.",
   }),
   teacherId: z.string().min(1, "يرجى اختيار المعلم المسؤول."),

@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { GraduationCap, Users, Calendar, Eye, Pencil } from "lucide-react";
 
-import type { GroupListItem } from "@/lib/data/group.data";
-import type { ActivityType } from "@/types";
+import type { GroupListItem } from "@/queries/group.queries";
+import type { ActivityType } from "@/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DeleteGroupAlert } from "./DeleteGroupAlert";
@@ -19,7 +19,7 @@ export function GroupCard({ group, type }: GroupCardProps) {
   return (
     <article className="group flex flex-col border border-border rounded-xl overflow-hidden bg-card hover:border-primary/40 hover:shadow-md transition-all duration-200">
       {/* Accent bar */}
-      <div className="h-1 w-full bg-gradient-to-l from-primary/60 to-primary" />
+      <div className="h-1 w-full bg-linear-to-l from-primary/60 to-primary" />
 
       <div className="flex flex-col gap-4 p-5 flex-1">
         {/* Name + Badge */}
@@ -38,9 +38,7 @@ export function GroupCard({ group, type }: GroupCardProps) {
           <div className="flex items-center gap-2">
             <GraduationCap size={14} className="shrink-0" />
             {isTeacherMissing ? (
-              <span className="text-destructive/70 text-xs">
-                المعلم محذوف
-              </span>
+              <span className="text-destructive/70 text-xs">المعلم محذوف</span>
             ) : (
               <span>{group.teacherName}</span>
             )}

@@ -1,14 +1,19 @@
 // src/actions/upload.actions.ts
 "use server";
 
-import { ok, fail, handleActionError, ActionResponse } from "@/lib/action-response";
+import {
+  ok,
+  fail,
+  handleActionError,
+  ActionResponse,
+} from "@/lib/utils/action-response";
 import { getMosqueId } from "@/lib/auth/get-context";
 import { cloudinary, UPLOAD_CONFIG } from "@/lib/cloudinary/config";
 
 type UploadData = { url: string; publicId: string };
 
 export async function uploadImageAction(
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse<UploadData>> {
   try {
     const mosqueId = await getMosqueId();
@@ -41,7 +46,7 @@ export async function uploadImageAction(
     const result = await cloudinary.uploader.upload(base64, {
       ...UPLOAD_CONFIG,
       folder: `mosque-app/${mosqueId}/${folderPath}`,
-      public_id: `${folderPath}_${Date.now()}`,     
+      public_id: `${folderPath}_${Date.now()}`,
     });
 
     return ok({

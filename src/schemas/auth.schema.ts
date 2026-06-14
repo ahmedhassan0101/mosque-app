@@ -1,9 +1,10 @@
 // src\schemas\auth.schema.ts
 import { z } from "zod";
+import { nameSchema } from "./global.schema";
 
 export const registerSchema = z
   .object({
-    name: z.string().min(2, "الاسم يجب أن يكون حرفين على الأقل"),
+    name: nameSchema,
     email: z.email("بريد إلكتروني غير صالح"),
     password: z.string().min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل"),
     confirmPassword: z.string(),

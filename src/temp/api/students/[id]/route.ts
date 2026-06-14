@@ -1,0 +1,66 @@
+import { NextRequest, NextResponse } from "next/server";
+import { connectDB } from "@/temp/connect";
+import Student from "@/models/Student";
+import { getMosqueId } from "@/lib/auth/get-context";
+import { studentSchema } from "@/lib/validations/student";
+
+type Params = { params: { id: string } };
+
+export async function GET(_: NextRequest, { params }: Params) {
+  try {
+    const mosqueId = await getMosqueId();
+    await connectDB();
+    const student = await Student.findOne({ _id: params.id, mosqueId }).lean();
+    if (!student)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ student });
+  } catch {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest, { params }: Params) {
+  try {
+    const mosqueId = await getMosqueId();
+    const body = await req.json();
+    const parsed = studentSchema.partial().safeParse(body);
+    if (!parsed.success)
+      return NextResponse.json(
+        { error: "بيانات غير صحيحة", details: parsed.error.flatten() },
+        { status: 400 },
+      );
+
+    await connectDB();
+    const student = await Student.findOneAndUpdate(
+      { _id: params.id, mosqueId },
+      { $set: parsed.data },
+      { new: true, runValidators: true },
+    ).lean();
+
+    if (!student)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ student });
+  } catch {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(_: NextRequest, { params }: Params) {
+  try {
+    const mosqueId = await getMosqueId();
+    await connectDB();
+    // Soft delete
+    const student = await Student.findOneAndUpdate(
+      { _id: params.id, mosqueId },
+      { isActive: false },
+      { new: true },
+    );
+
+    if (!student)
+      return NextResponse.json({ error: "الطالب غير موجود" }, { status: 404 });
+
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

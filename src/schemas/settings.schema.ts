@@ -1,8 +1,7 @@
 import { z } from "zod";
-// import { UserRole } from "@/types";
-// export type UserRole = "SUPER_ADMIN" | "ADMIN" | "SUPERVISOR";
+import { nameSchema } from "./global.schema";
 export const updateMosqueSchema = z.object({
-  name: z.string().min(3, "الاسم يجب أن يكون 3 أحرف على الأقل"),
+  name: nameSchema,
   address: z.string().min(5, "العنوان مطلوب"),
   phone: z.string().regex(/^[0-9+\-\s]{7,15}$/, "رقم هاتف غير صالح"),
 });

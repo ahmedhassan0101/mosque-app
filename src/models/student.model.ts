@@ -1,3 +1,4 @@
+// src\models\student.model.ts
 import { type IGuardian, type IStudent } from "@/types";
 import { Schema, model, models, Types, Document, Model } from "mongoose";
 

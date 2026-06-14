@@ -5,11 +5,11 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import type { Control, FieldValues, Path } from "react-hook-form";
 import { useController } from "react-hook-form";
-import { useImageUpload } from "@/hooks/mutations/useImageUpload";
+import { useImageUpload } from "@/temp/mutations/useImageUpload";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Loader2, Upload, X, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 // npm install react-dropzone
 

@@ -6,14 +6,14 @@
  */
 
 import { auth } from "@/lib/auth/auth";
-import { connectDB } from "@/lib/db/db";
+import { connectDB } from "@/lib/db/client";
 import {
   ok,
   fail,
   firstZodIssue,
   handleActionError,
-} from "@/lib/action-response";
-import type { ActionResponse } from "@/lib/action-response";
+} from "@/lib/utils/action-response";
+import type { ActionResponse } from "@/lib/utils/action-response";
 
 import { Mosque } from "@/models/mosque.model";
 import { User } from "@/models/user.model";

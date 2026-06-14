@@ -1,8 +1,9 @@
 // src\schemas\onboarding.schema.ts
 import { z } from "zod";
+import { nameSchema } from "./global.schema";
 
 export const createMosqueSchema = z.object({
-  name: z.string().min(3, "اسم المسجد يجب أن يكون 3 أحرف على الأقل"),
+  name: nameSchema,
   address: z.string().min(5, "العنوان يجب أن يكون 5 أحرف على الأقل"),
   phone: z
     .string()

@@ -7,7 +7,7 @@ export interface ITeacherDocument extends ITeacher, Document {}
 const teacherSchema = new Schema<ITeacherDocument>(
   {
     mosqueId: {
-      type: Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Mosque",
       required: true,
       // Indexed for fast multi-tenant scoping queries

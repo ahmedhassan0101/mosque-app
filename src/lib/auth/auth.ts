@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { authConfig } from "./auth.config";
-import { connectDB } from "@/lib/db/db";
+import { connectDB } from "@/lib/db/client";
 import { User } from "@/models/user.model";
 import { loginSchema } from "@/schemas/auth.schema";
 
@@ -116,7 +116,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 // export const authOptions = {
 //   // ... باقي إعداداتك (Providers, pages, etc.)
-  
+
 //   callbacks: {
 //     async jwt({ token, user }) {
 //       // أول مرة المستخدم بيعمل Login، بنحط الـ User ID في التوكن
@@ -131,7 +131,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 //         try {
 //           await connectDB();
 //           const freshUser = await User.findById(token.id).select("role mosqueId").lean();
-          
+
 //           if (freshUser) {
 //             // تحديث التوكن بالبيانات الطازجة من الداتا بيز
 //             token.role = freshUser.role;
@@ -140,7 +140,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 //           console.error("Error refreshing token role:", error);
 //         }
 //       }
-      
+
 //       return token;
 //     },
 

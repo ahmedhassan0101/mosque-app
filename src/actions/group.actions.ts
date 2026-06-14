@@ -2,21 +2,20 @@
 // src\actions\group.actions.ts
 "use server";
 
+import { ActivityType } from "@/constants";
 import {
   fail,
   firstZodIssue,
   handleActionError,
   ok,
   type ActionResponse,
-} from "@/lib/action-response";
+} from "@/lib/utils/action-response";
 import { getMosqueId } from "@/lib/auth/get-context";
-import { connectDB } from "@/lib/db/db";
+import { connectDB } from "@/lib/db/client";
 import Group from "@/models/group.model";
 import Student from "@/models/student.model";
 import { groupSchema, type GroupInput } from "@/schemas/group.schema";
-import { ActivityType } from "@/types";
 import { revalidatePath } from "next/cache";
-// import type { ActivityType } from "@/constants/activities";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

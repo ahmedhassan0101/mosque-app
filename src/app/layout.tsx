@@ -1,12 +1,12 @@
 
 import type { Metadata, Viewport } from "next";
 import { Readex_Pro } from "next/font/google";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { auth } from "@/lib/auth/auth";
-import { Providers } from "@/components/providers/providers";
-import GlobalError from "./error";
+import { Providers } from "@/components/providers/Providers";
+// import GlobalError from "./error";
 
 /* ─────────────────────────────────────────────
    Arabic Font — Readex Pro
@@ -90,3 +90,5 @@ export default async function RootLayout({
     </html>
   );
 }
+
+

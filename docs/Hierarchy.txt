@@ -1,0 +1,145 @@
+mosque-app/
+├── docs/ ---------------------------------------------------------------[Done]
+│   ├── instructions.md
+│   ├── phases.md
+│   ├── seed-guide.md
+│   └── git.md
+├── scripts/-------------------------------------------------------------[Done]
+│   ├── seed.ts
+│   └── seed-superadmin.ts
+├── public/--------------------------------------------------------------[Done]
+│   └── globe.svg        ← لو مستخدم، غير كده احذفه
+├── README.md
+├── components.json
+├── eslint.config.mjs
+├── next.config.ts
+├── package.json
+├── postcss.config.mjs
+├── tsconfig.json
+└── src/
+    ├── middleware.ts               ← كان proxy.ts
+    ├── actions/---------------------------------------------[Done]
+    │   ├── auth.actions.ts
+    │   ├── group.actions.ts
+    │   ├── import.actions.ts
+    │   ├── onboarding.actions.ts
+    │   ├── session.actions.ts
+    │   ├── settings.actions.ts
+    │   ├── student.actions.ts
+    │   ├── teacher.actions.ts
+    │   └── upload.actions.ts
+    ├── app/--------------------------------------------------[Done]
+    │   ├── layout.tsx
+    │   ├── page.tsx
+    │   ├── globals.css
+    │   ├── favicon.ico
+    │   ├── loading.tsx             ← جديد
+    │   ├── error.tsx
+    │   ├── not-found.tsx
+    │   ├── (auth)/
+    │   │   ├── layout.tsx
+    │   │   ├── login/page.tsx
+    │   │   ├── register/page.tsx
+    │   │   ├── forgot-password/page.tsx
+    │   │   ├── reset-password/page.tsx
+    │   │   ├── verify-email/page.tsx
+    │   │   ├── waiting-verification/page.tsx
+    │   │   └── onboarding/page.tsx ← انتقل من (onboarding)
+    │   ├── (dashboard)/
+    │   │   ├── layout.tsx
+    │   │   └── dashboard/
+    │   │       ├── page.tsx
+    │   │       ├── loading.tsx     ← جديد
+    │   │       ├── error.tsx       ← جديد (مختلف عن الـ global)
+    │   │       ├── not-found.tsx   ← جديد
+    │   │       ├── groups/[type]/
+    │   │       │   ├── page.tsx
+    │   │       │   ├── new/page.tsx
+    │   │       │   └── [id]/
+    │   │       │       ├── page.tsx
+    │   │       │       └── edit/page.tsx
+    │   │       ├── sessions/
+    │   │       │   ├── page.tsx
+    │   │       │   ├── new/page.tsx
+    │   │       │   └── [id]/edit/page.tsx
+    │   │       ├── settings/page.tsx
+    │   │       ├── students/
+    │   │       │   ├── page.tsx
+    │   │       │   ├── new/page.tsx
+    │   │       │   ├── import/page.tsx
+    │   │       │   └── [id]/
+    │   │       │       ├── page.tsx
+    │   │       │       └── edit/page.tsx
+    │   │       └── teachers/
+    │   │           ├── page.tsx
+    │   │           ├── new/page.tsx
+    │   │           ├── schedules/page.tsx
+    │   │           └── [id]/
+    │   │               ├── page.tsx
+    │   │               └── edit/page.tsx
+    │   └── api/
+    │       └── auth/[...nextauth]/route.ts
+    ├── components/
+    │   ├── auth/           (PascalCase كلها)
+    │   ├── form/           (PascalCase، بدون مكررات)
+    │   ├── shared/         ← كان "global"
+    │   ├── groups/         (بدون مكررات)
+    │   ├── layout/         (PascalCase)
+    │   ├── onboarding/     (PascalCase)
+    │   ├── providers/      (PascalCase)
+    │   ├── sessions/
+    │   ├── settings/       (PascalCase)
+    │   ├── students/
+    │   ├── teachers/       ← كان "teacher" (جمع)
+    │   └── ui/             (shadcn - kebab-case)
+    ├── constants/
+    │   ├── index.ts
+    │   ├── import.ts
+    │   └── navigation.ts
+    ├── hooks/
+    │   ├── use-attendance-students.ts
+    │   ├── use-countdown.ts
+    │   └── use-debounce.ts
+    ├── lib/----------------------------------------------------------[Done]
+    │   ├── auth/
+    │   ├── db/
+    │   ├── cloudinary/
+    │   ├── import/
+    │   ├── services/       ← services فقط (بدون actions)
+    │   │   ├── import.service.ts
+    │   │   ├── sheikh.service.ts
+    │   │   └── student.service.ts
+    │   ├── utils/------------------------------------------[Done]
+    │   │   ├── age.ts
+    │   │   └── utils.ts
+    │   ├── action-response.ts
+    │   ├── mail.ts
+    │   └── quran.ts
+    ├── models/---------------------------------------------------------[Done]
+    │   ├── attendance.model.ts
+    │   ├── group.model.ts
+    │   ├── mosque.model.ts
+    │   ├── session.model.ts
+    │   ├── student.model.ts
+    │   ├── teacher.model.ts
+    │   └── user.model.ts
+    ├── schemas/--------------------------------------------------------[Done]
+    ├── types/----------------------------------------------------------[Done]
+    │   ├── index.ts
+    │   ├── next-auth.d.ts
+    │   └── serialized.ts
+    └── (temp/ - تحذف بعد مراجعتك)
+
+
+
+The Concept of Layout Components
+
+-from 
+<NavBar style={...}>
+    <h3> Component codes... </h3>
+</NavBar>
+
+to:
+<LayoutComponent style={...}>
+    <SideNavBar />
+</LayoutComponent>

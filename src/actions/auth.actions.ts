@@ -14,14 +14,14 @@ import {
 import { generateResetToken, hashToken } from "@/lib/auth/reset-token";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
 import { signIn, signOut } from "@/lib/auth/auth";
-import { connectDB } from "@/lib/db/db";
+import { connectDB } from "@/lib/db/client";
 import {
   handleActionError,
   firstZodIssue,
   fail,
   ok,
-} from "@/lib/action-response";
-import type { ActionResponse } from "@/lib/action-response";
+} from "@/lib/utils/action-response";
+import type { ActionResponse } from "@/lib/utils/action-response";
 // 2. Models
 import { User } from "@/models/user.model";
 // 3. Schemas

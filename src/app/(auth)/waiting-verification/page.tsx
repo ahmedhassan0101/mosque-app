@@ -4,28 +4,34 @@
 import { MailOpen } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
- 
+
 import { auth } from "@/lib/auth/auth";
-import { AuthHeader, AuthCard, AuthFooter } from "@/components/auth/auth-primitives";
-import { ResendVerificationButton } from "@/components/auth/resend-verification-button";
- 
+import {
+  AuthHeader,
+  AuthCard,
+  AuthFooter,
+} from "@/components/auth/AuthPrimitives";
+import { ResendVerificationButton } from "@/components/auth/ResendVerificationButton";
+
 export const metadata: Metadata = { title: "في انتظار التحقق | مسجد ERP" };
- 
+
 interface WaitingPageProps {
   searchParams: Promise<{ email?: string }>;
 }
- 
-export default async function WaitingVerificationPage({ searchParams }: WaitingPageProps) {
+
+export default async function WaitingVerificationPage({
+  searchParams,
+}: WaitingPageProps) {
   const { email: queryEmail } = await searchParams;
   const session = await auth();
   const email = queryEmail ?? session?.user?.email ?? "";
- 
+
   const steps = [
     "افتح بريدك الإلكتروني",
     "ابحث عن رسالة من مسجد ERP",
     "اضغط على زر «تأكيد البريد الإلكتروني»",
   ];
- 
+
   return (
     <>
       {/* Icon + header */}
@@ -43,7 +49,7 @@ export default async function WaitingVerificationPage({ searchParams }: WaitingP
           className="mb-0"
         />
       </div>
- 
+
       <AuthCard className="space-y-4">
         {/* Steps */}
         <ol className="space-y-3">
@@ -52,11 +58,13 @@ export default async function WaitingVerificationPage({ searchParams }: WaitingP
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
                 {i + 1}
               </span>
-              <span className="text-sm text-muted-foreground leading-6">{step}</span>
+              <span className="text-sm text-muted-foreground leading-6">
+                {step}
+              </span>
             </li>
           ))}
         </ol>
- 
+
         <div className="border-t border-border pt-4 space-y-2">
           <p className="text-xs text-center text-muted-foreground">
             لم تصلك الرسالة؟ تحقق من مجلد البريد المزعج أو أعد الإرسال:
@@ -64,9 +72,12 @@ export default async function WaitingVerificationPage({ searchParams }: WaitingP
           <ResendVerificationButton email={email} />
         </div>
       </AuthCard>
- 
+
       <AuthFooter>
-        <Link href="/login" className="font-medium text-primary hover:underline">
+        <Link
+          href="/login"
+          className="font-medium text-primary hover:underline"
+        >
           العودة لتسجيل الدخول
         </Link>
       </AuthFooter>
