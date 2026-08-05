@@ -1,32 +1,72 @@
+// // components/ui/card.tsx
+
 // import * as React from "react";
+// import { cn } from "@/lib/utils/utils";
 
-// import { cn } from "@/lib/utils";
+// /*
+//   Card — Design System Override
+//   ─────────────────────────────────────────────
+//   التغييرات عن shadcn الأصلي:
 
-// function Card({
-//   className,
-//   size = "default",
-//   ...props
-// }: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+//   1. border border-border بدل ring-1 ring-foreground/10
+//      — أوضح وأكثر اتساقاً مع الـ design tokens
+//   2. rounded-lg (--radius-lg = 12px) بدل rounded-xl (16px)
+//      — الـ 12px هو الـ card radius المحدد في الـ spec
+//   3. shadow-sm في light فقط — الـ dark mode يعتمد على الـ border
+//   4. إزالة overflow-hidden من الـ base — ممكن يكسر الـ dropdowns
+//      (يُضاف يدوياً عند الحاجة)
+//   5. py-(--card-spacing) → p-4 md:p-6 — باستخدام الـ utility classes
+//   6. إزالة text-sm من الـ base — الـ font size يُحدد في كل مكان بشكل صريح
+
+//   Variants:
+//     default → card عادي مع padding متغير
+//     stat    → dashboard KPI card — padding ثابت p-6
+//     flat    → بدون shadow — dark mode first
+
+//   الاستخدام:
+//     <Card>                      → default card
+//     <Card variant="stat">       → stat/KPI card
+//     <CardHeader>...</CardHeader>
+//     <CardContent>...</CardContent>
+//     <CardFooter>...</CardFooter>
+//   ─────────────────────────────────────────────
+// */
+
+// type CardVariant = "default" | "stat" | "flat";
+
+// interface CardProps extends React.ComponentProps<"div"> {
+//   variant?: CardVariant;
+// }
+
+// function Card({ className, variant = "default", ...props }: CardProps) {
 //   return (
 //     <div
 //       data-slot="card"
-//       data-size={size}
+//       data-variant={variant}
 //       className={cn(
-//         "group/card flex flex-col gap-4 overflow-hidden rounded-xl  py-4 pt-0 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
-//         className,
+//         // Base — shared
+//         "flex flex-col gap-0 bg-card text-card-foreground",
+//         "rounded-lg border border-border",
+//         // Shadow: light mode only — dark mode uses border
+//         "shadow-sm dark:shadow-none",
+//         // Variant overrides
+//         variant === "stat" && "p-6",
+//         variant === "flat" && "shadow-none",
+//         className
 //       )}
 //       {...props}
 //     />
 //   );
 // }
-// // bg-card
+
 // function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 //   return (
 //     <div
 //       data-slot="card-header"
 //       className={cn(
-//         "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4  group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3  bg-muted/50 border-b pt-4",
-//         className,
+//         "flex items-start justify-between gap-4",
+//         "p-4 pb-0 md:p-6 md:pb-0",
+//         className
 //       )}
 //       {...props}
 //     />
@@ -38,8 +78,8 @@
 //     <div
 //       data-slot="card-title"
 //       className={cn(
-//         "font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",
-//         className,
+//         "text-base font-semibold leading-snug text-foreground",
+//         className
 //       )}
 //       {...props}
 //     />
@@ -50,20 +90,23 @@
 //   return (
 //     <div
 //       data-slot="card-description"
-//       className={cn("text-sm text-muted-foreground", className)}
+//       className={cn("text-sm text-muted-foreground leading-normal", className)}
 //       {...props}
 //     />
 //   );
 // }
 
+// /*
+//   CardAction:
+//   العنصر الاختياري في يسار الـ header (RTL).
+//   يُستخدم لوضع link أو button صغير بجانب الـ title.
+//   مثال: "عرض الكل" بجانب عنوان القسم
+// */
 // function CardAction({ className, ...props }: React.ComponentProps<"div">) {
 //   return (
 //     <div
 //       data-slot="card-action"
-//       className={cn(
-//         "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
-//         className,
-//       )}
+//       className={cn("shrink-0 self-start", className)}
 //       {...props}
 //     />
 //   );
@@ -73,19 +116,27 @@
 //   return (
 //     <div
 //       data-slot="card-content"
-//       className={cn("px-4 group-data-[size=sm]/card:px-3", className)}
+//       className={cn("p-4 md:p-6", className)}
 //       {...props}
 //     />
 //   );
 // }
 
+// /*
+//   CardFooter:
+//   خلفية muted خفيفة + border علوي — للـ actions أو الـ metadata.
+//   مثال: "حفظ / إلغاء" في نهاية الـ settings card
+// */
 // function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 //   return (
 //     <div
 //       data-slot="card-footer"
 //       className={cn(
-//         "flex items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3",
-//         className,
+//         "flex items-center justify-end gap-2",
+//         "border-t border-border bg-muted/40",
+//         "px-4 py-3 md:px-6",
+//         "rounded-b-lg",
+//         className
 //       )}
 //       {...props}
 //     />
@@ -95,36 +146,103 @@
 // export {
 //   Card,
 //   CardHeader,
-//   CardFooter,
 //   CardTitle,
-//   CardAction,
 //   CardDescription,
+//   CardAction,
 //   CardContent,
+//   CardFooter,
 // };
+// components/ui/card.tsx
 
 import * as React from "react";
 import { cn } from "@/lib/utils/utils";
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+/*
+  Card — Design System (Final)
+  ─────────────────────────────────────────────
+  CardHeader — Option B:
+  - بدون border-b — الـ spacing وحده يفصل
+  - الـ border-b خُفِّف لـ 40% opacity كـ prop اختياري للـ cards الداخلية
+  - sys-label (اسم النظام) + title كبير text-2xl + description
+
+  القرار:
+  - border بين الـ header والـ content: اختياري عبر prop
+  - Auth cards: بدون border
+  - Dashboard cards مع header معقد: يمكن تفعيله
+  ─────────────────────────────────────────────
+*/
+
+type CardVariant = "default" | "stat" | "flat";
+
+interface CardProps extends React.ComponentProps<"div"> {
+  variant?: CardVariant;
+}
+
+function Card({ className, variant = "default", ...props }: CardProps) {
   return (
     <div
       data-slot="card"
+      data-variant={variant}
       className={cn(
-        "rounded-xl border border-border bg-card text-card-foreground",
-        className,
+        "flex flex-col bg-card text-card-foreground",
+        "rounded-lg border border-border",
+        "shadow-sm dark:shadow-none",
+        variant === "stat" && "p-6",
+        variant === "flat" && "shadow-none",
+        className
       )}
       {...props}
     />
   );
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+/*
+  CardHeader:
+  - divider={true} → border-b خفيف 40% للـ dashboard cards
+  - divider={false} → بدون border (default) للـ auth cards
+*/
+interface CardHeaderProps extends React.ComponentProps<"div"> {
+  divider?: boolean;
+}
+
+function CardHeader({ className, divider = false, ...props }: CardHeaderProps) {
   return (
     <div
       data-slot="card-header"
-      className={cn("flex flex-col gap-1 px-5 pt-5", className)}
+      className={cn(
+        "flex flex-col gap-1",
+        "px-6 pt-6 pb-5",
+        divider && "border-b border-border/40 pb-5",
+        className
+      )}
       {...props}
     />
+  );
+}
+
+/*
+  CardSysLabel:
+  السطر الصغير فوق الـ title — اسم النظام أو context
+  dot أخضر emerald + نص muted صغير
+  مثال: "نظام إدارة المسجد" في auth cards
+*/
+function CardSysLabel({ className, children, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-sys-label"
+      className={cn(
+        "flex items-center gap-1.5 text-xs text-muted-foreground",
+        className
+      )}
+      {...props}
+    >
+      {/* Emerald dot — الـ brand accent الوحيد في الـ header */}
+      <span
+        className="size-1.5 rounded-full bg-primary shrink-0"
+        aria-hidden="true"
+      />
+      {children}
+    </div>
   );
 }
 
@@ -133,8 +251,9 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
-        "text-base font-semibold leading-snug text-foreground",
-        className,
+        // text-2xl (24px) — فرق واضح وقوي عن الـ body text (14px)
+        "text-2xl font-semibold leading-tight text-foreground",
+        className
       )}
       {...props}
     />
@@ -145,7 +264,20 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn(
+        "text-sm leading-normal text-muted-foreground",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function CardAction({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-action"
+      className={cn("shrink-0 self-start", className)}
       {...props}
     />
   );
@@ -155,7 +287,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-content"
-      className={cn("px-5 pb-5 pt-4", className)}
+      className={cn("px-6 pb-6 pt-0", className)}
       {...props}
     />
   );
@@ -166,26 +298,24 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center border-t border-border px-5 py-3",
-        className,
+        "flex items-center justify-end gap-2",
+        "border-t border-border/40 bg-muted/30",
+        "px-6 py-4",
+        "rounded-b-lg",
+        className
       )}
       {...props}
     />
   );
 }
 
-function CardAction({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div data-slot="card-action" className={cn("", className)} {...props} />
-  );
-}
-
 export {
   Card,
   CardHeader,
+  CardSysLabel,
   CardTitle,
   CardDescription,
+  CardAction,
   CardContent,
   CardFooter,
-  CardAction,
 };

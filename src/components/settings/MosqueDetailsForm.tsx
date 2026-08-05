@@ -7,8 +7,15 @@ import {
   type UpdateMosqueInput,
 } from "@/schemas/settings.schema";
 import { updateMosqueSettings } from "@/actions/settings.actions";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/temp/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 import { useTransition } from "react";
 import { FormInput } from "../form/FormInput";
@@ -81,7 +88,6 @@ export function MosqueDetailsForm({ mosque }: MosqueDetailsFormProps) {
         </form>
       </CardContent>
 
-   
       <CardFooter className="justify-start">
         <Button type="submit" form="mosque-details-form" disabled={isPending}>
           {isPending ? "جارٍ الحفظ..." : "حفظ التغييرات"}

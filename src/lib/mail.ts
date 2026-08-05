@@ -19,6 +19,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL!;
  */
 export async function sendPasswordResetEmail(email: string, token: string) {
   const resetUrl = `${APP_URL}/reset-password?token=${token}`;
+  console.log("🚀 ~ sendPasswordResetEmail ~ resetUrl:", resetUrl)
 
   try {
     const { data, error } = await resend.emails.send({
@@ -45,6 +46,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
       return { success: false, error: error.message };
     }
 
+    console.log("🚀 ~ sendPasswordResetEmail ~ success:", "success")
     return { success: true, data };
   } catch (error) {
     console.error("[Mail Function Error - Reset]:", error);
@@ -69,6 +71,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 export async function sendVerificationEmail(email: string, token: string) {
   const verifyUrl = `${APP_URL}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
 
+  console.log("🔗 VERIFICATION URL FOR TESTING:", verifyUrl);
   try {
     const { data, error } = await resend.emails.send({
       from: `Masjid ERP <${FROM_ADDRESS}>`,

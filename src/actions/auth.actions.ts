@@ -133,12 +133,14 @@ export async function requestPasswordReset(
   email: string,
 ): Promise<ActionResponse> {
   const parsed = forgotPasswordSchema.safeParse({ email });
+  console.log("🚀 ~ requestPasswordReset ~ email:", email)
   if (!parsed.success) return fail("يرجى إدخال بريد إلكتروني صالح.");
 
   try {
     await connectDB();
 
     const user = await User.findOne({ email: parsed.data.email });
+    console.log("🚀 ~ requestPasswordReset ~ user:", user)
 
     // Security: Do not reveal if the email exists or not
     if (!user || user.provider !== "credentials") {
@@ -147,6 +149,7 @@ export async function requestPasswordReset(
         "إذا كان البريد مسجلاً لدينا، سيصلك رابط إعادة التعيين قريباً.",
       );
     }
+    console.log("🚀 ~ requestPasswordReset ~--------------- }:")
 
     const { token, hash } = generateResetToken();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour

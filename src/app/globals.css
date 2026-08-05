@@ -3,21 +3,69 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ═══════════════════════════════════════════════════════════════
+   MASJID ERP — Design System Tokens
+   Philosophy: 90% Slate neutrals · 10% Emerald accent
+   Emerald appears ONLY in: CTAs, active states, indicators, badges
+   Neutrals are pure Slate (hue ~264) — zero green tint
+═══════════════════════════════════════════════════════════════ */
+
 /* ─────────────────────────────────────────────
-   MASJID ERP — Design System Tokens (OKLCH)
-   Palette: Emerald · Teal · Warm Slate (Dark)
-   Harmonized from Landing Page visual identity
+   FONT FACE DECLARATIONS
+   graphik-arabic → loaded from /public/fonts/
+   Geist Mono     → for numbers, IDs, code
+   Note: @font-face will be added in layout.tsx via next/font
+         These are declared here as CSS fallbacks only.
+───────────────────────────────────────────── */
+@layer base {
+  /* Geist Mono — for numerics / IDs / code snippets */
+  /* Loaded via next/font/google in layout.tsx       */
+  /* Defined here so utility classes resolve safely  */
+}
+
+/* ─────────────────────────────────────────────
+   @theme — Tailwind v4 Token Registration
+   Maps CSS custom properties → Tailwind classes
 ───────────────────────────────────────────── */
 @theme inline {
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* ── Radius Scale ───────────────────────── */
+  --radius-sm: 0.375rem; /* 6px  — inputs, badges          */
+  --radius-md: 0.5rem; /* 8px  — buttons, small cards    */
+  --radius-lg: 0.75rem; /* 12px — cards (default)         */
+  --radius-xl: 1rem; /* 16px — modals, sheets          */
+  --radius-2xl: 1.25rem; /* 20px — large panels            */
 
-  /* Core Color Mappings */
+  /* ── Font Families ──────────────────────── */
+  --font-sans: "graphik-arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Fira Code", ui-monospace, monospace;
+
+  /* ── Font Sizes (px values → rem) ──────── */
+  --text-xs: 0.75rem; /* 12px — captions, helper text    */
+  --text-sm: 0.8125rem; /* 13px — table cells, secondary   */
+  --text-base: 0.875rem; /* 14px — body, form labels        */
+  --text-lg: 1rem; /* 16px — card titles, subtitles   */
+  --text-xl: 1.25rem; /* 20px — page titles              */
+  --text-2xl: 1.5rem; /* 24px — dashboard headings       */
+  --text-3xl: 1.875rem; /* 30px — hero numbers             */
+
+  /* ── Line Heights ───────────────────────── */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* ── Shadows ────────────────────────────── */
+  /* shadow-sm  → light mode cards (border replaces in dark) */
+  --shadow-sm:
+    0 1px 3px 0 oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.04);
+  --shadow-md:
+    0 4px 6px -1px oklch(0 0 0 / 0.07), 0 2px 4px -2px oklch(0 0 0 / 0.05);
+  --shadow-lg:
+    0 10px 15px -3px oklch(0 0 0 / 0.08), 0 4px 6px -4px oklch(0 0 0 / 0.05);
+  /* Emerald glow shadow — for primary CTAs hover state      */
+  --shadow-primary: 0 0 0 3px oklch(0.55 0.15 162 / 0.2);
+
+  /* ── Core Color Mappings ─────────────────── */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -33,20 +81,27 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Chart Colors */
+  /* ── Semantic Color Mappings ────────────── */
+  /* Not in shadcn default — added for status badges & indicators */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* ── Chart Color Mappings ───────────────── */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* Sidebar Colors */
+  /* ── Sidebar Color Mappings ─────────────── */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -55,186 +110,198 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
-  /* ── Extended Brand Tokens ──────────────────
-     Use these for manual accent overrides:
-     bg-[var(--emerald-glow)]  /  text-[var(--teal)]
-  ─────────────────────────────────────────── */
-  --color-emerald-glow: var(--emerald-glow);
-  --color-teal: var(--teal);
-  --color-amber-accent: var(--amber-accent);
-  --color-blue-accent: var(--blue-accent);
 }
 
-/* ╔══════════════════════════════════════════════╗
-   ║           LIGHT MODE  ( :root )              ║
-   ╚══════════════════════════════════════════════╝
-   Brand story:
-   • Background  → warm near-white with faint green hue (airy, clean)
-   • Card        → pure white (crisp panels)
-   • Primary     → Emerald 500 (oklch ≈ 0.696 0.17 162) — the brand hero
-   • Accent      → Teal tint (softer, secondary interactables)
-   • Muted       → cool light-green-grey surfaces & disabled text
-   • Foreground  → deep warm-slate for max readability
-*/
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                   LIGHT MODE  ( :root )                     ║
+   ║                                                             ║
+   ║  Neutrals → pure Slate scale (hue 264) — zero green tint   ║
+   ║  Emerald  → accent only (primary, success, ring, active)   ║
+   ╚══════════════════════════════════════════════════════════════╝ */
 :root {
   --radius: 0.75rem;
 
-  /* Surfaces */
-  --background: oklch(0.985 0.008 165); /* warm off-white, faint emerald tint */
-  --foreground: oklch(0.22 0.025 195); /* deep slate-green — very readable    */
-  --card: oklch(1 0 0); /* pure white cards                    */
-  --card-foreground: oklch(0.22 0.025 195);
+  /* ── Surfaces & Backgrounds ─────────────── */
+  --background: oklch(0.98 0 0); /* Slate 50  — clean off-white       */
+  --foreground: oklch(0.13 0.02 264); /* Slate 900 — deep readable text    */
 
-  /* Popovers */
+  --card: oklch(1 0 0); /* pure white panels                 */
+  --card-foreground: oklch(0.13 0.02 264);
+
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.025 195);
+  --popover-foreground: oklch(0.13 0.02 264);
 
-  /* ── Primary: Emerald 500 ──
-     Used for: buttons, active tabs, progress bars, CTAs, logo accent
-     Tailwind classes: bg-primary  text-primary  border-primary  ring-primary
-  */
-  --primary: oklch(0.696 0.17 162); /* Emerald 500 */
-  --primary-foreground: oklch(1 0 0); /* white text on emerald */
+  /* ── Primary: Emerald 500 ───────────────────────────────────────
+     The ONLY accent color. Used for:
+     CTAs, active nav items, progress bars, focus rings, checkboxes.
+     Rule: max ONE primary button per view.
+  ─────────────────────────────────────────────────────────────── */
+  --primary: oklch(0.55 0.15 162); /* Emerald 500                       */
+  --primary-foreground: oklch(1 0 0); /* white text on emerald             */
 
-  /* ── Secondary: Muted Teal-Green ──
-     Used for: secondary buttons, ghost states, subtle surfaces
-     Tailwind: bg-secondary  text-secondary-foreground
-  */
-  --secondary: oklch(0.935 0.03 162); /* faint emerald wash */
-  --secondary-foreground: oklch(0.35 0.06 162); /* mid emerald text  */
+  /* ── Secondary: Slate 100 ──────────────────────────────────────
+     Ghost buttons, secondary actions, subtle tag backgrounds.
+     Pure slate — no green tint.
+  ─────────────────────────────────────────────────────────────── */
+  --secondary: oklch(0.94 0.01 264); /* Slate 100                      */
+  --secondary-foreground: oklch(
+    0.28 0.02 264
+  ); /* Slate 700                      */
 
-  /* ── Muted: Greyed backgrounds + helper text ──
-     Used for: nav bg, table rows alt, code blocks, disabled
-     Tailwind: bg-muted  text-muted-foreground
-  */
-  --muted: oklch(0.94 0.015 165);
-  --muted-foreground: oklch(0.52 0.025 175);
+  /* ── Muted: Slate 100/400 ──────────────────────────────────────
+     Table alternating rows, disabled states, helper text.
+     Pure slate — no green tint.
+  ─────────────────────────────────────────────────────────────── */
+  --muted: oklch(0.94 0.01 264); /* Slate 100                         */
+  --muted-foreground: oklch(
+    0.55 0.02 264
+  ); /* Slate 400 — secondary text        */
 
-  /* ── Accent: Soft Teal ──
-     Used for: hover highlights, badges bg, notification dots
-     Tailwind: bg-accent  text-accent-foreground
-  */
-  --accent: oklch(0.91 0.05 175); /* teal-tinged light surface */
-  --accent-foreground: oklch(0.3 0.07 175); /* dark teal text            */
+  /* ── Accent: Slate 100 ─────────────────────────────────────────
+     Hover highlights on nav items, dropdown row hover.
+     Kept neutral to avoid visual noise.
+  ─────────────────────────────────────────────────────────────── */
+  --accent: oklch(0.94 0.01 264); /* Slate 100                         */
+  --accent-foreground: oklch(
+    0.28 0.02 264
+  ); /* Slate 700                         */
 
-  /* ── Semantic ── */
-  --destructive: oklch(0.58 0.2 25); /* red-orange             */
-  --success: oklch(0.696 0.17 162); /* same as primary: emerald */
-  --warning: oklch(0.75 0.14 75); /* amber                  */
+  /* ── Semantic: Destructive ──────────────── */
+  --destructive: oklch(0.58 0.22 27); /* Red 500                       */
+  --destructive-foreground: oklch(1 0 0);
 
-  /* ── Borders & Inputs ── */
-  --border: oklch(0.88 0.02 165);
-  --input: oklch(0.94 0.015 165);
-  --ring: oklch(0.696 0.17 162); /* emerald focus ring */
+  /* ── Semantic: Success ─────────────────────────────────────────
+     Same as primary (emerald) — consistent brand signal.
+     Why separate token? Allows future divergence if needed.
+  ─────────────────────────────────────────────────────────────── */
+  --success: oklch(0.55 0.15 162); /* Emerald 500                       */
+  --success-foreground: oklch(1 0 0);
 
-  /* ── Charts ──
-     Tuned to look natural alongside emerald primary
-  */
-  --chart-1: oklch(0.696 0.17 162); /* emerald — primary series      */
-  --chart-2: oklch(0.65 0.13 195); /* teal-blue — secondary series  */
-  --chart-3: oklch(0.75 0.14 75); /* amber                         */
-  --chart-4: oklch(0.6 0.15 255); /* indigo/blue                   */
-  --chart-5: oklch(0.65 0.18 25); /* warm coral                    */
+  /* ── Semantic: Warning ──────────────────── */
+  --warning: oklch(0.72 0.15 70); /* Amber 500                         */
+  --warning-foreground: oklch(
+    0.2 0.04 60
+  ); /* dark amber text                   */
 
-  /* ── Sidebar ── */
-  --sidebar: oklch(0.975 0.01 165);
-  --sidebar-foreground: oklch(0.28 0.025 195);
-  --sidebar-primary: oklch(0.696 0.17 162);
+  /* ── Semantic: Info ─────────────────────────────────────────────
+     Not in shadcn default. Added for:
+     informational badges, tooltips, status indicators.
+     Why: project uses 4-state system (success/warning/error/info).
+  ─────────────────────────────────────────────────────────────── */
+  --info: oklch(0.6 0.17 250); /* Blue 500                          */
+  --info-foreground: oklch(1 0 0);
+
+  /* ── Borders, Inputs, Focus ─────────────── */
+  --border: oklch(0.9 0.01 264); /* Slate 200                          */
+  --input: oklch(0.9 0.01 264); /* Slate 200 (same as border)         */
+  --ring: oklch(0.55 0.15 162); /* Emerald — focus ring               */
+
+  /* ── Chart Colors ───────────────────────────────────────────────
+     Series ordered by visual hierarchy:
+     1→ primary (emerald), 2→ blue, 3→ amber, 4→ rose, 5→ violet
+  ─────────────────────────────────────────────────────────────── */
+  --chart-1: oklch(0.55 0.15 162); /* Emerald — primary series          */
+  --chart-2: oklch(0.6 0.17 250); /* Blue — secondary series           */
+  --chart-3: oklch(0.72 0.15 70); /* Amber                             */
+  --chart-4: oklch(0.62 0.2 15); /* Rose                              */
+  --chart-5: oklch(0.55 0.18 290); /* Violet                            */
+
+  /* ── Sidebar ─────────────────────────────── */
+  --sidebar: oklch(0.97 0.005 264); /* near-white slate          */
+  --sidebar-foreground: oklch(0.28 0.02 264); /* Slate 700                 */
+  --sidebar-primary: oklch(0.55 0.15 162); /* Emerald 500               */
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.91 0.05 175);
-  --sidebar-accent-foreground: oklch(0.3 0.07 175);
-  --sidebar-border: oklch(0.88 0.02 165);
-  --sidebar-ring: oklch(0.696 0.17 162);
-
-  /* ── Extended Brand Tokens ── */
-  --emerald-glow: oklch(
-    0.696 0.17 162 / 0.15
-  ); /* transparent emerald for glow divs */
-  --teal: oklch(0.66 0.14 190);
-  --amber-accent: oklch(0.75 0.14 75);
-  --blue-accent: oklch(0.6 0.15 255);
+  --sidebar-accent: oklch(0.94 0.01 264); /* Slate 100 — hover bg      */
+  --sidebar-accent-foreground: oklch(
+    0.28 0.02 264
+  ); /* Slate 700                 */
+  --sidebar-border: oklch(0.9 0.01 264); /* Slate 200                 */
+  --sidebar-ring: oklch(0.55 0.15 162); /* Emerald                   */
 }
 
-/* ╔══════════════════════════════════════════════╗
-   ║           DARK MODE  ( .dark )               ║
-   ╚══════════════════════════════════════════════╝
-   Brand story:
-   • Background  → very deep warm-slate (not pure black — warmer, premium)
-   • Card        → slightly elevated dark surface
-   • Primary     → Emerald 400-ish (lighter for contrast on dark)
-   • Accent      → dark teal tint
-   • Muted       → subtle dark surfaces and softer helper text
-*/
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                   DARK MODE  ( .dark )                      ║
+   ║                                                             ║
+   ║  Background → warm dark slate (NOT pure black — warmer)    ║
+   ║  Primary    → Emerald 400 (lighter for dark bg contrast)   ║
+   ║  Borders    → replace shadows in dark mode                 ║
+   ╚══════════════════════════════════════════════════════════════╝ */
 .dark {
-  /* Surfaces */
-  --background: oklch(0.165 0.018 210); /* deep warm-slate, near-black     */
-  --foreground: oklch(0.93 0.012 180); /* soft warm-white, easy on eyes   */
-  --card: oklch(0.205 0.02 205); /* slightly lifted dark panel      */
-  --card-foreground: oklch(0.93 0.012 180);
+  /* ── Surfaces ───────────────────────────── */
+  --background: oklch(0.13 0.02 264); /* Slate ~950 — deep warm slate      */
+  --foreground: oklch(0.98 0 0); /* near-white text                   */
 
-  /* Popovers */
-  --popover: oklch(0.205 0.02 205);
-  --popover-foreground: oklch(0.93 0.012 180);
+  --card: oklch(0.17 0.02 264); /* Slate ~900 — slightly lifted      */
+  --card-foreground: oklch(0.98 0 0);
 
-  /* ── Primary: Emerald 400 (lighter for dark bg) ──
-     Lightened so it pops on dark surfaces with WCAG AA contrast
-  */
-  --primary: oklch(0.76 0.16 162); /* Emerald ~400 on dark          */
+  --popover: oklch(0.17 0.02 264);
+  --popover-foreground: oklch(0.98 0 0);
+
+  /* ── Primary: Emerald 400 ───────────────────────────────────────
+     Lighter than 500 to maintain WCAG AA contrast on dark bg.
+     Ratio target: ≥ 4.5:1 against --background.
+  ─────────────────────────────────────────────────────────────── */
+  --primary: oklch(0.6 0.15 162); /* Emerald ~400                      */
   --primary-foreground: oklch(
-    0.12 0.02 195
-  ); /* very dark text on bright btn  */
+    0.1 0.02 264
+  ); /* very dark text on bright button   */
 
-  /* ── Secondary ── */
-  --secondary: oklch(0.265 0.03 175); /* dark teal-green surface        */
+  /* ── Secondary ──────────────────────────── */
+  --secondary: oklch(0.22 0.02 264); /* Slate ~800                      */
   --secondary-foreground: oklch(
-    0.88 0.03 165
-  ); /* light green text on secondary  */
+    0.82 0.01 264
+  ); /* Slate ~200                      */
 
-  /* ── Muted ── */
-  --muted: oklch(0.248 0.022 200);
-  --muted-foreground: oklch(0.58 0.025 180);
+  /* ── Muted ───────────────────────────────── */
+  --muted: oklch(0.22 0.02 264); /* Slate ~800                        */
+  --muted-foreground: oklch(
+    0.55 0.02 264
+  ); /* Slate ~400                        */
 
-  /* ── Accent: Dark Teal Wash ── */
-  --accent: oklch(0.265 0.04 175);
-  --accent-foreground: oklch(0.88 0.05 165);
+  /* ── Accent ──────────────────────────────── */
+  --accent: oklch(0.22 0.02 264); /* Slate ~800                        */
+  --accent-foreground: oklch(
+    0.82 0.01 264
+  ); /* Slate ~200                        */
 
-  /* ── Semantic ── */
-  --destructive: oklch(0.65 0.2 25);
-  --success: oklch(0.76 0.16 162);
-  --warning: oklch(0.8 0.14 75);
+  /* ── Semantic ───────────────────────────── */
+  --destructive: oklch(0.65 0.22 27); /* Red ~400 (brighter on dark)   */
+  --destructive-foreground: oklch(0.1 0.02 264);
 
-  /* ── Borders & Inputs ── */
-  --border: oklch(0.3 0.025 200);
-  --input: oklch(0.248 0.022 200);
-  --ring: oklch(0.76 0.16 162); /* emerald ring in dark           */
+  --success: oklch(0.6 0.15 162); /* Emerald ~400 */
+  --success-foreground: oklch(0.1 0.02 264);
 
-  /* ── Charts ── */
-  --chart-1: oklch(0.76 0.16 162); /* emerald — primary        */
-  --chart-2: oklch(0.7 0.12 195); /* teal-blue                */
-  --chart-3: oklch(0.8 0.14 75); /* amber                    */
-  --chart-4: oklch(0.65 0.15 255); /* indigo                   */
-  --chart-5: oklch(0.68 0.18 25); /* coral                    */
+  --warning: oklch(0.78 0.15 70); /* Amber ~400 */
+  --warning-foreground: oklch(0.15 0.04 60);
 
-  /* ── Sidebar ── */
-  --sidebar: oklch(0.14 0.018 210);
-  --sidebar-foreground: oklch(0.82 0.015 180);
-  --sidebar-primary: oklch(0.76 0.16 162);
-  --sidebar-primary-foreground: oklch(0.12 0.02 195);
-  --sidebar-accent: oklch(0.248 0.03 175);
-  --sidebar-accent-foreground: oklch(0.82 0.03 165);
-  --sidebar-border: oklch(0.265 0.022 205);
-  --sidebar-ring: oklch(0.76 0.16 162);
+  --info: oklch(0.65 0.17 250); /* Blue ~400 */
+  --info-foreground: oklch(0.1 0.02 264);
 
-  /* ── Extended Brand Tokens ── */
-  --emerald-glow: oklch(0.76 0.16 162 / 0.12);
-  --teal: oklch(0.7 0.13 190);
-  --amber-accent: oklch(0.8 0.14 75);
-  --blue-accent: oklch(0.65 0.15 255);
+  /* ── Borders, Inputs, Focus ─────────────── */
+  --border: oklch(0.28 0.02 264); /* Slate ~700 — replaces shadow */
+  --input: oklch(0.22 0.02 264); /* Slate ~800 */
+  --ring: oklch(0.6 0.15 162); /* Emerald ~400 focus ring */
+
+  /* ── Chart Colors ───────────────────────── */
+  --chart-1: oklch(0.6 0.15 162); /* Emerald ~400 */
+  --chart-2: oklch(0.65 0.17 250); /* Blue ~400 */
+  --chart-3: oklch(0.78 0.15 70); /* Amber ~400   */
+  --chart-4: oklch(0.67 0.2 15); /* Rose ~400                         */
+  --chart-5: oklch(0.6 0.18 290); /* Violet ~400                       */
+
+  /* ── Sidebar ─────────────────────────────── */
+  --sidebar: oklch(0.1 0.02 264); /* deeper than card          */
+  --sidebar-foreground: oklch(0.75 0.01 264); /* Slate ~300                */
+  --sidebar-primary: oklch(0.6 0.15 162); /* Emerald ~400              */
+  --sidebar-primary-foreground: oklch(0.1 0.02 264);
+  --sidebar-accent: oklch(0.17 0.02 264); /* card color — hover bg     */
+  --sidebar-accent-foreground: oklch(0.82 0.01 264);
+  --sidebar-border: oklch(0.22 0.02 264); /* subtle separator          */
+  --sidebar-ring: oklch(0.6 0.15 162);
 }
 
 /* ─────────────────────────────────────────────
-   BASE RESET & RTL DEFAULTS
+   BASE RESET & GLOBAL DEFAULTS
 ───────────────────────────────────────────── */
 *,
 *::before,
@@ -250,6 +317,9 @@ html {
 }
 
 body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base); /* 14px default */
+  line-height: var(--leading-normal);
   background-color: var(--background);
   color: var(--foreground);
   font-feature-settings:
@@ -262,9 +332,17 @@ body {
   min-height: 100dvh;
 }
 
-/* RTL typography fine-tuning */
+/* RTL: Arabic-first layout */
 [dir="rtl"] {
   text-align: right;
+}
+
+/* Mono font for numbers, IDs, codes */
+.font-mono,
+[data-mono],
+.tabular-nums {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ─────────────────────────────────────────────
@@ -286,11 +364,220 @@ body {
   background: var(--primary);
 }
 
-/* ─────────────────────────────────────────────
-   UTILITY: Noise Texture Overlay
-   Usage: add className="bg-noise" to any element
-───────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   Only utilities that will repeat across the project.
+   Pattern: @layer utilities prevents specificity conflicts.
+═══════════════════════════════════════════════════════════════ */
 @layer utilities {
+  /* ── Layout Utilities ──────────────────────────────────────── */
+
+  /* Standard page content padding (RTL-safe) */
+  .page-x-padding {
+    padding-inline: 1rem; /* px-4 mobile */
+  }
+  @media (min-width: 768px) {
+    .page-x-padding {
+      padding-inline: 1.5rem; /* px-6 desktop */
+    }
+  }
+
+  /* ── Typography Utilities ──────────────────────────────────── */
+
+  /* Page title — h1 equivalent */
+  .text-page-title {
+    font-size: var(--text-xl); /* 20px */
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--foreground);
+  }
+
+  /* Section/card title */
+  .text-section-title {
+    font-size: var(--text-lg); /* 16px */
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--foreground);
+  }
+
+  /* Dashboard heading (stat cards, charts) */
+  .text-dashboard-heading {
+    font-size: var(--text-2xl); /* 24px */
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--foreground);
+  }
+
+  /* Helper / caption text */
+  .text-caption {
+    font-size: var(--text-xs); /* 12px */
+    color: var(--muted-foreground);
+    line-height: var(--leading-normal);
+  }
+
+  /* Table cell text */
+  .text-table-cell {
+    font-size: var(--text-sm); /* 13px */
+    color: var(--foreground);
+  }
+
+  /* Stat number (big dashboard numbers) */
+  .text-stat-number {
+    font-family: var(--font-mono);
+    font-size: var(--text-3xl); /* 30px */
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--foreground);
+  }
+
+  /* ── Status Badge Utilities ────────────────────────────────── */
+  /* Usage: <span className="badge-success">حاضر</span>         */
+
+  .badge-base {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .badge-success {
+    background-color: oklch(from var(--success) l c h / 0.1);
+    color: var(--success);
+  }
+
+  .badge-warning {
+    background-color: oklch(from var(--warning) l c h / 0.1);
+    color: var(--warning);
+  }
+
+  .badge-destructive {
+    background-color: oklch(from var(--destructive) l c h / 0.1);
+    color: var(--destructive);
+  }
+
+  .badge-info {
+    background-color: oklch(from var(--info) l c h / 0.1);
+    color: var(--info);
+  }
+
+  .badge-neutral {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+  }
+
+  /* ── Card Utilities ────────────────────────────────────────── */
+
+  /* Standard card — the base for all cards */
+  .card-base {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem; /* p-4 */
+  }
+  @media (min-width: 768px) {
+    .card-base {
+      padding: 1.5rem; /* p-6 on md+ */
+    }
+  }
+
+  /* Stat card — dashboard KPI blocks */
+  .card-stat {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem; /* p-6 always */
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Card with shadow (light mode only) */
+  .card-elevated {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  .dark .card-elevated {
+    box-shadow: none; /* borders replace shadow in dark */
+  }
+
+  /* ── Sidebar Utilities ─────────────────────────────────────── */
+
+  /* Active nav item — the primary indicator */
+  .sidebar-item-active {
+    background: linear-gradient(
+      90deg,
+      oklch(from var(--sidebar-primary) l c h / 0.12),
+      oklch(from var(--sidebar-primary) l c h / 0.04)
+    );
+    color: var(--sidebar-primary);
+    /* RTL: border on the right side (visual start in RTL) */
+    box-shadow: inset -2px 0 0 var(--sidebar-primary);
+    font-weight: 500;
+  }
+
+  /* Inactive nav item hover */
+  .sidebar-item-hover {
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+  .sidebar-item-hover:hover {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+  }
+
+  /* ── Table Utilities ───────────────────────────────────────── */
+
+  .table-header-cell {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.75rem 1rem;
+  }
+
+  .table-row-hover {
+    transition: background 120ms ease;
+  }
+  .table-row-hover:hover {
+    background-color: oklch(from var(--muted) l c h / 0.5);
+  }
+
+  /* ── Form Utilities ────────────────────────────────────────── */
+
+  /* Consistent form input height */
+  .input-height {
+    height: 2.25rem; /* h-9 = 36px */
+  }
+
+  /* Form field error message */
+  .field-error {
+    font-size: var(--text-xs);
+    color: var(--destructive);
+    margin-top: 0.25rem;
+  }
+
+  /* ── Focus Ring (RTL-aware) ────────────────────────────────── */
+  .focus-ring {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  .focus-ring:focus-visible {
+    outline-color: var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* ── Visual Effect Utilities ───────────────────────────────── */
+
+  /* Noise texture overlay — decorative backgrounds */
   .bg-noise {
     position: relative;
     isolation: isolate;
@@ -308,76 +595,88 @@ body {
     background-size: 128px 128px;
   }
 
-  /* Sidebar active gradient glow */
-  .sidebar-active-glow {
-    background: linear-gradient(
-      135deg,
-      oklch(from var(--primary) l c h / 0.15),
-      oklch(from var(--primary) l c h / 0.05)
-    );
-    box-shadow: inset 2px 0 0 var(--primary);
+  /* Primary glow background — for hero sections / empty states */
+  .bg-primary-glow {
+    background-color: oklch(from var(--primary) l c h / 0.08);
   }
 
-  /* Glass card effect */
+  /* Glass card — for overlays, modals on colored backgrounds */
   .glass-card {
-    background: oklch(from var(--card) l c h / 0.8);
+    background: oklch(from var(--card) l c h / 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid oklch(from var(--border) l c h / 0.6);
   }
 
-  /* Subtle gradient shimmer for nav items on hover */
-  .nav-item-hover {
+  /* Divider with label (e.g. "أو" between form options) */
+  .divider-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+  }
+  .divider-label::before,
+  .divider-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--border);
+  }
+
+  /* ── Spacing Shorthands ────────────────────────────────────── */
+  /* Standard gap between form fields */
+  .form-fields-gap {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* gap-4 */
+  }
+
+  /* Standard gap inside cards between sections */
+  .card-sections-gap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* gap-6 */
+  }
+
+  /* ── Skeleton Pulse (for loading states) ───────────────────── */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--muted) 25%,
+      oklch(from var(--muted) calc(l + 0.03) c h) 50%,
+      var(--muted) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+    border-radius: var(--radius-md);
+  }
+
+  /* ── Transition Utilities ──────────────────────────────────── */
+  .transition-default {
+    transition: all 150ms ease;
+  }
+
+  .transition-colors {
     transition:
-      background 200ms ease,
-      color 200ms ease,
-      box-shadow 200ms ease;
+      color 150ms ease,
+      background-color 150ms ease,
+      border-color 150ms ease;
   }
-  .nav-item-hover:hover {
-    background: var(--sidebar-accent);
-    color: var(--sidebar-accent-foreground);
-  }
-
-  /* Focus ring RTL-aware */
-  .focus-ring {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-  }
-  .focus-ring:focus-visible {
-    outline-color: var(--ring);
+  .auth-card {
+    width: 100%;
+    max-width: 26rem; /* 416px */
   }
 
-  /* ── Emerald glow helper (replaces raw emerald-500/10 divs) ── */
-  .bg-primary-glow {
-    background-color: var(--emerald-glow);
+  /* Alert icon alignment في RTL */
+  .alert-icon-start {
+    order: -1; /* يضمن إن الـ icon يكون على يمين النص في RTL */
   }
 }
 
 /* ─────────────────────────────────────────────
    ANIMATION KEYFRAMES
 ───────────────────────────────────────────── */
-@keyframes slide-in-right {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in-left {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
 @keyframes fade-up {
   from {
     transform: translateY(8px);
@@ -389,7 +688,17 @@ body {
   }
 }
 
-@keyframes sidebar-in {
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-start {
+  /* RTL: enters from right (inline-start) */
   from {
     transform: translateX(100%);
     opacity: 0;
@@ -400,9 +709,68 @@ body {
   }
 }
 
-.animate-fade-up {
-  animation: fade-up 0.35s ease both;
+@keyframes slide-in-end {
+  /* enters from left (inline-end in RTL) */
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
-.animate-sidebar-in {
-  animation: sidebar-in 0.3s ease both;
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-up {
+  animation: fade-up 0.3s ease both;
+}
+.animate-fade-in {
+  animation: fade-in 0.25s ease both;
+}
+.animate-slide-start {
+  animation: slide-in-start 0.3s ease both;
+}
+.animate-slide-end {
+  animation: slide-in-end 0.3s ease both;
+}
+.animate-scale-in {
+  animation: scale-in 0.2s ease both;
+}
+
+/* Stagger delays for list animations */
+.animate-delay-1 {
+  animation-delay: 50ms;
+}
+.animate-delay-2 {
+  animation-delay: 100ms;
+}
+.animate-delay-3 {
+  animation-delay: 150ms;
+}
+.animate-delay-4 {
+  animation-delay: 200ms;
+}
+.animate-delay-5 {
+  animation-delay: 250ms;
 }

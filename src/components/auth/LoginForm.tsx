@@ -1,16 +1,28 @@
 // "use client";
 
+// import { useTransition } from "react";
+// import { useRouter, useSearchParams } from "next/navigation";
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
+// import { toast } from "sonner";
+// import Link from "next/link";
+// import { CheckCircle } from "lucide-react";
+
+// import { loginUser } from "@/actions/auth.actions";
+// import { loginSchema, type LoginInput } from "@/schemas/auth.schema";
 
 // import { Button } from "@/components/ui/button";
-// import { toast } from "sonner";
-// import { useTransition } from "react";
-// import Link from "next/link";
-// import { GoogleAuth } from "./google-auth";
-// import { useRouter, useSearchParams } from "next/navigation";
-// import { loginUser } from "@/actions/auth.actions";
-// import { CheckCircle2 } from "lucide-react";
+// import { Alert, AlertDescription } from "@/components/ui/alert";
+// import {
+//   Card,
+//   CardHeader,
+//   CardTitle,
+//   CardDescription,
+//   CardContent,
+//   CardFooter,
+// } from "@/components/ui/card";
+// import { FormInput } from "@/components/form/FormInput";
+// import { GoogleAuth } from "@/components/auth/GoogleAuth";
 
 // export function LoginForm() {
 //   const router = useRouter();
@@ -29,13 +41,11 @@
 //     startTransition(async () => {
 //       const result = await loginUser(values);
 
-//       // Early Return on Failure
 //       if (result.status !== "success") {
 //         toast.error(result.message);
 //         return;
 //       }
 
-//       // Success Logic
 //       toast.success(result.message);
 //       router.push("/dashboard");
 //       router.refresh();
@@ -43,67 +53,105 @@
 //   }
 
 //   return (
-//     <form
-//       onSubmit={form.handleSubmit(onSubmit)}
-//       className="space-y-4"
-//       dir="rtl"
-//     >
-//       {isVerified && (
-//         <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-900/50 dark:bg-green-900/20 dark:text-green-400">
-//           <CheckCircle2 className="h-5 w-5 shrink-0" />
-//           <p>تم التحقق من بريدك الإلكتروني بنجاح! يمكنك الآن تسجيل الدخول.</p>
+//     /*
+//       max-w-sm = 384px — العرض المناسب لـ auth forms
+//       w-full عشان يكون responsive على الـ mobile
+//     */
+//     <Card className="w-full max-w-sm">
+//       {/* ── Header ─────────────────────────────── */}
+//       <CardHeader>
+//         <CardTitle>أهلاً بك مجدداً</CardTitle>
+//         <CardDescription>أدخل بياناتك للوصول إلى لوحة التحكم</CardDescription>
+//       </CardHeader>
+
+//       {/* ── Body ───────────────────────────────── */}
+//       <CardContent>
+//         <div className="flex flex-col gap-5">
+//           {/* Success alerts — تظهر من الـ URL params بعد redirect */}
+//           {(isVerified || isReset) && (
+//             <Alert variant="success">
+//               <CheckCircle />
+//               <AlertDescription>
+//                 {isVerified
+//                   ? "تم التحقق من بريدك الإلكتروني بنجاح، يمكنك تسجيل الدخول الآن."
+//                   : "تم تغيير كلمة المرور بنجاح، سجّل الدخول بكلمة المرور الجديدة."}
+//               </AlertDescription>
+//             </Alert>
+//           )}
+
+//           {/* Form fields */}
+//           <form
+//             onSubmit={form.handleSubmit(onSubmit)}
+//             noValidate
+//             className="flex flex-col gap-4"
+//           >
+//             <FormInput
+//               control={form.control}
+//               name="email"
+//               label="البريد الإلكتروني"
+//               type="email"
+//               placeholder="admin@mosque.com"
+//               dir="ltr"
+//               disabled={isPending}
+//             />
+
+//             {/* Password field + forgot password link */}
+//             <div className="flex flex-col gap-1">
+//               <FormInput
+//                 control={form.control}
+//                 name="password"
+//                 label="كلمة المرور"
+//                 type="password"
+//                 autoComplete="current-password"
+//                 disabled={isPending}
+//               />
+//               <div className="flex justify-start">
+//                 <Button
+//                   variant="link"
+//                   size="sm"
+//                   className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
+//                   asChild
+//                 >
+//                   <Link href="/forgot-password">نسيت كلمة المرور؟</Link>
+//                 </Button>
+//               </div>
+//             </div>
+
+//             {/* Submit */}
+//             <Button type="submit" className="w-full" disabled={isPending}>
+//               {isPending ? "جارٍ تسجيل الدخول..." : "تسجيل الدخول"}
+//             </Button>
+//           </form>
+
+//           {/* Divider */}
+//           <div className="relative flex items-center gap-3 text-xs text-muted-foreground">
+//             <span className="h-px flex-1 bg-border" />
+//             <span>أو</span>
+//             <span className="h-px flex-1 bg-border" />
+//           </div>
+
+//           {/* Google OAuth */}
+//           <GoogleAuth />
 //         </div>
-//       )}
-//       {isReset && (
-//         <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-900/50 dark:bg-green-900/20 dark:text-green-400">
-//           <CheckCircle2 className="h-5 w-5 shrink-0" />
-//           <p>
-//             تم تغيير كلمة المرور بنجاح! يرجى تسجيل الدخول بكلمة المرور الجديدة.
-//           </p>
-//         </div>
-//       )}
-//       <FormInput
-//         control={form.control}
-//         name="email"
-//         label="البريد الإلكتروني"
-//         type="email"
-//         placeholder="admin@mosque.com"
-//         dir="ltr"
-//       />
+//       </CardContent>
 
-//       <FormInput
-//         control={form.control}
-//         name="password"
-//         label="كلمة المرور"
-//         type="password"
-//       />
-
-//       <div className="text-left">
-//         <Link
-//           href="/forgot-password"
-//           className="text-sm text-primary hover:underline"
-//         >
-//           نسيت كلمة المرور؟
-//         </Link>
-//       </div>
-
-//       <Button type="submit" className="w-full" disabled={isPending}>
-//         {isPending ? "جاري الدخول..." : "تسجيل الدخول"}
-//       </Button>
-//       <GoogleAuth />
-
-//       <p className="text-center text-sm text-muted-foreground">
-//         ليس لديك حساب؟{" "}
-//         <Link href="/register" className="text-primary hover:underline">
-//           إنشاء حساب
-//         </Link>
-//       </p>
-//     </form>
+//       {/* ── Footer ─────────────────────────────── */}
+//       <CardFooter className="justify-center">
+//         <p className="text-xs text-muted-foreground">
+//           ليس لديك حساب؟{" "}
+//           <Link
+//             href="/register"
+//             className="font-medium text-primary underline-offset-4 hover:underline"
+//           >
+//             إنشاء حساب جديد
+//           </Link>
+//         </p>
+//       </CardFooter>
+//     </Card>
 //   );
 // }
-
-// app/(auth)/login/login-form.tsx
-
+// src/components/auth/LoginForm.tsx
+// src/components/auth/LoginForm.tsx
 "use client";
 
 import { useTransition } from "react";
@@ -112,19 +160,24 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import Link from "next/link";
+import { CheckCircle } from "lucide-react";
 
-// import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { loginUser } from "@/actions/auth.actions";
-import { Button } from "@/components/ui/button";
-// import { FormInput } from "@/components/auth/form-input";
-import { GoogleAuth } from "@/components/auth/GoogleAuth";
-import {
-  AuthCard,
-  AuthAlert,
-  AuthFooter,
-} from "@/components/auth/AuthPrimitives";
 import { loginSchema, type LoginInput } from "@/schemas/auth.schema";
-import { FormInput } from "../form/FormInput";
+
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Card,
+  CardHeader,
+  CardSysLabel,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { FormInput } from "@/components/form/FormInput";
+import { GoogleAuth } from "@/components/auth/GoogleAuth";
 
 export function LoginForm() {
   const router = useRouter();
@@ -153,69 +206,79 @@ export function LoginForm() {
   }
 
   return (
-    <AuthCard>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-        noValidate
-      >
-        {/* Contextual success banners */}
-        {isVerified && (
-          <AuthAlert
-            type="success"
-            message="تم التحقق من بريدك الإلكتروني بنجاح! يمكنك الآن تسجيل الدخول."
-          />
-        )}
-        {isReset && (
-          <AuthAlert
-            type="success"
-            message="تم تغيير كلمة المرور بنجاح. يرجى تسجيل الدخول بكلمة المرور الجديدة."
-          />
-        )}
-
-        <FormInput
-          control={form.control}
-          name="email"
-          label="البريد الإلكتروني"
-          type="email"
-          placeholder="admin@mosque.com"
-          dir="ltr"
-        />
-
-        {/* Password row with inline "forgot" link */}
-        <div className="space-y-1">
-          <FormInput
-            control={form.control}
-            name="password"
-            label="كلمة المرور"
-            type="password"
-          />
-          <div className="flex justify-start">
-            <Link
-              href="/forgot-password"
-              className="text-xs text-muted-foreground hover:text-primary transition-colors"
-            >
-              نسيت كلمة المرور؟
-            </Link>
-          </div>
+    <Card className="w-full max-w-md animate-scale-in">
+      {/* ── Header — Option B ──────────────────────────────────── */}
+      <CardHeader>
+        <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
+        <div className="flex flex-col gap-1 pt-2">
+          <CardTitle>أهلاً بك مجدداً</CardTitle>
+          <CardDescription>أدخل بياناتك للوصول إلى لوحة التحكم</CardDescription>
         </div>
+      </CardHeader>
 
-        <Button type="submit" className="w-full" size="lg" disabled={isPending}>
-          {isPending ? "جارٍ الدخول..." : "تسجيل الدخول"}
+      {/* ── Content ────────────────────────────────────────────── */}
+      <CardContent>
+        <div className="flex flex-col gap-5">
+          {/* Success alerts من الـ redirect params */}
+          {(isVerified || isReset) && (
+            <Alert variant="success">
+              <CheckCircle />
+              <AlertDescription>
+                {isVerified
+                  ? "تم التحقق من بريدك الإلكتروني بنجاح، يمكنك تسجيل الدخول الآن."
+                  : "تم تغيير كلمة المرور بنجاح، سجّل الدخول بكلمة المرور الجديدة."}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            noValidate
+            className="flex flex-col gap-4"
+          >
+            <FormInput
+              control={form.control}
+              name="email"
+              label="البريد الإلكتروني"
+              type="email"
+              placeholder="admin@mosque.com"
+              dir="ltr"
+              disabled={isPending}
+            />
+
+            <div className="flex flex-col gap-1.5">
+              <FormInput
+                control={form.control}
+                name="password"
+                label="كلمة المرور"
+                type="password"
+                autoComplete="current-password"
+                disabled={isPending}
+              />
+              <Button variant="link" size="sm" asChild>
+                <Link href="/forgot-password">نسيت كلمة المرور؟</Link>
+              </Button>
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "جارٍ تسجيل الدخول..." : "تسجيل الدخول"}
+            </Button>
+          </form>
+
+          {/* Divider من globals.css utility class */}
+          <div className="divider-label">أو</div>
+
+          <GoogleAuth />
+        </div>
+      </CardContent>
+
+      {/* ── Footer ─────────────────────────────────────────────── */}
+      <CardFooter className="justify-center gap-0.5">
+        <p className="text-xs  font-medium">ليس لديك حساب؟</p>
+        <Button variant="link" size="sm" asChild>
+          <Link href="/register">إنشاء حساب جديد</Link>
         </Button>
-
-        <GoogleAuth />
-      </form>
-
-      <AuthFooter>
-        ليس لديك حساب؟{" "}
-        <Link
-          href="/register"
-          className="font-medium text-primary hover:underline"
-        >
-          إنشاء حساب
-        </Link>
-      </AuthFooter>
-    </AuthCard>
+      </CardFooter>
+    </Card>
   );
 }

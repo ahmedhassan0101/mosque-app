@@ -3,7 +3,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/temp/input";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import { useTransition } from "react";

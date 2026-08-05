@@ -1,9 +1,8 @@
-
-// components/auth/resend-verification-button.tsx
+// src/components/auth/ResendVerificationButton.tsx
 "use client";
 
 import { useTransition, useEffect } from "react";
-import { RefreshCcw, Loader2 } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 
 import { resendVerificationEmail } from "@/actions/auth.actions";
@@ -20,7 +19,6 @@ export function ResendVerificationButton({
   const [isPending, startTransition] = useTransition();
   const { seconds, start, isActive } = useCountdown(60);
 
-  // Start cooldown immediately on mount so user can't spam on page load
   useEffect(() => {
     start();
   }, [start]);
@@ -30,6 +28,7 @@ export function ResendVerificationButton({
       toast.error("البريد الإلكتروني غير موجود");
       return;
     }
+
     startTransition(async () => {
       const result = await resendVerificationEmail(email);
       if (result.status !== "success") {
@@ -44,24 +43,21 @@ export function ResendVerificationButton({
   return (
     <Button
       type="button"
-      variant="outline"
+      variant="secondary"
       className="w-full"
       disabled={isActive || isPending}
       onClick={handleResend}
     >
-      {isPending ? (
+      {isPending && "جارٍ الإرسال..."}
+      {!isPending && isActive && (
         <>
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          جارٍ الإرسال...
+          <RefreshCcw size={14} aria-hidden="true" />
+          إعادة الإرسال بعد {seconds} ثانية
         </>
-      ) : isActive ? (
+      )}
+      {!isPending && !isActive && (
         <>
-          <RefreshCcw className="h-3.5 w-3.5" />
-          إعادة الإرسال بعد {seconds}ث
-        </>
-      ) : (
-        <>
-          <RefreshCcw className="h-3.5 w-3.5" />
+          <RefreshCcw size={14} aria-hidden="true" />
           إعادة إرسال رسالة التحقق
         </>
       )}

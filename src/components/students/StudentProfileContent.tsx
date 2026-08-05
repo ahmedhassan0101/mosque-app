@@ -17,7 +17,7 @@ import {
 import { getStudentProfile } from "@/queries/student.queries";
 import { calculateAge } from "@/lib/utils/age";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { DeleteStudentButton } from "./DeleteStudentButton";
 import type { StudentGroupSummary } from "@/queries/student.queries";
 import { ACTIVITIES, GENDERS, LEVELS } from "@/constants";

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Trash2, Trash2Icon } from "lucide-react";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 
 import {
   AlertDialog,
@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 
 // 1. تعريف التايب الصحيح لنتيجة السيرفر أكشن لحل مشكلة الـ await ts(80007)
 type ActionResponse = { error?: string; success?: boolean } | void;
@@ -43,24 +43,23 @@ export function DeleteButton({
   // const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const label = ITEM_LABELS[deletedItem];
-// e: React.MouseEvent
+  // e: React.MouseEvent
   const onDelete = () => {
     // e.preventDefault();
 
     startTransition(async () => {
       const result = await handleDelete(id);
-      
+
       if (result && result.error) {
         toast.error(result.error);
       } else {
         toast.success(`تم حذف ${label} بنجاح`);
-        // setIsOpen(false); 
+        // setIsOpen(false);
       }
     });
   };
-//  open={isOpen} onOpenChange={setIsOpen}
+  //  open={isOpen} onOpenChange={setIsOpen}
   return (
-
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="destructive" size="sm">
@@ -78,8 +77,9 @@ export function DeleteButton({
           <AlertDialogTitle>حذف {label}</AlertDialogTitle>
 
           <AlertDialogDescription className="text-base leading-relaxed">
-            هل تريد بالتأكيد حذف {label} <strong className="text-foreground">{name}</strong>؟
-            <br /> 
+            هل تريد بالتأكيد حذف {label}{" "}
+            <strong className="text-foreground">{name}</strong>؟
+            <br />
             <span className="text-sm text-muted-foreground mt-2 inline-block">
               لا يمكن التراجع عن هذا الإجراء بعد تنفيذه.
             </span>
@@ -90,7 +90,7 @@ export function DeleteButton({
           <AlertDialogCancel variant="outline" disabled={isPending}>
             إلغاء
           </AlertDialogCancel>
-          
+
           <AlertDialogAction
             variant="destructive"
             onClick={onDelete}

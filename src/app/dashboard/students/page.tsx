@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getStudentsList } from "@/queries/student.queries";
 import { StudentsStats } from "@/components/students/StudentsStatsCards";

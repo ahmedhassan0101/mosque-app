@@ -1370,7 +1370,9 @@ function Footer() {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function LandingPage() {
+export default  function LandingPage() {
+  // throw new Error("Landing page is currently disabled for maintenance. Please check back later.");
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
   return (
     <div dir="rtl" className="min-h-screen bg-background text-foreground">
       <Navbar />

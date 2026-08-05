@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormInput } from "../form/FormInput";
 import { FormTextarea } from "../form/FormTextarea";
-import { Button } from "../ui/button";
+import { Button } from "../../temp/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { saveTeacher } from "@/actions/teacher.actions";

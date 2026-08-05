@@ -78,7 +78,8 @@ const RECENT_ACTIVITIES = [
 ───────────────────────────────────────────── */
 
 export default function DashboardPage() {
-  return (
+
+return (
     <div className="flex flex-col gap-6">
       {/* ── Page Header ── */}
       <div>
@@ -106,7 +107,7 @@ export default function DashboardPage() {
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="mt-4">
-                <p className="text-2xl font-bold tabular-nums text-foreground">
+                <p className="text-2xl font-bold text-foreground ">
                   {stat.value}
                 </p>
                 <p className="mt-0.5 text-sm text-muted-foreground">

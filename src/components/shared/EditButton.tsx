@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "../../temp/button";
 import { Pencil } from "lucide-react";
 
 export default function EditButton({ href }: { href: string }) {

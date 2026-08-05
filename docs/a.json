@@ -14,7 +14,9 @@
     "shadcn",
     "tw-animate-css",
     "uploadthing",
-    "zustand"
+    "zustand",
+    "npm uninstall @auth/mongodb-adapter @tanstack/react-query-devtools @tanstack/react-table @uploadthing/react @zxing/browser html2canvas idb jspdf next-cloudinary next-pwa recharts shadcn tw-animate-css uploadthing zustand @tailwindcss/postcss tailwindcss",
+    "Unused dependencies* @auth/mongodb-adapter* @tanstack/react-query-devtools* @tanstack/react-table* @uploadthing/react* @zxing/browser* html2canvas* idb* jspdf* next-cloudinary* next-pwa* recharts* shadcn* tw-animate-css* uploadthing* zustandUnused devDependencies* @tailwindcss/postcss* tailwindcss"
   ],
   "devDependencies": ["@tailwindcss/postcss", "tailwindcss"],
   "missing": {},

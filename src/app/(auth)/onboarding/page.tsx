@@ -23,29 +23,13 @@
 //   );
 // }
 
-// app/(auth)/onboarding/page.tsx
-//
-// Onboarding sits outside the dashboard (no sidebar) but shares
-// the auth layout split-screen structure. The user has authenticated
-// but hasn't linked a mosque yet.
+// src/app/(auth)/onboarding/page.tsx
 
 import type { Metadata } from "next";
-import { AuthHeader } from "@/components/auth/AuthPrimitives";
 import { OnboardingTabs } from "@/components/onboarding/OnboardingTabs";
-// import AuthLayout from "@/app/(auth)/layout";
 
-export const metadata: Metadata = { title: "إعداد المسجد | مسجد ERP" };
+export const metadata: Metadata = { title: "إعداد المسجد" };
 
 export default function OnboardingPage() {
-  return (
-    // <AuthLayout>
-    <>
-      <AuthHeader
-        title="مرحباً! لنبدأ الإعداد"
-        description="أنشئ مسجدك الجديد أو انضم لمسجد قائم برمز الدعوة"
-      />
-      <OnboardingTabs />
-    </>
-    // </AuthLayout>
-  );
+  return <OnboardingTabs />;
 }

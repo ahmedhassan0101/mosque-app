@@ -13,7 +13,7 @@ import {
 
 import { getTeacherProfile } from "@/queries/teacher.queries";
 import type { TeacherGroupSummary } from "@/queries/teacher.queries";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { DeleteTeacherButton } from "./DeleteTeacherButton";
 import { ACTIVITIES } from "@/constants";
 

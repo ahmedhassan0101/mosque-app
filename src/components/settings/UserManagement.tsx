@@ -4,7 +4,7 @@ import {
   removeUserFromMosque,
   updateUserRole,
 } from "@/actions/settings.actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import {
   Card,
   CardContent,
@@ -22,7 +22,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { useState, useTransition } from "react";
-import type{ RolesType } from "@/constants";
+import type { RolesType } from "@/constants";
 
 interface UserItem {
   id: string;

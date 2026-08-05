@@ -8,8 +8,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Users, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/temp/button";
+import { Input } from "@/temp/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -188,7 +188,6 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                       <Trash2 size={12} />
                     </Button>
                   </div>
-                  
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -216,8 +215,6 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
-
             <div className="space-y-1.5">
               <Label>
                 اسم المجموعة <span className="text-destructive">*</span>
@@ -251,7 +248,6 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
               </Select>
             </div>
 
-
             <div className="space-y-1.5">
               <Label>
                 الشيخ <span className="text-destructive">*</span>
@@ -278,13 +274,10 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
               )}
             </div>
 
-
-
             <div className="space-y-1.5">
               <Label>ملاحظات</Label>
               <Textarea rows={2} {...register("notes")} />
             </div>
-
 
             <DialogFooter>
               <Button
@@ -299,8 +292,6 @@ export function GroupsManager({ groups: initial, sheikhs }: Props) {
                 {editing ? "حفظ" : "إنشاء"}
               </Button>
             </DialogFooter>
-
-            
           </form>
         </DialogContent>
       </Dialog>

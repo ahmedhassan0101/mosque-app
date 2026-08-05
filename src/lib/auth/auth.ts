@@ -85,13 +85,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
         } else {
           // Keep image fresh
+          console.log("google ~ google ~ google ~ google ~ google ~ 11111" )
 
           existing.image = user.image ?? existing.image;
           // Ensure existing google users are marked as verified
           if (!existing.emailVerified) {
             existing.emailVerified = new Date();
+               console.log("google ~ google ~ google ~ google ~ google ~ 2222" )
           }
+
           await existing.save();
+             console.log("google ~ google ~ google ~ google ~ google ~ 2222" )
         }
         const dbUser = await User.findOne({ email: user.email });
         if (!dbUser) return false;

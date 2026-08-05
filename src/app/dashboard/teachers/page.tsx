@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import type { Metadata } from "next";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/temp/button";
+import { Input } from "@/temp/input";
 import { TeachersListContent } from "@/components/teachers/TeachersListContent";
 import { TeachersListSkeleton } from "@/components/teachers/TeachersListSkeleton";
 

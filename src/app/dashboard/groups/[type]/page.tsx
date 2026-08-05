@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { GroupsGridContent } from "@/components/groups/GroupsGridContent";
 import { GroupsGridSkeleton } from "@/components/groups/GroupsGridSkeleton";
 import { ACTIVITIES, type ActivityType } from "@/constants";

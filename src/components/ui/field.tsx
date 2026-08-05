@@ -1,25 +1,58 @@
+// components/ui/field.tsx
 "use client";
 
 import { useMemo } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils/utils";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
+/*
+  Field System — Design System Override
+  ─────────────────────────────────────────────
+  التغييرات عن النسخة الأصلية:
+
+  1. FieldLabel — حُذف منه الـ has-data-checked complexity
+     المشروع مش بيستخدم checkbox-inside-label pattern في الـ auth
+     الـ label بسيط: text فوق الـ input مباشرة
+
+  2. FieldError — text-xs بدل text-sm (12px أوضح وأخف)
+     + mt-1 بدل div مستقل — أقرب للـ input
+
+  3. FieldDescription — حُذف منها text-right
+     الـ dir="rtl" على html يكفي
+
+  4. FieldSeparator — محتفظ بيه لأنه يُستخدم في auth ("أو")
+
+  5. FieldSet / FieldGroup / FieldLegend — محتفظ بيهم
+     لأنهم بيُستخدموا في الـ onboarding forms المعقدة
+
+  الاستخدام الأساسي:
+    <Field>
+      <FieldLabel htmlFor="email">البريد الإلكتروني</FieldLabel>
+      <Input id="email" ... aria-invalid={hasError} />
+      <FieldError errors={[fieldState.error]} />
+    </Field>
+  ─────────────────────────────────────────────
+*/
+
+/* ── FieldSet ─────────────────────────────────────────────────
+   Container لمجموعة fields مترابطة (fieldset semantics)
+   مثال: قسم "بيانات المسجد" في الـ onboarding
+*/
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
     <fieldset
       data-slot="field-set"
-      className={cn(
-        "flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3",
-        className,
-      )}
+      className={cn("flex flex-col gap-4", className)}
       {...props}
     />
   );
 }
 
+/* ── FieldLegend ──────────────────────────────────────────────
+   عنوان الـ fieldset — legend أو label style
+*/
 function FieldLegend({
   className,
   variant = "legend",
@@ -30,43 +63,56 @@ function FieldLegend({
       data-slot="field-legend"
       data-variant={variant}
       className={cn(
-        "mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base",
-        className,
+        "mb-1 font-medium",
+        variant === "label" && "text-sm",
+        variant === "legend" && "text-base",
+        className
       )}
       {...props}
     />
   );
 }
 
+/* ── FieldGroup ───────────────────────────────────────────────
+   Container لمجموعة fields في صف أو عمود
+   gap-5 بين الـ fields — أكبر من gap-4 عشان يكون واضح فصل البلوكس
+*/
 function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="field-group"
       className={cn(
-        "group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
-        className,
+        "@container/field-group flex w-full flex-col gap-5",
+        className
       )}
       {...props}
     />
   );
 }
 
+/* ── Field ────────────────────────────────────────────────────
+   الـ wrapper الأساسي لكل field (label + input + error)
+   orientation:
+     vertical   → label فوق، input تحت (الأكثر استخداماً)
+     horizontal → label جنب الـ input (للـ settings forms)
+     responsive → vertical على mobile، horizontal على desktop
+*/
 const fieldVariants = cva(
   "group/field flex w-full gap-2 data-[invalid=true]:text-destructive",
   {
     variants: {
       orientation: {
-        vertical: "flex-col *:w-full [&>.sr-only]:w-auto",
+        vertical: "flex-col",
         horizontal:
-          "flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+          "flex-row items-center *:data-[slot=field-label]:flex-auto",
         responsive:
-          "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+          "flex-col @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:data-[slot=field-label]:flex-auto",
       },
     },
     defaultVariants: {
       orientation: "vertical",
     },
-  },
+  }
 );
 
 function Field({
@@ -85,19 +131,24 @@ function Field({
   );
 }
 
+/* ── FieldContent ─────────────────────────────────────────────
+   يُستخدم في الـ horizontal orientation
+   يلف الـ description + input أسفل الـ label
+*/
 function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="field-content"
-      className={cn(
-        "group/field-content flex flex-1 flex-col gap-0.5 leading-snug",
-        className,
-      )}
+      className={cn("flex flex-1 flex-col gap-1 leading-snug", className)}
       {...props}
     />
   );
 }
 
+/* ── FieldLabel ───────────────────────────────────────────────
+   Label فوق الـ input — بسيط ونظيف
+   الـ disabled state يأتي من الـ Field parent عبر group-data
+*/
 function FieldLabel({
   className,
   ...props
@@ -106,66 +157,71 @@ function FieldLabel({
     <Label
       data-slot="field-label"
       className={cn(
-        "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
-        "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
-        className,
+        "flex w-fit items-center gap-1.5 text-sm font-medium leading-snug",
+        "group-data-[disabled=true]/field:opacity-50",
+        // error state — اللون الأحمر يجي من Field parent (data-invalid)
+        "group-data-[invalid=true]/field:text-destructive",
+        className
       )}
       {...props}
     />
   );
 }
 
+/* ── FieldTitle ───────────────────────────────────────────────
+   نفس FieldLabel لكن بدون htmlFor — للـ non-input fields
+   مثال: عنوان section داخل fieldset
+*/
 function FieldTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      data-slot="field-label"
+      data-slot="field-title"
       className={cn(
-        "flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50",
-        className,
+        "flex w-fit items-center gap-2 text-sm font-medium leading-snug",
+        "group-data-[disabled=true]/field:opacity-50",
+        className
       )}
       {...props}
     />
   );
 }
 
+/* ── FieldDescription ─────────────────────────────────────────
+   Helper text تحت الـ input — hint أو توضيح
+   يظهر دايماً حتى لو في error state (فرق عن الـ FieldError)
+*/
 function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="field-description"
       className={cn(
-        "text-right text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
-        "last:mt-0 nth-last-2:-mt-1",
+        "text-xs leading-normal text-muted-foreground",
         "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
-        className,
+        className
       )}
       {...props}
     />
   );
 }
 
+/* ── FieldSeparator ───────────────────────────────────────────
+   فاصل بين fields — مع أو بدون label
+   مثال: <FieldSeparator>أو</FieldSeparator> في الـ login form
+*/
 function FieldSeparator({
   children,
   className,
   ...props
-}: React.ComponentProps<"div"> & {
-  children?: React.ReactNode;
-}) {
+}: React.ComponentProps<"div"> & { children?: React.ReactNode }) {
   return (
     <div
       data-slot="field-separator"
-      data-content={!!children}
-      className={cn(
-        "relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2",
-        className,
-      )}
+      className={cn("relative -my-1 h-5 text-xs", className)}
       {...props}
     >
       <Separator className="absolute inset-0 top-1/2" />
       {children && (
-        <span
-          className="relative mx-auto block w-fit bg-background px-2 text-muted-foreground"
-          data-slot="field-separator-content"
-        >
+        <span className="relative mx-auto block w-fit bg-background px-2 text-muted-foreground">
           {children}
         </span>
       )}
@@ -173,6 +229,12 @@ function FieldSeparator({
   );
 }
 
+/* ── FieldError ───────────────────────────────────────────────
+   رسالة الـ error تحت الـ input مباشرة
+   - errors array: يعرض أول error فقط لو واحدة، list لو أكتر
+   - children: override للـ error text مباشرة
+   - لا يظهر لو مفيش content (لا حاجة لـ empty div)
+*/
 function FieldError({
   className,
   children,
@@ -182,41 +244,40 @@ function FieldError({
   errors?: Array<{ message?: string } | undefined>;
 }) {
   const content = useMemo(() => {
-    if (children) {
-      return children;
-    }
+    if (children) return children;
+    if (!errors?.length) return null;
 
-    if (!errors?.length) {
-      return null;
-    }
+    // إزالة duplicates بناءً على الـ message
+    const unique = [
+      ...new Map(errors.map((e) => [e?.message, e])).values(),
+    ].filter(Boolean);
 
-    const uniqueErrors = [
-      ...new Map(errors.map((error) => [error?.message, error])).values(),
-    ];
+    if (unique.length === 0) return null;
 
-    if (uniqueErrors?.length == 1) {
-      return uniqueErrors[0]?.message;
-    }
+    // error واحدة → text مباشر
+    if (unique.length === 1) return unique[0]?.message;
 
+    // أكتر من error → unordered list
     return (
-      <ul className="ml-4 flex list-disc flex-col gap-1">
-        {uniqueErrors.map(
-          (error, index) =>
-            error?.message && <li key={index}>{error.message}</li>,
+      <ul className="flex list-disc flex-col gap-0.5 ps-4">
+        {unique.map(
+          (error, i) =>
+            error?.message && <li key={i}>{error.message}</li>
         )}
       </ul>
     );
   }, [children, errors]);
 
-  if (!content) {
-    return null;
-  }
+  if (!content) return null;
 
   return (
     <div
       role="alert"
       data-slot="field-error"
-      className={cn("text-sm font-normal text-destructive", className)}
+      className={cn(
+        "flex items-start gap-1 text-xs text-destructive",
+        className
+      )}
       {...props}
     >
       {content}
@@ -227,12 +288,12 @@ function FieldError({
 export {
   Field,
   FieldLabel,
+  FieldTitle,
   FieldDescription,
   FieldError,
+  FieldContent,
   FieldGroup,
   FieldLegend,
   FieldSeparator,
   FieldSet,
-  FieldContent,
-  FieldTitle,
 };

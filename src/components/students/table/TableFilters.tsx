@@ -27,8 +27,8 @@ import {
 import { useDebouncedCallback } from "use-debounce";
 import { Search, Loader2, X } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/temp/input";
+import { Button } from "@/temp/button";
 import {
   Select,
   SelectContent,

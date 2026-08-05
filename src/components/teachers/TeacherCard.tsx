@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Phone, Users, Pencil, Eye } from "lucide-react";
 
 import type { TeacherSerialized } from "@/types/serialized";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { DeleteTeacherButton } from "./DeleteTeacherButton";
 
 interface TeacherCardProps {

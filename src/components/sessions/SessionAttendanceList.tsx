@@ -6,7 +6,7 @@ import { Users, CheckSquare, Square } from "lucide-react";
 import type { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 import type { SessionInput } from "@/schemas/session.schema";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAttendanceStudents } from "@/hooks/use-attendance-students";
 
@@ -39,7 +39,8 @@ export function SessionAttendanceList({
   );
 
   const toggleAll = useCallback(() => {
-    const allSelected = attended.length === students.length && students.length > 0;
+    const allSelected =
+      attended.length === students.length && students.length > 0;
     setValue(
       "attendedStudentIds",
       allSelected ? [] : students.map((s) => s._id),
@@ -73,7 +74,8 @@ export function SessionAttendanceList({
     );
   }
 
-  const allSelected = students.length > 0 && attended.length === students.length;
+  const allSelected =
+    students.length > 0 && attended.length === students.length;
 
   // ── List ───────────────────────────────────────────────────────────────────
   return (
@@ -91,9 +93,15 @@ export function SessionAttendanceList({
           className="text-xs h-7"
         >
           {allSelected ? (
-            <><Square size={13} className="ml-1.5" />إلغاء الكل</>
+            <>
+              <Square size={13} className="ml-1.5" />
+              إلغاء الكل
+            </>
           ) : (
-            <><CheckSquare size={13} className="ml-1.5" />تحديد الكل</>
+            <>
+              <CheckSquare size={13} className="ml-1.5" />
+              تحديد الكل
+            </>
           )}
         </Button>
       </div>

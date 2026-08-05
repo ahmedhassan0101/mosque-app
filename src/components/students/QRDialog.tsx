@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { Download, Printer } from "lucide-react";
 
 interface Props {

@@ -12,7 +12,7 @@ git push -u origin master
 ## After adding or editing a feature
 
 ```bash
-git add .
+git status
 git add .
 git commit -m "add new feature"
 git commit -m "feat: Add Group Model"

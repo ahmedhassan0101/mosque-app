@@ -1,7 +1,7 @@
 "use client";
 
 import { refreshInviteCode } from "@/actions/settings.actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/temp/input";
 import { toast } from "sonner";
 import { useState, useTransition } from "react";
 import { Copy, RefreshCw } from "lucide-react";
@@ -50,7 +50,7 @@ export function InviteSection({ mosqueId, initialCode }: InviteSectionProps) {
           شارك هذا الرمز مع المشرفين الجدد للانضمام إلى مسجدك عبر صفحة الإعداد.
         </CardDescription>
       </CardHeader>
- 
+
       <CardContent className="space-y-4">
         {/* Code display + copy */}
         <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export function InviteSection({ mosqueId, initialCode }: InviteSectionProps) {
             <Copy className="h-4 w-4" />
           </Button>
         </div>
- 
+
         {/* Regenerate */}
         <Button
           variant="secondary"
@@ -87,10 +87,11 @@ export function InviteSection({ mosqueId, initialCode }: InviteSectionProps) {
           />
           توليد رمز جديد
         </Button>
- 
+
         {/* Helper note */}
         <p className="text-xs text-muted-foreground leading-relaxed">
-          عند توليد رمز جديد، سيصبح الرمز القديم غير صالح فوراً. تأكد من إعلام من أرسلت إليهم الرمز القديم.
+          عند توليد رمز جديد، سيصبح الرمز القديم غير صالح فوراً. تأكد من إعلام
+          من أرسلت إليهم الرمز القديم.
         </p>
       </CardContent>
     </Card>

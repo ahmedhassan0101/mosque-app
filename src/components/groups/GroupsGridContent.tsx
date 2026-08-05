@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BookOpen, Plus } from "lucide-react";
 
 import { getGroupsList } from "@/queries/group.queries";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { GroupCard } from "./GroupCard";
 import { ACTIVITIES, ActivityType } from "@/constants";
 

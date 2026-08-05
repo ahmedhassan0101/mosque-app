@@ -1,4 +1,4 @@
-// components/auth/redirect-timer.tsx
+// src/components/auth/RedirectTimer.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -10,10 +10,16 @@ interface RedirectTimerProps {
   seconds?: number;
 }
 
+/*
+  RedirectTimer:
+  - Countdown يبدأ فور الـ mount
+  - عند الوصول لـ 0 → router.push(href) تلقائياً
+  - tabular-nums على الـ number عشان ما يتحركش عند التغيير
+*/
 export function RedirectTimer({ href, seconds = 5 }: RedirectTimerProps) {
   const router = useRouter();
   const { seconds: timeLeft, start } = useCountdown(seconds, () =>
-    router.push(href),
+    router.push(href)
   );
 
   useEffect(() => {
@@ -21,9 +27,11 @@ export function RedirectTimer({ href, seconds = 5 }: RedirectTimerProps) {
   }, [start]);
 
   return (
-    <p className="rounded-lg bg-muted px-4 py-2.5 text-center text-xs text-muted-foreground">
+    <p className="rounded-md border border-border bg-muted/40 px-4 py-2.5 text-center text-xs text-muted-foreground">
       سيتم تحويلك تلقائياً خلال{" "}
-      <span className="font-bold tabular-nums text-primary">{timeLeft}</span>{" "}
+      <span className="font-semibold  text-foreground">
+        {timeLeft}
+      </span>{" "}
       ثانية
     </p>
   );

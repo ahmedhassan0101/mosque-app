@@ -11,7 +11,7 @@ import { studentSchema, type StudentInput } from "@/schemas/student.schema";
 import { saveStudent } from "@/actions/student.actions";
 import { StudentSerialized } from "@/queries/student.queries";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/temp/button";
 import { FormInput } from "@/components/form/FormInput";
 import { FormRadioGroup } from "@/components/form/FormRadioGroup";
 import { FormTextarea } from "@/components/form/FormTextarea";
