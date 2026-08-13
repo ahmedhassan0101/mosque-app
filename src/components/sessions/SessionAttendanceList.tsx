@@ -6,7 +6,7 @@ import { Users, CheckSquare, Square } from "lucide-react";
 import type { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 import type { SessionInput } from "@/schemas/session.schema";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAttendanceStudents } from "@/hooks/use-attendance-students";
 

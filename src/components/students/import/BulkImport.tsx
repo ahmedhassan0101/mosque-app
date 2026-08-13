@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
 
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { ImportResults, type ImportRowError } from "./ImportResults";
 import {
   downloadTemplateAction,

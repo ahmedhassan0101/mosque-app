@@ -121,7 +121,7 @@ export default async function WaitingVerificationPage({
   const email = queryEmail ?? session?.user?.email ?? "";
 
   return (
-    <Card className="w-full max-w-md animate-scale-in">
+    <Card className="container-auth animate-scale-in">
       {/* ── Header ─────────────────────────────────────────────── */}
       <CardHeader>
         <CardSysLabel>نظام إدارة المسجد</CardSysLabel>

@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 import { sessionSchema, type SessionInput } from "@/schemas/session.schema";
 import { createSession, updateSession } from "@/actions/session.actions";
 import { ACTIVITIES, BEHAVIORS, type ActivityType } from "@/constants";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { FormDatePicker } from "@/components/form/FormDatePicker";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormCheckboxGroup } from "@/components/form/FormCheckboxGroup";

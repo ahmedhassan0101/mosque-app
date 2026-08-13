@@ -5,7 +5,7 @@ import { GraduationCap, Users, Calendar, Eye, Pencil } from "lucide-react";
 import type { GroupListItem } from "@/queries/group.queries";
 import type { ActivityType } from "@/constants";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { DeleteGroupAlert } from "./DeleteGroupAlert";
 
 interface GroupCardProps {

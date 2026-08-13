@@ -8,6 +8,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
+import { ShowcaseUtilities } from "@/temp/ShowcaseUtilities";
 
 export const metadata: Metadata = {
   title: "لوحة التحكم",
@@ -78,9 +79,8 @@ const RECENT_ACTIVITIES = [
 ───────────────────────────────────────────── */
 
 export default function DashboardPage() {
-
-return (
-    <div className="flex flex-col gap-6">
+  return (
+    <div className="container-fluid flex flex-col gap-6">
       {/* ── Page Header ── */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-foreground">

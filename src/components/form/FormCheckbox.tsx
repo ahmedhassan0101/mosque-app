@@ -1,7 +1,11 @@
 "use client";
 
-import { Controller, Control, FieldValues, Path } from "react-hook-form";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 import {
   Field,
   FieldContent,
@@ -9,12 +13,14 @@ import {
   FieldLabel,
   FieldError,
 } from "@/components/ui/field";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface FormCheckboxProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
   label: string;
   description?: string;
+  disabled?: boolean;
 }
 
 export function FormCheckbox<T extends FieldValues>({
@@ -22,25 +28,31 @@ export function FormCheckbox<T extends FieldValues>({
   name,
   label,
   description,
+  disabled,
 }: FormCheckboxProps<T>) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <Field orientation="horizontal" data-invalid={fieldState.invalid} className="space-x-2 space-x-reverse">
+        <Field
+          orientation="horizontal"
+          data-invalid={fieldState.invalid || undefined}
+          data-disabled={disabled || undefined}
+        >
           <Checkbox
             id={name}
             checked={!!field.value}
             onCheckedChange={field.onChange}
-            aria-invalid={fieldState.invalid}
+            disabled={disabled}
+            aria-invalid={fieldState.invalid || undefined}
           />
           <FieldContent>
-            <FieldLabel htmlFor={name} className="cursor-pointer">
+            <FieldLabel htmlFor={name} className="cursor-pointer font-normal">
               {label}
             </FieldLabel>
             {description && <FieldDescription>{description}</FieldDescription>}
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            <FieldError errors={[fieldState.error]} />
           </FieldContent>
         </Field>
       )}

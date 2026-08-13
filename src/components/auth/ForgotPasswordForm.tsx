@@ -51,10 +51,10 @@ export function ForgotPasswordForm() {
   }
 
   /* ── State 2: Email Sent ──────────────────────────────────────
-  */
+   */
   if (sentEmail) {
     return (
-      <Card className="w-full max-w-md animate-scale-in">
+      <Card className="container-auth animate-scale-in"> 
         <CardHeader>
           <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
           <div className="flex flex-col gap-1 pt-2">
@@ -103,11 +103,7 @@ export function ForgotPasswordForm() {
         </CardContent>
 
         <CardFooter className="justify-center">
-          <Button
-            variant="link"
-            size="sm"
-            asChild
-          >
+          <Button variant="link" size="sm" asChild>
             <Link href="/login">العودة لتسجيل الدخول</Link>
           </Button>
         </CardFooter>
@@ -118,7 +114,7 @@ export function ForgotPasswordForm() {
   /* ── State 1: Form ────────────────────────────────────────────
    */
   return (
-    <Card className="w-full max-w-md animate-scale-in">
+    <Card className="container-auth animate-scale-in">
       <CardHeader>
         <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
         <div className="flex flex-col gap-1 pt-2">
@@ -181,7 +177,7 @@ export function ForgotPasswordForm() {
 // } from "@/schemas/auth.schema";
 // import { requestPasswordReset } from "@/actions/auth.actions";
 // import { useCountdown } from "@/hooks/use-countdown";
-// import { Button } from "@/temp/button";
+// import { Button } from "@/components/ui/button";
 // import { AuthCard, AuthFooter } from "@/components/auth/AuthPrimitives";
 // import { FormInput } from "../form/FormInput";
 

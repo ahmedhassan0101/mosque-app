@@ -25,8 +25,8 @@ export default async function EditTeacherPage({
   if (!teacher) notFound();
 
   return (
-    <div className="max-w-xl mx-auto py-6">
-      <h1 className="text-xl font-semibold mb-6">تعديل بيانات المعلم</h1>
+    <div className="container-form flex flex-col gap-6">
+      <h1 className="text-page-title">تعديل بيانات المعلم</h1>
       <TeacherForm initialData={teacher} teacherId={id} />
     </div>
   );

@@ -12,7 +12,7 @@
 //   joinMosqueSchema,
 //   type JoinMosqueInput,
 // } from "@/schemas/onboarding.schema";
-// import { Button } from "@/temp/button";
+// import { Button } from "@/components/ui/button";
 // import { AuthCard } from "@/components/auth/AuthPrimitives";
 // import { joinMosque } from "@/actions/onboarding.actions";
 // import { FormInput } from "../form/FormInput";

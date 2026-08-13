@@ -206,7 +206,7 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md animate-scale-in">
+    <Card className="container-auth animate-scale-in">
       {/* ── Header — Option B ──────────────────────────────────── */}
       <CardHeader>
         <CardSysLabel>نظام إدارة المسجد</CardSysLabel>

@@ -27,8 +27,8 @@ import {
 import { useDebouncedCallback } from "use-debounce";
 import { Search, Loader2, X } from "lucide-react";
 
-import { Input } from "@/temp/input";
-import { Button } from "@/temp/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -42,6 +42,7 @@ import {
   LEVELS,
   type levelType,
 } from "@/constants";
+
 
 export function TableFilters() {
   const [isPending, startTransition] = useTransition();

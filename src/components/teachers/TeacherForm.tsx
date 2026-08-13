@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormInput } from "../form/FormInput";
 import { FormTextarea } from "../form/FormTextarea";
-import { Button } from "../../temp/button";
+import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { saveTeacher } from "@/actions/teacher.actions";
@@ -57,7 +57,10 @@ export default function TeacherForm({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-6"
+    >
       <FormImageUpload
         control={form.control}
         name="image"

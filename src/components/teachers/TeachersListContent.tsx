@@ -1,7 +1,7 @@
 // src/components/teacher/TeachersListContent.tsx
 import { Users } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { getTeachersList } from "@/queries/teacher.queries";
 import { TeacherCard } from "./TeacherCard";
 

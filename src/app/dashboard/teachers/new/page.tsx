@@ -6,8 +6,8 @@ export const metadata: Metadata = { title: "إضافة معلم جديد" };
 
 export default function NewTeacherPage() {
   return (
-    <div className="max-w-xl mx-auto py-6">
-      <h1 className="text-xl font-semibold mb-6">إضافة معلم جديد</h1>
+    <div className="container-form flex flex-col gap-6">
+      <h1 className="text-page-title">إضافة معلم جديد</h1>
       <TeacherForm />
     </div>
   );

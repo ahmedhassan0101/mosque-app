@@ -57,7 +57,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   */
   if (isSuccess) {
     return (
-      <Card className="w-full max-w-md animate-scale-in">
+      <Card className="container-auth animate-scale-in">
         <CardHeader>
           <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
           <div className="flex flex-col gap-1 pt-2">
@@ -104,7 +104,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   /* ── State 1: Form ────────────────────────────────────────────
    */
   return (
-    <Card className="w-full max-w-md animate-scale-in">
+    <Card className="container-auth animate-scale-in">
       <CardHeader>
         <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
         <div className="flex flex-col gap-1 pt-2">
@@ -173,7 +173,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 // } from "@/schemas/auth.schema";
 // import { resetPassword } from "@/actions/auth.actions";
 // import { RedirectTimer } from "@/components/auth/RedirectTimer";
-// import { Button } from "@/temp/button";
+// import { Button } from "@/components/ui/button";
 // import { AuthCard, AuthFooter } from "@/components/auth/AuthPrimitives";
 // import { FormInput } from "../form/FormInput";
 

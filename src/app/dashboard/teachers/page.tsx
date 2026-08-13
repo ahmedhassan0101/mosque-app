@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import type { Metadata } from "next";
 
-import { Button } from "@/temp/button";
-import { Input } from "@/temp/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { TeachersListContent } from "@/components/teachers/TeachersListContent";
 import { TeachersListSkeleton } from "@/components/teachers/TeachersListSkeleton";
 
@@ -21,7 +21,7 @@ export default async function TeachersPage({
   const { query } = await searchParams;
 
   return (
-    <main className="space-y-6 p-6" dir="rtl">
+    <div className="container-fluid flex flex-col gap-6" dir="rtl">
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -63,6 +63,6 @@ export default async function TeachersPage({
           <TeachersListContent query={query} />
         </Suspense>
       </section>
-    </main>
+    </div>
   );
 }

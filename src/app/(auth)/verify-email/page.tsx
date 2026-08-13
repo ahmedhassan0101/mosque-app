@@ -36,7 +36,7 @@ export default async function VerifyEmailPage({
   // ── State 1: لا يوجد token ─────────────────────────────────────
   if (!token) {
     return (
-      <Card className="w-full max-w-md animate-scale-in">
+      <Card className="container-auth animate-scale-in">
         <CardHeader>
           <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
           <div className="flex flex-col gap-1 pt-2">
@@ -87,7 +87,7 @@ export default async function VerifyEmailPage({
   // ── State 2: Token منتهي الصلاحية أو فاشل ─────────────────────
   if (result.status !== "success") {
     return (
-      <Card className="w-full max-w-md animate-scale-in">
+      <Card className="container-auth animate-scale-in">
         <CardHeader>
           <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
           <div className="flex flex-col gap-1 pt-2">
@@ -133,7 +133,7 @@ export default async function VerifyEmailPage({
 
   // ── State 3: Success ───────────────────────────────────────────
   return (
-    <Card className="w-full max-w-md animate-scale-in">
+    <Card className="container-auth animate-scale-in">
       <CardHeader>
         <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
         <div className="flex flex-col gap-1 pt-2">

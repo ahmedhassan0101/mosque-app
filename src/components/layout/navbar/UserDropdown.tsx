@@ -55,14 +55,14 @@ export function UserDropdown({ session }: UserDropdownProps) {
 
         <DropdownMenuItem asChild>
           <Link href="/dashboard/profile">
-            <User />
+            <User className="me-2 size-4" />
             الملف الشخصي
           </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
           <Link href="/dashboard/settings">
-            <Settings />
+            <Settings className="me-2 size-4" />
             الإعدادات
           </Link>
         </DropdownMenuItem>
@@ -70,7 +70,7 @@ export function UserDropdown({ session }: UserDropdownProps) {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive" onClick={() => logoutUser()}>
-          <LogOut />
+          <LogOut className="me-2 size-4" />
           تسجيل الخروج
         </DropdownMenuItem>
       </DropdownMenuContent>

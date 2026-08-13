@@ -2,7 +2,7 @@
 
 import { Users } from "lucide-react";
 import StudentsTableHeader from "./StudentsTableHeader";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Table, TableBody } from "@/components/ui/table";
 import { StudentRow } from "./StudentRow";

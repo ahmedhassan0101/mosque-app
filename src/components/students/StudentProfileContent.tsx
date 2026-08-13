@@ -17,7 +17,7 @@ import {
 import { getStudentProfile } from "@/queries/student.queries";
 import { calculateAge } from "@/lib/utils/age";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { DeleteStudentButton } from "./DeleteStudentButton";
 import type { StudentGroupSummary } from "@/queries/student.queries";
 import { ACTIVITIES, GENDERS, LEVELS } from "@/constants";
@@ -75,6 +75,7 @@ export async function StudentProfileContent({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4" dir="rtl">
+      {/*    <div className="detail-grid" dir="rtl"> */}
       {/* ══ 1. Hero Card — spans 2 columns ══════════════════════════════ */}
       <section
         aria-label="البيانات الأساسية"

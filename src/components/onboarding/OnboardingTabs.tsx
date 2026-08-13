@@ -14,11 +14,9 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-
 export function OnboardingTabs() {
   return (
-    <Card className="w-full max-w-lg animate-scale-in">
-
+    <Card className="container-auth max-w-lg animate-scale-in">
       {/* ── Header ─────────────────────────────────────────────── */}
       <CardHeader>
         <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
@@ -32,16 +30,18 @@ export function OnboardingTabs() {
 
       <CardContent>
         <Tabs defaultValue="create" dir="rtl" className="flex flex-col gap-5">
-
           {/* ── Trigger Cards — variant="cards" من المكون نفسه ──── */}
           <TabsList variant="cards">
-
             <TabsTrigger
               value="create"
               className="group h-auto flex-col items-start gap-3"
             >
               <span className="flex size-9 items-center justify-center rounded-md bg-primary/10 transition-colors group-data-[state=active]:bg-primary group-data-[state=active]:[&>svg]:text-primary-foreground">
-                <Building2 size={18} className="text-primary" aria-hidden="true" />
+                <Building2
+                  size={18}
+                  className="text-primary"
+                  aria-hidden="true"
+                />
               </span>
               <span className="flex flex-col gap-1">
                 <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
@@ -62,7 +62,11 @@ export function OnboardingTabs() {
               className="group h-auto flex-col items-start gap-3"
             >
               <span className="flex size-9 items-center justify-center rounded-md bg-muted transition-colors group-data-[state=active]:bg-primary group-data-[state=active]:[&>svg]:text-primary-foreground">
-                <KeyRound size={18} className="text-muted-foreground group-data-[state=active]:text-primary-foreground" aria-hidden="true" />
+                <KeyRound
+                  size={18}
+                  className="text-muted-foreground group-data-[state=active]:text-primary-foreground"
+                  aria-hidden="true"
+                />
               </span>
               <span className="flex flex-col gap-1">
                 <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
@@ -77,7 +81,6 @@ export function OnboardingTabs() {
                 </span>
               </span>
             </TabsTrigger>
-
           </TabsList>
 
           {/* ── Forms ──────────────────────────────────────────── */}
@@ -88,10 +91,8 @@ export function OnboardingTabs() {
           <TabsContent value="join" className="animate-fade-up">
             <JoinMosqueForm />
           </TabsContent>
-
         </Tabs>
       </CardContent>
-
     </Card>
   );
 }

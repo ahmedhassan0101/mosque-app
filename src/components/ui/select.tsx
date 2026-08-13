@@ -41,21 +41,22 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        // Base
+        // Base — mirrors Input exactly so the two read as siblings
         "flex w-fit items-center justify-between gap-2",
-        "rounded-lg border border-input bg-background",
+        "rounded-md border border-input bg-background dark:bg-input/20",
         "text-sm text-foreground whitespace-nowrap",
         "transition-colors duration-150 outline-none select-none",
         // Sizes — aligned with Button & Input
         "data-[size=default]:h-9 data-[size=default]:px-3",
         "data-[size=sm]:h-8 data-[size=sm]:px-2.5 data-[size=sm]:text-xs data-[size=sm]:rounded-md",
-        // Placeholder text color
+        // Placeholder text color — [data-placeholder] is a real Radix attribute
         "data-placeholder:text-muted-foreground",
-        // Focus — matches Input component
-        "focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30",
+        // Focus — matches Input
+        "focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25",
         // States
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        "aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20",
+        "disabled:cursor-not-allowed disabled:bg-muted/50 disabled:opacity-60",
+        "aria-invalid:border-destructive",
+        "aria-invalid:focus-visible:ring-destructive/25",
         // SelectValue inner slot
         "[&>*[data-slot=select-value]]:flex [&>*[data-slot=select-value]]:items-center [&>*[data-slot=select-value]]:gap-1.5",
         "[&>*[data-slot=select-value]]:line-clamp-1",
@@ -95,8 +96,12 @@ function SelectContent({
           "min-w-32 max-h-(--radix-select-content-available-height)",
           "origin-(--radix-select-content-transform-origin)",
           // Animations
-          "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
-          "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          // FIX: Radix sets data-state="open"/"closed" on Content, not a
+          // bare data-open/data-closed attribute — the shorthand below
+          // never matched, so the panel appeared/disappeared with no
+          // transition at all.
+          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           "data-[side=bottom]:slide-in-from-top-1",
           "data-[side=top]:slide-in-from-bottom-1",
           "data-[side=left]:slide-in-from-right-1",
@@ -146,22 +151,18 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        // Layout — RTL aware: check icon on the right (start in RTL)
         "relative flex w-full cursor-default select-none items-center",
         "rounded-md py-1.5 pe-8 ps-2 text-sm outline-none",
-        // States
         "focus:bg-accent focus:text-accent-foreground",
         "data-disabled:pointer-events-none data-disabled:opacity-50",
-        // Icons
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}
     >
       {/*
-       * Check icon: absolute positioned at `start-2` in RTL = appears on right.
-       * This matches Arabic reading direction where the selected indicator
-       * should be on the trailing (right) side.
+       * Check icon sits at inset-end (pe-8 above reserves the space) —
+       * that's the LEFT side in RTL, not the right.
        */}
       <span className="absolute inset-e-2 flex size-4 items-center justify-center">
         <SelectPrimitive.ItemIndicator>

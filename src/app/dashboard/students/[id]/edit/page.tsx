@@ -50,10 +50,8 @@ export default async function EditStudentPage({
   if (!student) notFound();
 
   return (
-    <div className="max-w-4xl mx-auto py-6">
-      <h1 className="text-xl font-semibold mb-6">
-        تعديل بيانات الطالب: {student.name}
-      </h1>
+    <div className="container-form flex flex-col gap-6">
+      <h1 className="text-page-title">تعديل بيانات الطالب: {student.name}</h1>
       <StudentForm initialData={student} studentId={id} />
     </div>
   );

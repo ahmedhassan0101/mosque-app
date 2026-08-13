@@ -1,7 +1,7 @@
 "use client";
 
 import { refreshInviteCode } from "@/actions/settings.actions";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Input } from "@/temp/input";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useState, useTransition } from "react";
 import { Copy, RefreshCw } from "lucide-react";

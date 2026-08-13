@@ -24,7 +24,7 @@ import type { StudentSerialized } from "@/types/serialized";
 
 import { calculateAge } from "@/lib/utils/age";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { DeleteStudentButton } from "./DeleteStudentTableButton";
 import { ACTIVITIES } from "@/constants";

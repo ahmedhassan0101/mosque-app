@@ -15,7 +15,7 @@ import type { GroupSerialized } from "@/types/serialized";
 import { FormInput } from "@/components/form/FormInput";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { FormCheckboxGroup } from "../form/FormCheckboxGroup";
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -79,7 +79,10 @@ export default function GroupForm({
   // This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-6"
+    >
       {/* ── نوع النشاط (للقراءة فقط) ── */}
       <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
         <span className="text-sm text-muted-foreground font-medium">
@@ -89,7 +92,6 @@ export default function GroupForm({
           {ACTIVITY_LABELS[category]}
         </span>
       </div>
-
       {/* ── البيانات الأساسية ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormInput
@@ -115,7 +117,6 @@ export default function GroupForm({
           placeholder="مثال: السبت والثلاثاء بعد العصر"
         />
       </div>
-
       {/* ── اختيار الطلاب ── */}
       <section className="space-y-3">
         {students.length === 0 ? (
@@ -134,7 +135,6 @@ export default function GroupForm({
           </div>
         )}
       </section>
-
       {/* ── ملاحظات ── */}
       <FormTextarea
         control={form.control}
@@ -142,7 +142,6 @@ export default function GroupForm({
         label="ملاحظات (اختياري)"
         placeholder="أي ملاحظات تخص المجموعة..."
       />
-
       {/* ── أزرار الإرسال ── */}
       <div className="flex justify-end gap-3 pt-4 border-t">
         <Button

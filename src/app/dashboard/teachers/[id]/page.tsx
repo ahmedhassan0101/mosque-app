@@ -29,7 +29,7 @@ export default async function TeacherProfilePage({
   const teacher = await getTeacherById(id);
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-6 space-y-6" dir="rtl">
+    <div className="container-detail flex flex-col gap-6" dir="rtl">
       {/* ── Breadcrumb ── */}
       <nav
         aria-label="مسار التنقل"
@@ -59,6 +59,6 @@ export default async function TeacherProfilePage({
       <Suspense fallback={<TeacherProfileSkeleton />}>
         <TeacherProfileContent id={id} />
       </Suspense>
-    </main>
+    </div>
   );
 }

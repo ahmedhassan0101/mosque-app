@@ -47,14 +47,13 @@ export function RegisterForm() {
       }
       toast.success(result.message);
       router.push(
-        `/waiting-verification?email=${encodeURIComponent(values.email)}`
+        `/waiting-verification?email=${encodeURIComponent(values.email)}`,
       );
     });
   }
 
   return (
-    <Card className="w-full max-w-md animate-scale-in">
-
+    <Card className="container-auth animate-scale-in">
       {/* ── Header ─────────────────────────────────────────────── */}
       <CardHeader>
         <CardSysLabel>نظام إدارة المسجد</CardSysLabel>
@@ -69,7 +68,6 @@ export function RegisterForm() {
       {/* ── Content ────────────────────────────────────────────── */}
       <CardContent>
         <div className="flex flex-col gap-5">
-
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             noValidate
@@ -112,11 +110,7 @@ export function RegisterForm() {
               disabled={isPending}
             />
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isPending}
-            >
+            <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "جارٍ إنشاء الحساب..." : "إنشاء الحساب"}
             </Button>
           </form>
@@ -124,7 +118,6 @@ export function RegisterForm() {
           <div className="divider-label">أو</div>
 
           <GoogleAuth />
-
         </div>
       </CardContent>
 
@@ -140,7 +133,6 @@ export function RegisterForm() {
           </Link>
         </p>
       </CardFooter>
-
     </Card>
   );
 }
@@ -157,7 +149,7 @@ export function RegisterForm() {
 
 // // import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
 // import { registerUser } from "@/actions/auth.actions";
-// import { Button } from "@/temp/button";
+// import { Button } from "@/components/ui/button";
 // // import { FormInput } from "@/components/auth/form-input";
 // import { GoogleAuth } from "@/components/auth/GoogleAuth";
 // import { AuthCard, AuthFooter } from "@/components/auth/AuthPrimitives";

@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getStudentsList } from "@/queries/student.queries";
 import { StudentsStats } from "@/components/students/StudentsStatsCards";
@@ -61,7 +61,7 @@ export default async function StudentsPage({ searchParams }: PageProps) {
   return (
     // NuqsAdapter is required at the boundary where nuqs Client Components are used
     <NuqsAdapter>
-      <main className="space-y-6 p-6" dir="rtl">
+      <div className="container-fluid flex flex-col gap-6" dir="rtl">
         {/* ── Header ── */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -96,7 +96,7 @@ export default async function StudentsPage({ searchParams }: PageProps) {
           currentPage={currentPage}
           hasActiveFilters={hasActiveFilters}
         />
-      </main>
+      </div>
     </NuqsAdapter>
   );
 }

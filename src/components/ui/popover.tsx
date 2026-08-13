@@ -30,7 +30,15 @@ function PopoverContent({
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          "z-50 flex w-72 origin-(--radix-popover-content-transform-origin) flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "z-50 flex w-72 origin-(--radix-popover-content-transform-origin) flex-col gap-2.5",
+          "rounded-lg border border-border bg-popover p-2.5 text-sm text-popover-foreground shadow-md",
+          "outline-hidden duration-100",
+          "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          // FIX: Radix sets data-state="open"/"closed" on Content, not a
+          // bare data-open/data-closed attribute — same bug fixed in
+          // SelectContent. The panel had no enter/exit animation at all.
+          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           className,
         )}
         {...props}
@@ -55,11 +63,15 @@ function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// FIX: was typed as h2 props but rendered a <div> — broke heading semantics
+// for anything relying on it (e.g. screen readers). "font-heading" also
+// isn't a registered token in this project (only --font-sans/--font-mono
+// exist), so it silently did nothing.
 function PopoverTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <div
+    <h2
       data-slot="popover-title"
-      className={cn("font-heading font-medium", className)}
+      className={cn("text-sm font-semibold", className)}
       {...props}
     />
   );

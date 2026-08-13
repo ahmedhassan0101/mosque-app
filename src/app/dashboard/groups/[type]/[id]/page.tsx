@@ -35,7 +35,7 @@ export default async function GroupDetailsPage({ params }: Props) {
   const group = await getGroupById(id);
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 space-y-5" dir="rtl">
+    <div className="container-detail flex flex-col gap-6" dir="rtl">
       {/* ── Breadcrumb ── */}
       <nav
         aria-label="مسار التنقل"
@@ -60,11 +60,10 @@ export default async function GroupDetailsPage({ params }: Props) {
           {group?.name ?? "تفاصيل المجموعة"}
         </span>
       </nav>
-
       {/* ── Profile — streamed ── */}
       <Suspense fallback={<GroupProfileSkeleton />}>
         <GroupProfileContent id={id} type={type} />
       </Suspense>
-    </main>
+    </div>
   );
 }

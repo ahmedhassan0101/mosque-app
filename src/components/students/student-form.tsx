@@ -11,14 +11,14 @@ import { studentSchema, type StudentInput } from "@/schemas/student.schema";
 import { saveStudent } from "@/actions/student.actions";
 import { StudentSerialized } from "@/queries/student.queries";
 
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/form/FormInput";
 import { FormRadioGroup } from "@/components/form/FormRadioGroup";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { FormDatePicker } from "@/components/form/FormDatePicker";
 import { FormSelect } from "@/components/form/FormSelect";
 import { SURAH_OPTIONS } from "@/constants/quran";
-import { FormImageUpload } from "../form/form-image-upload";
+import { FormImageUpload } from "@/components/form/form-image-upload";
 import { GENDERS, LEVELS } from "@/constants";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -83,7 +83,10 @@ export default function StudentForm({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-6"
+    >
       ── الصورة ──
       <FormImageUpload
         control={form.control}
@@ -106,11 +109,19 @@ export default function StudentForm({
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* <FormDatePicker
+            control={form.control}
+            name="birthDate"
+            label="تاريخ الميلاد"
+            required
+          /> */}
           <FormDatePicker
             control={form.control}
             name="birthDate"
             label="تاريخ الميلاد"
             required
+            maxDate={new Date()}
+            minDate={new Date("1900-01-01")}
           />
           <FormInput
             control={form.control}
@@ -224,6 +235,7 @@ export default function StudentForm({
         name="notes"
         label="ملاحظات إضافية"
         placeholder="أي ملاحظات تخص الطالب..."
+        maxLength={500}
       />
       ── أزرار الإرسال ──
       <div className="flex justify-end gap-3 pt-2">

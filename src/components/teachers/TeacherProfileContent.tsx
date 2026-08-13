@@ -13,7 +13,7 @@ import {
 
 import { getTeacherProfile } from "@/queries/teacher.queries";
 import type { TeacherGroupSummary } from "@/queries/teacher.queries";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { DeleteTeacherButton } from "./DeleteTeacherButton";
 import { ACTIVITIES } from "@/constants";
 
@@ -71,7 +71,7 @@ export async function TeacherProfileContent({
     .join("");
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* ── Teacher info card ── */}
       <section
         aria-label="بيانات المعلم"

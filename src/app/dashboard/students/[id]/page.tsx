@@ -28,7 +28,7 @@ export default async function StudentProfilePage({
   const student = await getStudentById(id);
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 space-y-5" dir="rtl">
+    <div className="container-detail flex flex-col gap-6" dir="rtl">
       {/* ── Breadcrumb ── */}
       <nav
         aria-label="مسار التنقل"
@@ -53,11 +53,10 @@ export default async function StudentProfilePage({
           {student?.name ?? "الملف الشخصي"}
         </span>
       </nav>
-
       {/* ── Bento Grid — streamed ── */}
       <Suspense fallback={<StudentProfileSkeleton />}>
         <StudentProfileContent id={id} />
       </Suspense>
-    </main>
+    </div>
   );
 }

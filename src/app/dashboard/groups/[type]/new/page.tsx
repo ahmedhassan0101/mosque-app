@@ -35,10 +35,8 @@ export default async function NewGroupPage({ params }: Props) {
   }));
 
   return (
-    <div className="max-w-4xl mx-auto py-6">
-      <h1 className="text-xl font-semibold mb-6">
-        إضافة {ACTIVITIES.labels[type]} جديدة
-      </h1>
+    <div className="container-form flex flex-col gap-6">
+      <h1 className="text-page-title">إضافة {ACTIVITIES.labels[type]} جديدة</h1>
       <GroupForm
         category={type}
         teachers={teacherOptions}

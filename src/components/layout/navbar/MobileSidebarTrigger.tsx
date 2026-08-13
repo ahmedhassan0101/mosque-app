@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Sidebar } from "./Sidebar";
+import { Sidebar } from "../Sidebar";
 
 interface MobileSidebarTriggerProps {
   role?: string;
@@ -22,17 +22,12 @@ export function MobileSidebarTrigger({ role }: MobileSidebarTriggerProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className="lg:hidden"
-          aria-label="فتح القائمة"
-        >
+        <Button variant="ghost" size="icon-sm" className="xl:hidden">
           <Menu size={16} />
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="p-0" aria-label="القائمة الجانبية">
+      <SheetContent side="left" className="p-0">
         <SheetTitle className="sr-only">القائمة الجانبية</SheetTitle>
 
         <Sidebar

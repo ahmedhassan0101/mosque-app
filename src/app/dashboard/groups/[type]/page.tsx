@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { GroupsGridContent } from "@/components/groups/GroupsGridContent";
 import { GroupsGridSkeleton } from "@/components/groups/GroupsGridSkeleton";
 import { ACTIVITIES, type ActivityType } from "@/constants";
@@ -27,7 +27,7 @@ export default async function GroupsPage({ params }: Props) {
   if (!assertActivityType(type)) notFound();
 
   return (
-    <main className="space-y-6 p-6" dir="rtl">
+    <div className="container-fluid flex flex-col gap-6" dir="rtl">
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -52,6 +52,6 @@ export default async function GroupsPage({ params }: Props) {
           <GroupsGridContent type={type} />
         </Suspense>
       </section>
-    </main>
+    </div>
   );
 }

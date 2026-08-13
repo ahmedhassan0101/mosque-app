@@ -19,7 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 
 interface DeleteGroupAlertProps {
   id: string;

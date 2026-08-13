@@ -4,7 +4,7 @@ import {
   removeUserFromMosque,
   updateUserRole,
 } from "@/actions/settings.actions";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,

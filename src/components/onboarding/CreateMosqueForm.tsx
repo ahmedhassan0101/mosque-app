@@ -92,7 +92,7 @@
 //   createMosqueSchema,
 //   type CreateMosqueInput,
 // } from "@/schemas/onboarding.schema";
-// import { Button } from "@/temp/button";
+// import { Button } from "@/components/ui/button";
 // import { AuthCard } from "@/components/auth/AuthPrimitives";
 // import { createMosque } from "@/actions/onboarding.actions";
 // import { FormInput } from "../form/FormInput";

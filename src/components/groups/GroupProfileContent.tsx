@@ -14,7 +14,7 @@ import {
 
 import { getGroupWithDetails } from "@/queries/group.queries";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 import { DeleteGroupAlert } from "./DeleteGroupAlert";
 import { ACTIVITIES, type ActivityType } from "@/constants";
 

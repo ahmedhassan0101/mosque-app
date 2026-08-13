@@ -1,4 +1,3 @@
-// components/ui/field.tsx
 "use client";
 
 import { useMemo } from "react";
@@ -7,39 +6,21 @@ import { cn } from "@/lib/utils/utils";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
-/*
-  Field System — Design System Override
-  ─────────────────────────────────────────────
-  التغييرات عن النسخة الأصلية:
+/**
+ * Field System — Design System Override
+ * Default usage:
+ *   <Field>
+ *     <FieldLabel htmlFor="email">...</FieldLabel>
+ *     <Input id="email" aria-invalid={hasError} />
+ *     <FieldError errors={[fieldState.error]} />
+ *   </Field>
+ */
 
-  1. FieldLabel — حُذف منه الـ has-data-checked complexity
-     المشروع مش بيستخدم checkbox-inside-label pattern في الـ auth
-     الـ label بسيط: text فوق الـ input مباشرة
+// Shared base classes for label-like text — used by FieldLabel and FieldTitle
+const FIELD_LABEL_BASE =
+  "flex w-fit items-center gap-1.5 text-sm font-medium leading-snug group-data-[disabled=true]/field:opacity-50";
 
-  2. FieldError — text-xs بدل text-sm (12px أوضح وأخف)
-     + mt-1 بدل div مستقل — أقرب للـ input
-
-  3. FieldDescription — حُذف منها text-right
-     الـ dir="rtl" على html يكفي
-
-  4. FieldSeparator — محتفظ بيه لأنه يُستخدم في auth ("أو")
-
-  5. FieldSet / FieldGroup / FieldLegend — محتفظ بيهم
-     لأنهم بيُستخدموا في الـ onboarding forms المعقدة
-
-  الاستخدام الأساسي:
-    <Field>
-      <FieldLabel htmlFor="email">البريد الإلكتروني</FieldLabel>
-      <Input id="email" ... aria-invalid={hasError} />
-      <FieldError errors={[fieldState.error]} />
-    </Field>
-  ─────────────────────────────────────────────
-*/
-
-/* ── FieldSet ─────────────────────────────────────────────────
-   Container لمجموعة fields مترابطة (fieldset semantics)
-   مثال: قسم "بيانات المسجد" في الـ onboarding
-*/
+// Container for a group of related fields (fieldset semantics)
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
     <fieldset
@@ -50,9 +31,6 @@ function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   );
 }
 
-/* ── FieldLegend ──────────────────────────────────────────────
-   عنوان الـ fieldset — legend أو label style
-*/
 function FieldLegend({
   className,
   variant = "legend",
@@ -73,10 +51,7 @@ function FieldLegend({
   );
 }
 
-/* ── FieldGroup ───────────────────────────────────────────────
-   Container لمجموعة fields في صف أو عمود
-   gap-5 بين الـ fields — أكبر من gap-4 عشان يكون واضح فصل البلوكس
-*/
+// Groups fields in a row or column — gap-5 to keep blocks visually separated
 function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -90,13 +65,12 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/* ── Field ────────────────────────────────────────────────────
-   الـ wrapper الأساسي لكل field (label + input + error)
-   orientation:
-     vertical   → label فوق، input تحت (الأكثر استخداماً)
-     horizontal → label جنب الـ input (للـ settings forms)
-     responsive → vertical على mobile، horizontal على desktop
-*/
+/**
+ * orientation:
+ *   vertical   → label above input (default, most common)
+ *   horizontal → label beside input (settings-style forms)
+ *   responsive → vertical on mobile, horizontal on desktop
+ */
 const fieldVariants = cva(
   "group/field flex w-full gap-2 data-[invalid=true]:text-destructive",
   {
@@ -131,10 +105,7 @@ function Field({
   );
 }
 
-/* ── FieldContent ─────────────────────────────────────────────
-   يُستخدم في الـ horizontal orientation
-   يلف الـ description + input أسفل الـ label
-*/
+// Used in horizontal orientation — wraps description + input below the label
 function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -145,10 +116,6 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/* ── FieldLabel ───────────────────────────────────────────────
-   Label فوق الـ input — بسيط ونظيف
-   الـ disabled state يأتي من الـ Field parent عبر group-data
-*/
 function FieldLabel({
   className,
   ...props
@@ -157,9 +124,8 @@ function FieldLabel({
     <Label
       data-slot="field-label"
       className={cn(
-        "flex w-fit items-center gap-1.5 text-sm font-medium leading-snug",
-        "group-data-[disabled=true]/field:opacity-50",
-        // error state — اللون الأحمر يجي من Field parent (data-invalid)
+        FIELD_LABEL_BASE,
+        // Error color comes from the Field parent via data-invalid
         "group-data-[invalid=true]/field:text-destructive",
         className
       )}
@@ -168,28 +134,18 @@ function FieldLabel({
   );
 }
 
-/* ── FieldTitle ───────────────────────────────────────────────
-   نفس FieldLabel لكن بدون htmlFor — للـ non-input fields
-   مثال: عنوان section داخل fieldset
-*/
+// Same as FieldLabel but without htmlFor — for non-input fields (e.g. section titles)
 function FieldTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="field-title"
-      className={cn(
-        "flex w-fit items-center gap-2 text-sm font-medium leading-snug",
-        "group-data-[disabled=true]/field:opacity-50",
-        className
-      )}
+      className={cn(FIELD_LABEL_BASE, className)}
       {...props}
     />
   );
 }
 
-/* ── FieldDescription ─────────────────────────────────────────
-   Helper text تحت الـ input — hint أو توضيح
-   يظهر دايماً حتى لو في error state (فرق عن الـ FieldError)
-*/
+// Helper text below the input — stays visible even during error state
 function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
@@ -204,10 +160,7 @@ function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-/* ── FieldSeparator ───────────────────────────────────────────
-   فاصل بين fields — مع أو بدون label
-   مثال: <FieldSeparator>أو</FieldSeparator> في الـ login form
-*/
+// Divider between fields, with optional label (e.g. "أو" in the login form)
 function FieldSeparator({
   children,
   className,
@@ -229,12 +182,7 @@ function FieldSeparator({
   );
 }
 
-/* ── FieldError ───────────────────────────────────────────────
-   رسالة الـ error تحت الـ input مباشرة
-   - errors array: يعرض أول error فقط لو واحدة، list لو أكتر
-   - children: override للـ error text مباشرة
-   - لا يظهر لو مفيش content (لا حاجة لـ empty div)
-*/
+// Error message below the input. Renders nothing if there's no error content.
 function FieldError({
   className,
   children,
@@ -247,17 +195,13 @@ function FieldError({
     if (children) return children;
     if (!errors?.length) return null;
 
-    // إزالة duplicates بناءً على الـ message
     const unique = [
       ...new Map(errors.map((e) => [e?.message, e])).values(),
     ].filter(Boolean);
 
     if (unique.length === 0) return null;
-
-    // error واحدة → text مباشر
     if (unique.length === 1) return unique[0]?.message;
 
-    // أكتر من error → unordered list
     return (
       <ul className="flex list-disc flex-col gap-0.5 ps-4">
         {unique.map(

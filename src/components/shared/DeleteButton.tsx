@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/temp/button";
+import { Button } from "@/components/ui/button";
 
 // 1. تعريف التايب الصحيح لنتيجة السيرفر أكشن لحل مشكلة الـ await ts(80007)
 type ActionResponse = { error?: string; success?: boolean } | void;

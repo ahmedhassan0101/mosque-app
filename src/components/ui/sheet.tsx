@@ -81,13 +81,13 @@ function SheetContent({
           "data-[side=top]:inset-x-0 data-[side=top]:top-0",
           "data-[side=top]:h-auto data-[side=top]:border-b data-[side=top]:border-border",
 
-          // Left — logical: border على نهاية العنصر (يمين، الجهة اللي تواجه المحتوى)
-          "data-[side=left]:inset-y-0 data-[side=left]:start-0",
+          // Left — logical: border 
+          "data-[side=left]:inset-y-0 data-[side=left]:inset-s-0",
           "data-[side=left]:h-full data-[side=left]:w-72",
           "data-[side=left]:border-e data-[side=left]:border-border",
 
-          // Right — logical: border على بداية العنصر (يسار، الجهة اللي تواجه المحتوى)
-          "data-[side=right]:inset-y-0 data-[side=right]:end-0",
+          // Right — logical: border
+          "data-[side=right]:inset-y-0 data-[side=right]:inset-e-0",
           "data-[side=right]:h-full data-[side=right]:w-72",
           "data-[side=right]:border-s data-[side=right]:border-border",
 
@@ -115,7 +115,7 @@ function SheetContent({
             <Button
               variant="ghost"
               size="icon-sm"
-              className="absolute top-3 end-3"
+              className="absolute top-3 inset-e-3"
             >
               <XIcon size={15} />
               <span className="sr-only">إغلاق</span>
