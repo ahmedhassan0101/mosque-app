@@ -22,7 +22,7 @@ export default async function DashboardLayout({
         <main
           id="main-content"
           tabIndex={-1}
-          className="page-x-padding flex-1 overflow-y-auto scroll-smooth py-5 md:py-6 focus-visible:outline-none animate-fade-up"
+          className="page-padding flex-1 overflow-y-auto scroll-smooth focus-visible:outline-none animate-fade-up"
         >
           {children}
         </main>

@@ -27,7 +27,7 @@ export default async function GroupsPage({ params }: Props) {
   if (!assertActivityType(type)) notFound();
 
   return (
-    <div className="container-fluid flex flex-col gap-6" dir="rtl">
+    <div className="container-fluid" dir="rtl">
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

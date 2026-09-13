@@ -80,7 +80,7 @@ const RECENT_ACTIVITIES = [
 
 export default function DashboardPage() {
   return (
-    <div className="container-fluid flex flex-col gap-6">
+    <div className="container-fluid">
       {/* ── Page Header ── */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-foreground">

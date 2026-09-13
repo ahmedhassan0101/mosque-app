@@ -50,7 +50,7 @@ export default async function EditGroupPage({ params }: Props) {
   }));
 
   return (
-    <div className="container-form flex flex-col gap-6">
+    <div className="container-form">
       <h1 className="text-page-title">تعديل: {group.name}</h1>
       <GroupForm
         initialData={group}

@@ -21,8 +21,9 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { useState, useTransition } from "react";
+import { startTransition, useState, useTransition } from "react";
 import type { RolesType } from "@/constants";
+import { Users, Trash2 } from "lucide-react";
 
 interface UserItem {
   id: string;
@@ -38,7 +39,6 @@ interface UserManagementProps {
   currentUserId: string;
 }
 
-// Role label map — single source of truth for display strings
 const ROLE_LABELS: Record<string, string> = {
   ADMIN: "مدير",
   SUPERVISOR: "مشرف",
@@ -51,7 +51,6 @@ export function UserManagement({
 }: UserManagementProps) {
   const [isPending, startTransition] = useTransition();
   const [localUsers, setLocalUsers] = useState(users);
-
   const handleRoleChange = (userId: string, newRole: RolesType) => {
     startTransition(async () => {
       const result = await updateUserRole(mosqueId, userId, newRole);
@@ -83,24 +82,25 @@ export function UserManagement({
   };
 
   return (
-    <Card className="max-w-2xl">
-      <CardHeader>
-        <CardTitle>المستخدمون</CardTitle>
-        <CardDescription>
-          {localUsers.length} {localUsers.length === 1 ? "مستخدم" : "مستخدمون"}{" "}
-          مسجّلون في هذا المسجد.
-        </CardDescription>
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 pb-6">
+        <div className="space-y-1">
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Users className="h-5 w-5 text-muted-foreground" />
+            المستخدمون
+          </CardTitle>
+          <CardDescription className="text-sm">
+            {localUsers.length}{" "}
+            {localUsers.length === 1 ? "مستخدم" : "مستخدمون"} مسجّلون في هذا
+            المسجد.
+          </CardDescription>
+        </div>
       </CardHeader>
 
       <CardContent className="p-0">
-        {/*
-         * List instead of space-y-3 with borders — cleaner table-like pattern.
-         * divide-y creates separators without extra wrapper divs.
-         */}
-        <ul className="divide-y divide-border">
+        <ul className="divide-y divide-border border-t">
           {localUsers.map((user) => {
             const isSelf = user.id === currentUserId;
-            // Generate initials: first char of each word, max 2
             const initials = user.name
               .split(" ")
               .slice(0, 2)
@@ -110,29 +110,29 @@ export function UserManagement({
             return (
               <li
                 key={user.id}
-                className="flex items-center justify-between gap-4 px-5 py-3.5"
+                className="flex items-center justify-between gap-4 px-6 py-4 hover:bg-muted/30 transition-colors"
               >
                 {/* Left: avatar + identity */}
-                <div className="flex items-center gap-3 min-w-0">
-                  <Avatar className="h-8 w-8 shrink-0">
+                <div className="flex items-center gap-4 min-w-0">
+                  <Avatar className="h-10 w-10 shrink-0 border">
                     <AvatarImage src={user.image ?? ""} alt={user.name} />
-                    <AvatarFallback className="text-xs font-semibold">
+                    <AvatarFallback className="text-sm font-semibold bg-primary/5 text-primary">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="truncate text-sm font-medium text-foreground">
+                      <p className="truncate text-sm font-semibold text-foreground">
                         {user.name}
                       </p>
                       {isSelf && (
-                        <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                        <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
                           أنت
                         </span>
                       )}
                     </div>
                     <p
-                      className="truncate text-xs text-muted-foreground"
+                      className="truncate text-sm text-muted-foreground mt-0.5"
                       dir="ltr"
                     >
                       {user.email}
@@ -140,25 +140,22 @@ export function UserManagement({
                   </div>
                 </div>
 
-                {/* Right: role selector + remove button (hidden for self) */}
+                {/* Right: Controls */}
                 {isSelf ? (
-                  /*
-                   * Current user — show role as read-only badge, no controls.
-                   * Prevents self-demotion accidents.
-                   */
-                  <span className="shrink-0 rounded-md border border-border bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                  <span className="shrink-0 rounded-md bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
                     {ROLE_LABELS[user.role] ?? user.role}
                   </span>
                 ) : (
-                  <div className="flex shrink-0 items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-3">
                     <Select
                       defaultValue={user.role}
                       onValueChange={(v) =>
                         handleRoleChange(user.id, v as RolesType)
                       }
                       disabled={isPending}
+                      dir="rtl"
                     >
-                      <SelectTrigger size="sm" className="w-28">
+                      <SelectTrigger size="sm" className="w-27.5 h-9">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent align="end">
@@ -168,12 +165,14 @@ export function UserManagement({
                     </Select>
 
                     <Button
-                      variant="destructive"
-                      size="sm"
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 text-destructive hover:bg-destructive/10 hover:text-destructive"
                       disabled={isPending}
                       onClick={() => handleRemove(user.id)}
+                      title="إزالة المستخدم"
                     >
-                      إزالة
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 )}

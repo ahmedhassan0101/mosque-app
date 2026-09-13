@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "إضافة معلم جديد" };
 
 export default function NewTeacherPage() {
   return (
-    <div className="container-form flex flex-col gap-6">
+    <div className="container-form">
       <h1 className="text-page-title">إضافة معلم جديد</h1>
       <TeacherForm />
     </div>

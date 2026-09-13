@@ -8,12 +8,13 @@ import { useForm } from "react-hook-form";
 import { FormInput } from "../form/FormInput";
 import { FormTextarea } from "../form/FormTextarea";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { NotebookText, User } from "lucide-react";
 import { toast } from "sonner";
 import { saveTeacher } from "@/actions/teacher.actions";
 import { useRouter } from "next/navigation";
 import { FormImageUpload } from "../form/form-image-upload";
 import { TeacherSerialized } from "@/queries/teacher.queries";
+import { Card, CardContent, CardHeader, SectionTitle } from "../ui/card";
 
 type TeacherFormProps = {
   /** Provided when editing an existing teacher. Undefined for create mode. */
@@ -57,40 +58,78 @@ export default function TeacherForm({
   };
 
   return (
-    <form
+   <form
       onSubmit={form.handleSubmit(onSubmit)}
       className="flex flex-col gap-6"
     >
-      <FormImageUpload
-        control={form.control}
-        name="image"
-        label="صورة المعلم"
-        folderCategory="teachers"
-      />
-      <FormInput
-        control={form.control}
-        name="name"
-        label="الاسم"
-        placeholder="الشيخ أحمد"
-        required
-      />
-      <FormInput
-        control={form.control}
-        name="phone"
-        label="رقم الهاتف"
-        placeholder="01xxxxxxxxx"
-        dir="ltr"
-      />
-      <FormTextarea
-        control={form.control}
-        name="notes"
-        label="ملاحظات"
-        placeholder="أي ملاحظات إضافية..."
-      />
-      <Button type="submit" disabled={isPending}>
-        {isPending && <Loader2 size={14} className="animate-spin ml-2" />}
-        {isEdit ? "حفظ" : "إضافة"}
-      </Button>
+      <fieldset
+        disabled={isPending}
+        className="m-0 flex flex-col gap-6 border-0 p-0"
+      >
+        {/* كارت البيانات الأساسية */}
+        <Card>
+          <CardHeader divider>
+            <SectionTitle icon={User}>البيانات الأساسية</SectionTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-6">
+            <FormImageUpload
+              control={form.control}
+              name="image"
+              label="صورة المعلم"
+              folderCategory="teachers"
+            />
+
+            {/* الاسم والهاتف في سطر واحد في الشاشات الكبيرة لتوفير المساحة */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <FormInput
+                control={form.control}
+                name="name"
+                label="الاسم"
+                placeholder="الشيخ أحمد"
+                required
+              />
+              <FormInput
+                control={form.control}
+                name="phone"
+                label="رقم الهاتف (اختياري)"
+                placeholder="01xxxxxxxxx"
+                dir="ltr"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* كارت الملاحظات */}
+        <Card>
+          <CardHeader divider>
+            <SectionTitle icon={NotebookText}>ملاحظات</SectionTitle>
+          </CardHeader>
+          <CardContent>
+            <FormTextarea
+              control={form.control}
+              name="notes"
+              label="ملاحظات إضافية"
+              placeholder="أي ملاحظات تخص المعلم..."
+              
+            />
+          </CardContent>
+        </Card>
+      </fieldset>
+
+      <div className="flex justify-end gap-3 pt-6 border-t border-border">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+          disabled={isPending}
+          className="w-24"
+        >
+          إلغاء
+        </Button>
+        <Button type="submit" disabled={isPending} className="min-w-32">
+          {isPending ? "جارٍ الحفظ..." : isEdit ? "تحديث البيانات" : "إضافة المعلم"}
+        </Button>
+      </div>
     </form>
   );
 }

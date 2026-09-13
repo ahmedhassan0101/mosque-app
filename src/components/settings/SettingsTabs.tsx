@@ -29,8 +29,8 @@ export function SettingsTabs({
   currentUserId,
 }: SettingsTabsProps) {
   return (
-    <Tabs defaultValue="details" dir="rtl">
-      <TabsList className="mb-6 w-fit">
+    <Tabs defaultValue="details" dir="rtl" className="w-full">
+       <TabsList className="w-fit mb-4">
         <TabsTrigger value="details">بيانات المسجد</TabsTrigger>
         <TabsTrigger value="users">المستخدمون</TabsTrigger>
         <TabsTrigger value="invite">رمز الدعوة</TabsTrigger>
@@ -40,7 +40,7 @@ export function SettingsTabs({
         <MosqueDetailsForm mosque={mosque} />
       </TabsContent>
 
-      <TabsContent value="users">
+      <TabsContent value="users" >
         <UserManagement
           users={users}
           mosqueId={mosque.id}
@@ -54,3 +54,4 @@ export function SettingsTabs({
     </Tabs>
   );
 }
+

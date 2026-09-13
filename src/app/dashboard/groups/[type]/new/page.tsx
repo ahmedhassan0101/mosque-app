@@ -35,7 +35,7 @@ export default async function NewGroupPage({ params }: Props) {
   }));
 
   return (
-    <div className="container-form flex flex-col gap-6">
+    <div className="container-form">
       <h1 className="text-page-title">إضافة {ACTIVITIES.labels[type]} جديدة</h1>
       <GroupForm
         category={type}

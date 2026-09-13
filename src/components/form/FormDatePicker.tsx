@@ -84,7 +84,7 @@ export function FormDatePicker<T extends FieldValues>({
                 disabled={disabled}
                 aria-invalid={fieldState.invalid || undefined}
                 className={cn(
-                  "w-full justify-start text-start font-normal",
+                  "w-full justify-start text-start font-normal bg-background dark:bg-input",
                   !field.value && "text-muted-foreground",
                 )}
               >

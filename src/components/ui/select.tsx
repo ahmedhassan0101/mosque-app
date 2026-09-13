@@ -43,7 +43,7 @@ function SelectTrigger({
       className={cn(
         // Base — mirrors Input exactly so the two read as siblings
         "flex w-fit items-center justify-between gap-2",
-        "rounded-md border border-input bg-background dark:bg-input/20",
+        "rounded-md border border-input bg-background dark:bg-input",
         "text-sm text-foreground whitespace-nowrap",
         "transition-colors duration-150 outline-none select-none",
         // Sizes — aligned with Button & Input

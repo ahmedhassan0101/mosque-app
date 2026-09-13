@@ -15,8 +15,8 @@ export default async function NewSessionPage() {
   ]);
 
   return (
-    <div className="max-w-3xl mx-auto py-6 px-4">
-      <h1 className="text-xl font-semibold mb-6">تسجيل جلسة جديدة</h1>
+    <div className="container-form">
+      <h1 className="text-page-title">تسجيل جلسة جديدة</h1>
       <SessionForm teachers={teachers} groups={groups} />
     </div>
   );

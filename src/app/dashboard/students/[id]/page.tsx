@@ -28,7 +28,7 @@ export default async function StudentProfilePage({
   const student = await getStudentById(id);
 
   return (
-    <div className="container-detail flex flex-col gap-6" dir="rtl">
+    <div className="container-detail" dir="rtl">
       {/* ── Breadcrumb ── */}
       <nav
         aria-label="مسار التنقل"

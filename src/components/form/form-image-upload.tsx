@@ -121,9 +121,9 @@ export function FormImageUpload<T extends FieldValues>({
         </FieldLabel>
       )}
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         {/* Preview */}
-        <div className="relative">
+        <div className="relative mx-auto sm:mx-0 shrink-0">
           <div className="relative flex size-25 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-border bg-muted">
             {displayUrl ? (
               <Image src={displayUrl} alt="معاينة" fill className="object-cover" />
@@ -160,7 +160,7 @@ export function FormImageUpload<T extends FieldValues>({
         <div
           {...getRootProps()}
           className={cn(
-            "flex-1 rounded-lg border-2 border-dashed p-4 text-center transition-colors",
+            "flex-1 w-full rounded-lg border-2 border-dashed p-4 text-center transition-colors",
             isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
             isDragActive
               ? "border-primary bg-primary/5"

@@ -14,7 +14,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       className={cn(
         "flex h-9 w-full min-w-0",
         "rounded-md border border-input",
-        "bg-background dark:bg-input/20",
+        "bg-background dark:bg-input",
         "px-3 py-1.5",
         "text-sm text-foreground",
         "placeholder:text-muted-foreground",

@@ -13,18 +13,16 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div dir="rtl" className="space-y-6">
-      {/* ── Page header ─────────────────────────────────────────── */}
-      <div>
-        <h1 className="text-xl font-bold tracking-tight text-foreground">
+    <div dir="rtl" className="container-detail">
+      <div className="flex flex-col gap-2 border-b pb-6">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
           إعدادات المسجد
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           إدارة تفاصيل المسجد، الأعضاء، وصلاحيات الوصول.
         </p>
       </div>
 
-      {/* ── Tabs ────────────────────────────────────────────────── */}
       <SettingsTabs
         mosque={data.mosque}
         users={data.users}
@@ -33,3 +31,72 @@ export default async function SettingsPage() {
     </div>
   );
 }
+// import { redirect } from "next/navigation";
+// import { getMosqueSettingsData } from "@/queries/mosque.queries";
+// import { SettingsTabs } from "@/components/settings/SettingsTabs";
+// import type { Metadata } from "next";
+
+// export const metadata: Metadata = { title: "الإعدادات | Masjid ERP" };
+
+// export default async function SettingsPage() {
+//   const data = await getMosqueSettingsData();
+
+//   if (!data) {
+//     redirect("/dashboard");
+//   }
+
+//   return (
+//     <div dir="rtl" className="container-detail">
+//       {/* ── Page header ─────────────────────────────────────────── */}
+//       <div>
+//         <h1 className="text-page-title">إعدادات المسجد</h1>
+//         <p className="mt-1 text-sm text-muted-foreground">
+//           إدارة تفاصيل المسجد، الأعضاء، وصلاحيات الوصول.
+//         </p>
+//       </div>
+
+//       {/* ── Tabs ────────────────────────────────────────────────── */}
+//       <SettingsTabs
+//         mosque={data.mosque}
+//         users={data.users}
+//         currentUserId={data.currentUserId}
+//       />
+//     </div>
+//   );
+// }
+// -----------------
+// import { redirect } from "next/navigation";
+// import { getMosqueSettingsData } from "@/queries/mosque.queries";
+// import { SettingsTabs } from "@/components/settings/SettingsTabs";
+// import type { Metadata } from "next";
+
+// export const metadata: Metadata = { title: "الإعدادات | Masjid ERP" };
+
+// export default async function SettingsPage() {
+//   const data = await getMosqueSettingsData();
+
+//   if (!data) {
+//     redirect("/dashboard");
+//   }
+
+//   return (
+//     <div dir="rtl" className="space-y-6">
+//       {/* ── Page header ─────────────────────────────────────────── */}
+//       <div>
+//         <h1 className="text-xl font-bold tracking-tight text-foreground">
+//           إعدادات المسجد
+//         </h1>
+//         <p className="mt-1 text-sm text-muted-foreground">
+//           إدارة تفاصيل المسجد، الأعضاء، وصلاحيات الوصول.
+//         </p>
+//       </div>
+
+//       {/* ── Tabs ────────────────────────────────────────────────── */}
+//       <SettingsTabs
+//         mosque={data.mosque}
+//         users={data.users}
+//         currentUserId={data.currentUserId}
+//       />
+//     </div>
+//   );
+// }

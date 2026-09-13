@@ -19,6 +19,7 @@ import {
 import { toast } from "sonner";
 import { useTransition } from "react";
 import { FormInput } from "../form/FormInput";
+import { Save } from "lucide-react";
 
 interface MosqueDetailsFormProps {
   mosque: { id: string; name: string; address: string; phone: string };
@@ -39,18 +40,16 @@ export function MosqueDetailsForm({ mosque }: MosqueDetailsFormProps) {
   async function onSubmit(values: UpdateMosqueInput) {
     startTransition(async () => {
       const result = await updateMosqueSettings(mosque.id, values);
-
       if (result.status !== "success") {
         toast.error(result.message);
         return;
       }
-
       toast.success(result.message);
     });
   }
 
   return (
-    <Card className="max-w-lg">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>بيانات المسجد</CardTitle>
         <CardDescription>
@@ -62,15 +61,17 @@ export function MosqueDetailsForm({ mosque }: MosqueDetailsFormProps) {
         <form
           id="mosque-details-form"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
+          className="form-fields-grid  md:grid-cols-2"
           noValidate
         >
+   
           <FormInput
             control={form.control}
             name="name"
             label="اسم المسجد"
             placeholder="مسجد النور"
           />
+       
           <FormInput
             control={form.control}
             name="address"
@@ -88,8 +89,14 @@ export function MosqueDetailsForm({ mosque }: MosqueDetailsFormProps) {
         </form>
       </CardContent>
 
-      <CardFooter className="justify-start">
-        <Button type="submit" form="mosque-details-form" disabled={isPending}>
+      <CardFooter className="bg-muted/50 px-6 py-4 flex justify-end rounded-b-xl border-t">
+        <Button
+          type="submit"
+          form="mosque-details-form"
+          disabled={isPending}
+          className="gap-2"
+        >
+          <Save className="h-4 w-4" />
           {isPending ? "جارٍ الحفظ..." : "حفظ التغييرات"}
         </Button>
       </CardFooter>

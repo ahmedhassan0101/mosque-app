@@ -24,8 +24,8 @@ interface CheckboxOption {
 // Kept as a static lookup (not a template string) so Tailwind's class
 // scanner can actually see "grid-cols-2" / "grid-cols-3" as literal names.
 const GRID_COLS: Record<2 | 3, string> = {
-  2: "grid-cols-2",
-  3: "grid-cols-3",
+  2: "grid-cols-1 md:grid-cols-2",
+  3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
 };
 
 interface FormCheckboxGroupProps<T extends FieldValues> {
@@ -112,7 +112,7 @@ export function FormCheckboxGroup<T extends FieldValues>({
                       key={opt.value}
                       htmlFor={id}
                       className={cn(
-                        "flex cursor-pointer items-center gap-2 rounded-md border p-2.5 text-sm transition-colors select-none",
+                        "flex cursor-pointer items-center gap-2 rounded-md border p-2.5 text-sm transition-colors select-none bg-background dark:bg-input",
                         isChecked
                           ? "border-primary bg-primary/5"
                           : "border-border hover:bg-muted/50",

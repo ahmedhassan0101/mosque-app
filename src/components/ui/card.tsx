@@ -189,18 +189,13 @@ function Card({ className, variant = "default", ...props }: CardProps) {
         "shadow-sm dark:shadow-none",
         variant === "stat" && "p-6",
         variant === "flat" && "shadow-none",
-        className
+        className,
       )}
       {...props}
     />
   );
 }
 
-/*
-  CardHeader:
-  - divider={true} → border-b خفيف 40% للـ dashboard cards
-  - divider={false} → بدون border (default) للـ auth cards
-*/
 interface CardHeaderProps extends React.ComponentProps<"div"> {
   divider?: boolean;
 }
@@ -213,7 +208,7 @@ function CardHeader({ className, divider = false, ...props }: CardHeaderProps) {
         "flex flex-col gap-1",
         "px-6 pt-6 pb-5",
         divider && "border-b border-border/40 pb-5",
-        className
+        className,
       )}
       {...props}
     />
@@ -226,13 +221,17 @@ function CardHeader({ className, divider = false, ...props }: CardHeaderProps) {
   dot أخضر emerald + نص muted صغير
   مثال: "نظام إدارة المسجد" في auth cards
 */
-function CardSysLabel({ className, children, ...props }: React.ComponentProps<"div">) {
+function CardSysLabel({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-sys-label"
       className={cn(
         "flex items-center gap-1.5 text-xs text-muted-foreground",
-        className
+        className,
       )}
       {...props}
     >
@@ -251,9 +250,8 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
-        // text-2xl (24px) — فرق واضح وقوي عن الـ body text (14px)
         "text-2xl font-semibold leading-tight text-foreground",
-        className
+        className,
       )}
       {...props}
     />
@@ -264,10 +262,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn(
-        "text-sm leading-normal text-muted-foreground",
-        className
-      )}
+      className={cn("text-sm leading-normal text-muted-foreground", className)}
       {...props}
     />
   );
@@ -285,11 +280,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
-      data-slot="card-content"
-      className={cn("px-6 pb-6 pt-0", className)}
-      {...props}
-    />
+    <div data-slot="card-content" className={cn("p-6", className)} {...props} />
   );
 }
 
@@ -302,10 +293,25 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
         "border-t border-border/40 bg-muted/30",
         "px-6 py-4",
         "rounded-b-lg",
-        className
+        className,
       )}
       {...props}
     />
+  );
+}
+
+function SectionTitle({
+  icon: Icon,
+  children,
+}: {
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) {
+  return (
+    <CardTitle className="flex items-center gap-2 text-base font-semibold">
+      <Icon size={16} className="shrink-0 text-muted-foreground" />
+      {children}
+    </CardTitle>
   );
 }
 
@@ -318,4 +324,5 @@ export {
   CardAction,
   CardContent,
   CardFooter,
+  SectionTitle,
 };
