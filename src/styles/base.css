@@ -1,0 +1,67 @@
+/* src/styles/base.css
+   ─────────────────────────────────────────────
+   Document-level defaults only — the automatic reset and body styling,
+   nothing that's applied via a className. Reusable utility classes
+   (even small ones like font-mono) belong in the utilities files, not
+   here.
+
+   FIX: this content used to sit outside any @layer in the original
+   file, while everything else was wrapped in @layer utilities/base.
+   Unlayered CSS is given HIGHER cascade priority than layered CSS by
+   design — so these rules were silently winning over any conflicting
+   utility-layer class regardless of source order. Wrapping them in
+   @layer base (as intended) fixes that inconsistency.
+───────────────────────────────────────────── */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-base); /* 16px default */
+    line-height: var(--leading-normal);
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1,
+      "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+  }
+
+  /* RTL: Arabic-first layout */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  /* ── Scrollbar ─────────────────────────── */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    border-radius: 99px;
+    opacity: 0.4;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+}

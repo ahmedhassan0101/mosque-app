@@ -7,11 +7,19 @@ import { serialize, serializeMany } from "@/lib/utils/serialize";
 import type { StudentSerialized } from "@/types/serialized";
 import Group from "@/models/group.model";
 import type { ActivityType, levelType } from "@/constants";
+import { Types } from "mongoose";
 
 // Re-export for convenience
 export type { StudentSerialized };
 
 // ─── Types ───────────────────────────────────────────────────────────
+interface StudentsOverview {
+  // Total number of students in the mosque, regardless of filters.
+  totalCount: number;
+  activeCount: number;
+  activityStats: Record<ActivityType, number>;
+}
+
 export type StudentsFilters = {
   query?: string;
   level?: levelType | "all";
@@ -22,14 +30,20 @@ export type StudentsFilters = {
   sortOrder?: "asc" | "desc";
 };
 
-export type StudentsListResult = {
+// export type StudentsListResult = {
+//   students: StudentSerialized[];
+//   totalCount: number;
+//   totalPages: number;
+//   activeCount: number;
+//   activityStats: Record<ActivityType, number>;
+// };
+
+interface StudentsListResult {
   students: StudentSerialized[];
+  // The total number of students matching the current filters, used for pagination.
   totalCount: number;
   totalPages: number;
-  activeCount: number;
-  activityStats: Record<ActivityType, number>;
-};
-
+}
 /**
  * A group summary as shown on the student's profile page.
  * teacherName is a flat string — we don't need the full teacher object here.
@@ -76,6 +90,57 @@ export const getStudentById = cache(
   },
 );
 
+export const getStudentsOverview = cache(
+  async (): Promise<StudentsOverview> => {
+    const emptyResult: StudentsOverview = {
+      totalCount: 0,
+      activeCount: 0,
+      activityStats: {
+        quran: 0,
+        tarbiya: 0,
+        tajweed: 0,
+        maqraa: 0,
+        playground: 0,
+      },
+    };
+
+    try {
+      await connectDB();
+      const mosqueId = await getMosqueId();
+
+      // FIX: aggregate() does NOT auto-cast query values the way
+      // find()/countDocuments() do — a plain string here silently
+      // matches zero documents against an ObjectId-typed field.
+      const mosqueObjectId = new Types.ObjectId(mosqueId);
+
+      const [totalCount, activeCount, activityAgg] = await Promise.all([
+        Student.countDocuments({ mosqueId }),
+        Student.countDocuments({ mosqueId, isActive: true }),
+        Student.aggregate<{ _id: ActivityType; count: number }>([
+          { $match: { mosqueId: mosqueObjectId } },
+          {
+            $unwind: {
+              path: "$enrollments",
+              preserveNullAndEmptyArrays: false,
+            },
+          },
+          { $group: { _id: "$enrollments", count: { $sum: 1 } } },
+        ]),
+      ]);
+
+      const activityStats = { ...emptyResult.activityStats };
+      for (const item of activityAgg) {
+        if (item._id in activityStats) activityStats[item._id] = item.count;
+      }
+
+      return { totalCount, activeCount, activityStats };
+    } catch (error) {
+      console.error("[getStudentsOverview]:", error);
+      return emptyResult;
+    }
+  },
+);
+
 /**
  * Fetches all students for the current mosque, sorted alphabetically.
  * Returns [] on error — never throws — so the page renders safely.
@@ -89,6 +154,8 @@ export const getStudentById = cache(
  * activityStats: uses a separate aggregation pipeline so the count reflects
  * the TOTAL dataset, not the current page — giving accurate stats cards.
  */
+// ─── List (filtered, paginated, sorted) ─────────────────────────────────────
+
 export const getStudentsList = cache(
   async (filters: StudentsFilters = {}): Promise<StudentsListResult> => {
     const {
@@ -105,82 +172,40 @@ export const getStudentsList = cache(
       students: [],
       totalCount: 0,
       totalPages: 1,
-      activeCount: 0,
-      activityStats: {
-        quran: 0,
-        tarbiya: 0,
-        tajweed: 0,
-        maqraa: 0,
-        playground: 0,
-      },
     };
 
     try {
       await connectDB();
       const mosqueId = await getMosqueId();
 
-      // ── Build the base filter ──────────────────────────────────────────
       const filter: Record<string, unknown> = { mosqueId };
 
-      if (query && query.trim()) {
-        // Case-insensitive Arabic-safe regex search on name
+      if (query?.trim()) {
         filter.name = { $regex: query.trim(), $options: "i" };
       }
-
       if (level && level !== "all") {
         filter.level = level;
       }
-
       if (activity && activity !== "all") {
-        // enrollments is an array — $elemMatch or direct value match both work
         filter.enrollments = activity;
       }
 
-      // ── Sort direction ─────────────────────────────────────────────────
       const sortDirection = sortOrder === "asc" ? 1 : -1;
       const sortObj: Record<string, 1 | -1> = { [sortBy]: sortDirection };
-
-      // ── Pagination math ────────────────────────────────────────────────
       const skip = (page - 1) * limit;
 
-      // ── Run queries in parallel ────────────────────────────────────────
-      const [students, totalCount, activeCount, activityAgg] =
-        await Promise.all([
-          // 1. Paginated, filtered, sorted students
-          Student.find(filter).sort(sortObj).skip(skip).limit(limit).lean(),
-
-          // 2. Total count for this filter (for pagination math)
-          Student.countDocuments({ mosqueId }),
-
-          // 3. Active count across the FULL dataset (not filtered)
-          Student.countDocuments({ mosqueId, isActive: true }),
-
-          // 4. Enrollment stats across the FULL dataset
-          // $unwind flattens the enrollments array so we can $group by value
-          Student.aggregate<{ _id: ActivityType; count: number }>([
-            { $match: { mosqueId } },
-            {
-              $unwind: {
-                path: "$enrollments",
-                preserveNullAndEmptyArrays: false,
-              },
-            },
-            { $group: { _id: "$enrollments", count: { $sum: 1 } } },
-          ]),
-        ]);
-      console.log("🚀 ~ activityAgg:", activityAgg);
-
-      const activityStats = { ...emptyResult.activityStats };
-      for (const item of activityAgg) {
-        if (item._id in activityStats) activityStats[item._id] = item.count;
-      }
+      const [students, totalCount] = await Promise.all([
+        Student.find(filter).sort(sortObj).skip(skip).limit(limit).lean(),
+        // FIX: was countDocuments({ mosqueId }) — ignored query/level/activity
+        // entirely, so totalPages/pagination were wrong the moment any
+        // filter was active.
+        Student.countDocuments(filter),
+      ]);
 
       return {
         students: serializeMany(students) as StudentSerialized[],
         totalCount,
         totalPages: Math.max(1, Math.ceil(totalCount / limit)),
-        activeCount,
-        activityStats,
       };
     } catch (error) {
       console.error("[getStudentsList]:", error);
@@ -188,6 +213,105 @@ export const getStudentsList = cache(
     }
   },
 );
+// export const getStudentsList = cache(
+//   async (filters: StudentsFilters = {}): Promise<StudentsListResult> => {
+//     const {
+//       query,
+//       level,
+//       activity,
+//       page = 1,
+//       limit = 20,
+//       sortBy = "name",
+//       sortOrder = "asc",
+//     } = filters;
+
+//     const emptyResult: StudentsListResult = {
+//       students: [],
+//       totalCount: 0,
+//       totalPages: 1,
+//       activeCount: 0,
+//       activityStats: {
+//         quran: 0,
+//         tarbiya: 0,
+//         tajweed: 0,
+//         maqraa: 0,
+//         playground: 0,
+//       },
+//     };
+
+//     try {
+//       await connectDB();
+//       const mosqueId = await getMosqueId();
+
+//       // ── Build the base filter ──────────────────────────────────────────
+//       const filter: Record<string, unknown> = { mosqueId };
+
+//       if (query && query.trim()) {
+//         // Case-insensitive Arabic-safe regex search on name
+//         filter.name = { $regex: query.trim(), $options: "i" };
+//       }
+
+//       if (level && level !== "all") {
+//         filter.level = level;
+//       }
+
+//       if (activity && activity !== "all") {
+//         // enrollments is an array — $elemMatch or direct value match both work
+//         filter.enrollments = activity;
+//       }
+
+//       // ── Sort direction ─────────────────────────────────────────────────
+//       const sortDirection = sortOrder === "asc" ? 1 : -1;
+//       const sortObj: Record<string, 1 | -1> = { [sortBy]: sortDirection };
+
+//       // ── Pagination math ────────────────────────────────────────────────
+//       const skip = (page - 1) * limit;
+
+//       // ── Run queries in parallel ────────────────────────────────────────
+//       const [students, totalCount, activeCount, activityAgg] =
+//         await Promise.all([
+//           // 1. Paginated, filtered, sorted students
+//           Student.find(filter).sort(sortObj).skip(skip).limit(limit).lean(),
+
+//           // 2. Total count for this filter (for pagination math)
+//           Student.countDocuments({ mosqueId }),
+
+//           // 3. Active count across the FULL dataset (not filtered)
+//           Student.countDocuments({ mosqueId, isActive: true }),
+
+//           // 4. Enrollment stats across the FULL dataset
+//           // $unwind flattens the enrollments array so we can $group by value
+//           Student.aggregate<{ _id: ActivityType; count: number }>([
+//             { $match: { mosqueId } },
+//             {
+//               $unwind: {
+//                 path: "$enrollments",
+//                 preserveNullAndEmptyArrays: false,
+//               },
+//             },
+//             { $group: { _id: "$enrollments", count: { $sum: 1 } } },
+//           ]),
+//         ]);
+//       console.log("🚀 ~ activityAgg:", activityAgg);
+
+//       const activityStats = { ...emptyResult.activityStats };
+//       for (const item of activityAgg) {
+//         if (item._id in activityStats) activityStats[item._id] = item.count;
+//       }
+
+//       return {
+//         students: serializeMany(students) as StudentSerialized[],
+//         totalCount,
+//         totalPages: Math.max(1, Math.ceil(totalCount / limit)),
+//         activeCount,
+//         activityStats,
+//       };
+//     } catch (error) {
+//       console.error("[getStudentsList]:", error);
+//       return emptyResult;
+//     }
+//   },
+// );
 
 /**
  * Fetches a student's full profile including their active group memberships.

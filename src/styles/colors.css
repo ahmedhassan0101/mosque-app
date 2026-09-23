@@ -1,0 +1,170 @@
+/* src/styles/colors.css
+   ─────────────────────────────────────────────
+   Actual color values — light and dark mode. Separated from theme.css
+   deliberately: these get tuned far more often during design iteration
+   than the structural scale (radius, spacing, z-index) does.
+
+   Philosophy: 90% Slate neutrals · 10% Emerald accent.
+   Emerald appears ONLY in: CTAs, active states, indicators, badges.
+   Neutrals are pure Slate (hue ~264) — zero green tint.
+───────────────────────────────────────────── */
+
+/* ── Light Mode ──────────────────────────── */
+:root {
+  /* TODO: legacy single --radius var, unused by any built component
+     (everything uses the named --radius-sm/md/lg/xl scale from
+     theme.css explicitly) — confirm removal before treating this
+     file as final. Original value: 0.75rem */
+
+  /* ── Surfaces & Backgrounds ─────────────── */
+  --background: oklch(0.98 0 0); /* Slate 50  — clean off-white */
+  --foreground: oklch(0.13 0.02 264); /* Slate 900 — deep readable text */
+
+  --card: oklch(1 0 0); /* pure white panels */
+  --card-foreground: oklch(0.13 0.02 264);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.02 264);
+
+  /* ── Primary: Emerald 500 ─────────────────
+     The ONLY accent color. Used for: CTAs, active nav items, progress
+     bars, focus rings, checkboxes. Rule: max ONE primary button per view.
+  ───────────────────────────────────────── */
+  --primary: oklch(0.55 0.15 162); /* Emerald 500 */
+  --primary-foreground: oklch(1 0 0); /* white text on emerald */
+
+  /* ── Secondary: Slate 100 ─────────────────
+     Ghost buttons, secondary actions, subtle tag backgrounds.
+  ───────────────────────────────────────── */
+  --secondary: oklch(0.94 0.01 264); /* Slate 100 */
+  --secondary-foreground: oklch(0.28 0.02 264); /* Slate 700 */
+
+  /* ── Muted: Slate 100/400 ─────────────────
+     Table alternating rows, disabled states, helper text.
+  ───────────────────────────────────────── */
+  --muted: oklch(0.94 0.01 264); /* Slate 100 */
+  --muted-foreground: oklch(0.55 0.02 264); /* Slate 400 — secondary text */
+
+  /* ── Accent: Slate 100 ────────────────────
+     Hover highlights on nav items, dropdown row hover.
+  ───────────────────────────────────────── */
+  --accent: oklch(0.94 0.01 264); /* Slate 100 */
+  --accent-foreground: oklch(0.28 0.02 264); /* Slate 700 */
+
+  /* ── Semantic: Destructive ──────────────── */
+  --destructive: oklch(0.58 0.22 27); /* Red 500 */
+  --destructive-foreground: oklch(1 0 0);
+
+  /* ── Semantic: Success ────────────────────
+     Same as primary (emerald) — consistent brand signal. Kept as a
+     separate token to allow future divergence without touching primary.
+  ───────────────────────────────────────── */
+  --success: oklch(0.55 0.15 162); /* Emerald 500 */
+  --success-foreground: oklch(1 0 0);
+
+  /* ── Semantic: Warning ──────────────────── */
+  --warning: oklch(0.72 0.15 70); /* Amber 500 */
+  --warning-foreground: oklch(0.2 0.04 60); /* dark amber text */
+
+  /* ── Semantic: Info ───────────────────────
+     Not in shadcn default — added for the project's 4-state system
+     (success/warning/error/info).
+  ───────────────────────────────────────── */
+  --info: oklch(0.6 0.17 250); /* Blue 500 */
+  --info-foreground: oklch(1 0 0);
+
+  /* ── Borders, Inputs, Focus ─────────────── */
+  --border: oklch(0.9 0.01 264); /* Slate 200 */
+  --input: oklch(0.9 0.01 264); /* Slate 200 (same as border) */
+  --ring: oklch(0.55 0.15 162); /* Emerald — focus ring */
+
+  /* ── Chart Colors ─────────────────────────
+     Series ordered by visual hierarchy: 1→ primary (emerald), 2→ blue,
+     3→ amber, 4→ rose, 5→ violet.
+  ───────────────────────────────────────── */
+  --chart-1: oklch(0.55 0.15 162); /* Emerald — primary series */
+  --chart-2: oklch(0.6 0.17 250); /* Blue — secondary series */
+  --chart-3: oklch(0.72 0.15 70); /* Amber */
+  --chart-4: oklch(0.62 0.2 15); /* Rose */
+  --chart-5: oklch(0.55 0.18 290); /* Violet */
+
+  /* ── Sidebar ──────────────────────────────── */
+  --sidebar: oklch(0.97 0.005 264); /* near-white slate */
+  --sidebar-foreground: oklch(0.28 0.02 264); /* Slate 700 */
+  --sidebar-primary: oklch(0.55 0.15 162); /* Emerald 500 */
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.94 0.01 264); /* Slate 100 — hover bg */
+  --sidebar-accent-foreground: oklch(0.28 0.02 264); /* Slate 700 */
+  --sidebar-border: oklch(0.9 0.01 264); /* Slate 200 */
+  --sidebar-ring: oklch(0.55 0.15 162); /* Emerald */
+}
+
+/* ── Dark Mode ───────────────────────────────
+   Background: warm dark slate (NOT pure black). Primary: Emerald 400
+   (lighter, for contrast on dark). Borders replace shadows in dark.
+───────────────────────────────────────────── */
+.dark {
+  /* ── Surfaces ─────────────────────────────── */
+  --background: oklch(0.13 0.02 264); /* Slate ~950 — deep warm slate */
+  --foreground: oklch(0.98 0 0); /* near-white text */
+
+  --card: oklch(0.17 0.02 264); /* Slate ~900 — slightly lifted */
+  --card-foreground: oklch(0.98 0 0);
+
+  --popover: oklch(0.17 0.02 264);
+  --popover-foreground: oklch(0.98 0 0);
+
+  /* ── Primary: Emerald 400 ─────────────────
+     Lighter than 500 to maintain WCAG AA contrast on dark bg.
+     Target ratio: ≥ 4.5:1 against --background.
+  ───────────────────────────────────────── */
+  --primary: oklch(0.6 0.15 162); /* Emerald ~400 */
+  --primary-foreground: oklch(0.1 0.02 264); /* very dark text on bright button */
+
+  /* ── Secondary ────────────────────────────── */
+  --secondary: oklch(0.22 0.02 264); /* Slate ~800 */
+  --secondary-foreground: oklch(0.82 0.01 264); /* Slate ~200 */
+
+  /* ── Muted ────────────────────────────────── */
+  --muted: oklch(0.22 0.02 264); /* Slate ~800 */
+  --muted-foreground: oklch(0.55 0.02 264); /* Slate ~400 */
+
+  /* ── Accent ───────────────────────────────── */
+  --accent: oklch(0.22 0.02 264); /* Slate ~800 */
+  --accent-foreground: oklch(0.82 0.01 264); /* Slate ~200 */
+
+  /* ── Semantic ─────────────────────────────── */
+  --destructive: oklch(0.65 0.22 27); /* Red ~400 (brighter on dark) */
+  --destructive-foreground: oklch(0.1 0.02 264);
+
+  --success: oklch(0.6 0.15 162); /* Emerald ~400 */
+  --success-foreground: oklch(0.1 0.02 264);
+
+  --warning: oklch(0.78 0.15 70); /* Amber ~400 */
+  --warning-foreground: oklch(0.15 0.04 60);
+
+  --info: oklch(0.65 0.17 250); /* Blue ~400 */
+  --info-foreground: oklch(0.1 0.02 264);
+
+  /* ── Borders, Inputs, Focus ─────────────── */
+  --border: oklch(0.28 0.02 264); /* Slate ~700 — replaces shadow */
+  --input: oklch(0.22 0.02 264); /* Slate ~800 */
+  --ring: oklch(0.6 0.15 162); /* Emerald ~400 focus ring */
+
+  /* ── Chart Colors ─────────────────────────── */
+  --chart-1: oklch(0.6 0.15 162); /* Emerald ~400 */
+  --chart-2: oklch(0.65 0.17 250); /* Blue ~400 */
+  --chart-3: oklch(0.78 0.15 70); /* Amber ~400 */
+  --chart-4: oklch(0.67 0.2 15); /* Rose ~400 */
+  --chart-5: oklch(0.6 0.18 290); /* Violet ~400 */
+
+  /* ── Sidebar ──────────────────────────────── */
+  --sidebar: oklch(0.1 0.02 264); /* deeper than card */
+  --sidebar-foreground: oklch(0.75 0.01 264); /* Slate ~300 */
+  --sidebar-primary: oklch(0.6 0.15 162); /* Emerald ~400 */
+  --sidebar-primary-foreground: oklch(0.1 0.02 264);
+  --sidebar-accent: oklch(0.17 0.02 264); /* card color — hover bg */
+  --sidebar-accent-foreground: oklch(0.82 0.01 264);
+  --sidebar-border: oklch(0.22 0.02 264); /* subtle separator */
+  --sidebar-ring: oklch(0.6 0.15 162);
+}

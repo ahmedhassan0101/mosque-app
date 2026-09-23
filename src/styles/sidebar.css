@@ -1,0 +1,31 @@
+/* src/styles/sidebar.css
+   ─────────────────────────────────────────────
+   Sidebar navigation item states.
+───────────────────────────────────────────── */
+
+@layer utilities {
+  /* Active nav item — the primary indicator.
+     FIX: was a two-stop linear-gradient background, which directly
+     violates the project's "no gradients" rule. Replaced with a flat
+     10%-opacity tint — the same pattern already used everywhere else
+     in the app (badges, button states) to signal "active/selected". */
+  .sidebar-item-active {
+    background-color: oklch(from var(--sidebar-primary) l c h / 0.1);
+    color: var(--sidebar-primary);
+    /* RTL: negative inset offset renders the border on the visual
+       right (start) side — verified, not a bug */
+    box-shadow: inset -2px 0 0 var(--sidebar-primary);
+    font-weight: 500;
+  }
+
+  /* Inactive nav item hover */
+  .sidebar-item-hover {
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+  .sidebar-item-hover:hover {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+  }
+}

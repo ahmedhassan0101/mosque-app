@@ -1,4 +1,5 @@
 // src/app/(dashboard)/dashboard/students/StudentsStats.tsx
+import type { LucideIcon } from "lucide-react";
 import {
   Users,
   UserCheck,
@@ -8,6 +9,8 @@ import {
   Award,
   Dumbbell,
 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils/utils";
 import { ACTIVITIES, type ActivityType } from "@/constants";
 
 interface StudentsStatsProps {
@@ -16,12 +19,26 @@ interface StudentsStatsProps {
   activityStats: Record<ActivityType, number>;
 }
 
-const ACTIVITY_ICONS: Record<ActivityType, React.ReactNode> = {
-  quran: <BookOpen size={13} />,
-  tarbiya: <Heart size={13} />,
-  tajweed: <Music size={13} />,
-  maqraa: <Award size={13} />,
-  playground: <Dumbbell size={13} />,
+/*
+  TODO(hardcoded): no natural source for this pairing in the logic yet.
+  Icon + chart-token color per activity — move to @/constants alongside
+  ACTIVITIES if the table's activity Popover ends up needing the same
+  mapping later. Kept local for now since nothing else uses it.
+*/
+const ACTIVITY_ICONS: Record<ActivityType, LucideIcon> = {
+  quran: BookOpen,
+  tarbiya: Heart,
+  tajweed: Music,
+  maqraa: Award,
+  playground: Dumbbell,
+};
+
+const ACTIVITY_COLORS: Record<ActivityType, string> = {
+  quran: "var(--chart-1)",
+  tarbiya: "var(--chart-2)",
+  tajweed: "var(--chart-3)",
+  maqraa: "var(--chart-4)",
+  playground: "var(--chart-5)",
 };
 
 /**
@@ -33,53 +50,87 @@ export function StudentsStats({
   activeCount,
   activityStats,
 }: StudentsStatsProps) {
-  return (
-    <div className="space-y-3" dir="rtl">
-      {/* Row 1: Total + Active */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="border border-border rounded-xl bg-card p-4">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
-            <Users size={13} />
-            إجمالي الطلاب
-          </div>
-          <p className="text-2xl font-bold">{totalCount}</p>
-          <p className="text-xs text-muted-foreground mt-1">في المسجد</p>
-        </div>
+  const inactiveCount = totalCount - activeCount;
 
-        <div className="border border-border rounded-xl bg-card p-4">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
-            <UserCheck size={13} />
-            الطلاب النشطون
-          </div>
-          <p className="text-2xl font-bold">{activeCount}</p>
-          {totalCount - activeCount > 0 && (
-            <p className="text-xs text-muted-foreground mt-1">
-              {totalCount - activeCount} غير نشط
-            </p>
-          )}
-        </div>
+  return (
+    <div className="flex flex-col gap-3" dir="rtl">
+      {/* Primary — the two numbers that matter most, given real card weight */}
+      <div className="grid grid-cols-2 gap-3">
+        <StatCard
+          icon={Users}
+          label="إجمالي الطلاب"
+          value={totalCount}
+          hint="في المسجد"
+        />
+        <StatCard
+          icon={UserCheck}
+          label="الطلاب النشطون"
+          value={activeCount}
+          hint={inactiveCount > 0 ? `${inactiveCount} غير نشط` : undefined}
+        />
       </div>
 
-      {/* Row 2: All activities — always show all 5 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      {/* Secondary — activity breakdown as a lightweight chip row, not
+          5 more full cards competing for attention. Always shows all
+          5 categories, even at zero, so the set stays visually stable
+          rather than reflowing based on which activities have students. */}
+      <div className="flex flex-wrap gap-2">
         {ACTIVITIES.values.map((activity) => {
           const count = activityStats[activity] ?? 0;
+          const Icon = ACTIVITY_ICONS[activity];
+
           return (
             <div
               key={activity}
-              className={`border rounded-xl bg-card p-3 transition-colors ${
-                count > 0 ? "border-border" : "border-border/50 opacity-60"
-              }`}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5",
+                count === 0 && "opacity-60",
+              )}
             >
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1.5">
-                {ACTIVITY_ICONS[activity]}
-                <span className="truncate">{ACTIVITIES.labels[activity]}</span>
-              </div>
-              <p className="text-xl font-bold">{count}</p>
+              <span
+                className="size-1.5 shrink-0 rounded-full"
+                style={{
+                  backgroundColor:
+                    count > 0
+                      ? ACTIVITY_COLORS[activity]
+                      : "var(--muted-foreground)",
+                }}
+                aria-hidden="true"
+              />
+              <Icon size={14} className="shrink-0 text-muted-foreground" />
+              <span className="text-xs font-medium text-foreground">
+                {ACTIVITIES.labels[activity]}
+              </span>
+              <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                {count}
+              </span>
             </div>
           );
         })}
       </div>
     </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  hint,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: number;
+  hint?: string;
+}) {
+  return (
+    <Card className="p-4 md:p-6">
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Icon size={14} />
+        {label}
+      </div>
+      <p className="text-stat-number mt-2">{value}</p>
+      {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
+    </Card>
   );
 }

@@ -1,0 +1,30 @@
+/* src/styles/tables.css
+   ─────────────────────────────────────────────
+   PENDING DECISION: .table-header-cell / .table-row-hover appear
+   unused — StudentsTableHeader and StudentRow (the only table
+   components built so far) apply Tailwind classes directly
+   (bg-muted/40, hover:bg-muted/20) instead of these.
+
+   Kept here for reference until a project-wide search confirms zero
+   remaining usage:
+
+   .table-header-cell {
+     background-color: var(--muted);
+     color: var(--muted-foreground);
+     font-size: var(--text-xs);
+     font-weight: 500;
+     text-transform: uppercase;
+     letter-spacing: 0.04em;
+     padding: 0.75rem 1rem;
+   }
+
+   .table-row-hover {
+     transition: background 120ms ease;
+   }
+   .table-row-hover:hover {
+     background-color: oklch(from var(--muted) l c h / 0.5);
+   }
+
+   If confirmed unused, this file is dropped from globals.css entirely —
+   same resolution as cards.css.
+───────────────────────────────────────────── */

@@ -1,0 +1,45 @@
+/* src/styles/forms.css
+   ─────────────────────────────────────────────
+   Small, narrowly-scoped utilities used inside forms.
+───────────────────────────────────────────── */
+
+@layer utilities {
+  /* Standard gap between form fields — was briefly renamed to
+     .form-fields-grid with an unfinished switch to display:grid
+     (no grid-template-columns defined, old flex rules left commented
+     out). Restored to its original, working flex-based form. */
+  .form-fields-gap {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* gap-4 */
+  }
+
+  /* Standard gap between sections inside a longer form */
+  .card-sections-gap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* gap-6 */
+  }
+
+  /* Divider with label — e.g. "أو" between form options */
+  .divider-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+  }
+  .divider-label::before,
+  .divider-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--border);
+  }
+
+  /* Alert icon alignment in RTL — pending verification against the
+     actual Alert component once reviewed */
+  .alert-icon-start {
+    order: -1;
+  }
+}

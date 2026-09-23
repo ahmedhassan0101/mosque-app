@@ -1,0 +1,43 @@
+/* src/styles/badges.css
+   ─────────────────────────────────────────────
+   Semantic status badges — usage: <span className="badge-base badge-success">حاضر</span>
+───────────────────────────────────────────── */
+
+@layer utilities {
+  .badge-base {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .badge-success {
+    background-color: oklch(from var(--success) l c h / 0.1);
+    color: var(--success);
+  }
+
+  .badge-warning {
+    background-color: oklch(from var(--warning) l c h / 0.1);
+    color: var(--warning);
+  }
+
+  .badge-destructive {
+    background-color: oklch(from var(--destructive) l c h / 0.1);
+    color: var(--destructive);
+  }
+
+  .badge-info {
+    background-color: oklch(from var(--info) l c h / 0.1);
+    color: var(--info);
+  }
+
+  .badge-neutral {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+  }
+}

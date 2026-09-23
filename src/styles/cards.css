@@ -1,0 +1,45 @@
+/* src/styles/cards.css
+   ─────────────────────────────────────────────
+   PENDING DECISION: .card-base / .card-stat / .card-elevated were the
+   original card utilities, before the <Card> React component existed
+   (components/ui/card.tsx — Header/Content/Footer/Title composition,
+   with a "stat" variant and the correct light/dark shadow handling
+   already built in).
+
+   No component reviewed so far in this project uses these three
+   classes directly — every card in the app goes through <Card> instead.
+   They're very likely dead code, kept here only until a project-wide
+   search confirms zero remaining usage. Once confirmed, this file
+   should be deleted entirely (or left empty and dropped from the
+   @import list in globals.css).
+
+   Original definitions, kept here for reference until the search is done:
+
+   .card-base {
+     background-color: var(--card);
+     border: 1px solid var(--border);
+     border-radius: var(--radius-lg);
+     padding: 1rem;
+     box-shadow: var(--shadow-sm);
+   }
+   @media (min-width: 768px) { .card-base { padding: 1.5rem; } }
+   .dark .card-base { box-shadow: none; }
+
+   .card-stat {
+     background-color: var(--card);
+     border: 1px solid var(--border);
+     border-radius: var(--radius-lg);
+     padding: 1.5rem;
+     box-shadow: var(--shadow-sm);
+   }
+   (never got the dark:shadow-none fix its siblings did — confirms these
+   were already drifting out of sync with each other before this cleanup)
+
+   .card-elevated {
+     background-color: var(--card);
+     border: 1px solid var(--border);
+     border-radius: var(--radius-lg);
+     box-shadow: var(--shadow-sm);
+   }
+   .dark .card-elevated { box-shadow: none; }
+───────────────────────────────────────────── */

@@ -1,0 +1,125 @@
+/* src/styles/theme.css
+   ─────────────────────────────────────────────
+   Structural design tokens — radius, spacing, z-index, typography scale,
+   shadows, and the @theme color-mapping registrations.
+
+   Does NOT contain actual color values (light/dark OKLCH) — those live
+   in colors.css. This file is the "shape" of the design system; colors.css
+   is the "paint". Splitting them means a color tweak during design
+   iteration never requires touching this file, and vice versa.
+───────────────────────────────────────────── */
+
+@theme inline {
+  /* ── Layout Structure ───────────────────── */
+  --sidebar-width: 15rem; /* 240px */
+  --navbar-height: 3.5rem; /* 56px */
+
+  /* ── Page Containers ─────────────────────── */
+  --container-form: 48rem; /* 768px — forms, incl. 2-column grids */
+  --container-detail: 75rem; /* 1200px — profile/detail pages */
+  --container-landing: 80rem; /* 1280px — marketing sections */
+  --container-auth: 28rem; /* 448px — login/register cards */
+  --container-fluid: 100rem; /* 1600px — full-width dashboard pages */
+
+  /* ── Z-Index Scale ────────────────────────
+     Auto-generates z-sticky, z-header, z-dropdown, z-drawer, z-modal,
+     z-toast utility classes — no raw numbers in components.
+  ─────────────────────────────────────────── */
+  --z-index-sticky: 10; /* sticky table headers, sticky page header */
+  --z-index-header: 20; /* Navbar + Sidebar shell */
+  --z-index-dropdown: 30; /* Select/Popover/Calendar/DropdownMenu */
+  --z-index-drawer: 40; /* mobile Sidebar sheet */
+  --z-index-modal: 50; /* Dialog + its backdrop */
+  --z-index-toast: 60; /* Sonner notifications — always on top */
+
+  /* ── Radius Scale ───────────────────────── */
+  --radius-sm: 0.375rem; /* 6px  — inputs, badges */
+  --radius-md: 0.5rem; /* 8px  — buttons, small cards */
+  --radius-lg: 0.75rem; /* 12px — cards (default) */
+  --radius-xl: 1rem; /* 16px — modals, sheets */
+  --radius-2xl: 1.25rem; /* 20px — large panels */
+
+  /* ── Font Families ──────────────────────── */
+  --font-sans: "graphik-arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Fira Code", ui-monospace, monospace;
+
+  /* ── Font Sizes ──────────────────────────
+     Comments must match the value — a stale comment was found and
+     fixed here (--text-sm was documented as 13px, actual value 14px;
+     --text-2xl was documented as 24px in two consuming utility classes,
+     actual value 28px — fixed at the source of truth here).
+  ──────────────────────────────────────── */
+  --text-xs: 0.75rem; /* 12px — captions, helper text */
+  --text-sm: 0.875rem; /* 14px — table cells, secondary */
+  --text-base: 1rem; /* 16px — body, form labels */
+  --text-lg: 1.125rem; /* 18px — card titles, subtitles */
+  --text-xl: 1.375rem; /* 22px — page titles */
+  --text-2xl: 1.75rem; /* 28px — dashboard headings */
+  --text-3xl: 2.25rem; /* 36px — hero numbers */
+
+  /* ── Line Heights ───────────────────────── */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* ── Shadows ────────────────────────────── */
+  /* shadow-sm → light mode cards (border replaces it in dark) */
+  --shadow-sm:
+    0 1px 3px 0 oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.04);
+  --shadow-md:
+    0 4px 6px -1px oklch(0 0 0 / 0.07), 0 2px 4px -2px oklch(0 0 0 / 0.05);
+  --shadow-lg:
+    0 10px 15px -3px oklch(0 0 0 / 0.08), 0 4px 6px -4px oklch(0 0 0 / 0.05);
+
+  /* TODO: --shadow-primary (emerald glow) removed as unused and in
+     conflict with the "no glow effects" rule — confirm before this
+     file is treated as final. Original value, for reference:
+     0 0 0 3px oklch(0.55 0.15 162 / 0.2) */
+
+  /* ── Core Color Mappings ─────────────────── */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* ── Semantic Color Mappings ────────────── */
+  /* Not in shadcn default — added for status badges & indicators */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* ── Chart Color Mappings ───────────────── */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* ── Sidebar Color Mappings ─────────────── */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}

@@ -1,0 +1,99 @@
+/* src/styles/layout.css
+   ─────────────────────────────────────────────
+   Page-level structural utilities — applied to a page's direct content
+   wrapper, not to individual components inside it.
+───────────────────────────────────────────── */
+
+@layer utilities {
+  /* ── Breakpoint Contract ──────────────────────────────────────
+     < xl (1280px):  Sidebar hidden entirely → Drawer via hamburger.
+     ≥ xl (1280px):  Sidebar persistent, fully expanded (240px).
+     No "collapsed / icons-only" state — sidebar is either fully
+     shown or fully hidden.
+  ────────────────────────────────────────────────────────────── */
+
+  /* ── Page Padding ──────────────────────────────────────────────
+     Single class for both axes. Applied once, on the dashboard
+     shell's <main> only — pages never add their own padding on top.
+  ────────────────────────────────────────────────────────────── */
+  .page-padding {
+    padding-inline: 1rem; /* px-4 */
+    padding-block: 1.25rem; /* py-5 */
+  }
+  @media (min-width: 768px) {
+    .page-padding {
+      padding-inline: 1.75rem; /* px-7 */
+      padding-block: 1.5rem; /* py-6 */
+    }
+  }
+
+  /* ── Page Containers ──────────────────────────────────────────
+     .container-fluid / .container-form / .container-detail already
+     include flex-col + gap-6 — pages never repeat that alongside them.
+
+     .container-form / .container-detail anchor to the page's start
+     edge (margin-inline-end: auto), never centered — the sidebar
+     already breaks visual symmetry, so true centering would create
+     an inconsistent starting edge between list pages and forms.
+     True centering (.container-landing) is only for pages with no
+     sidebar to anchor against.
+  ────────────────────────────────────────────────────────────── */
+  .container-fluid {
+    width: 100%;
+    max-width: var(--container-fluid);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .container-form {
+    width: 100%;
+    max-width: var(--container-form);
+    margin-inline-end: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .container-detail {
+    width: 100%;
+    max-width: var(--container-detail);
+    margin-inline-end: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* True centering — only for pages with no sidebar to anchor against */
+  .container-landing {
+    width: 100%;
+    max-width: var(--container-landing);
+    margin-inline: auto;
+  }
+
+  .container-auth {
+    width: 100%;
+    max-width: var(--container-auth);
+  }
+
+  /* ── Detail Page Layout ───────────────────────────────────────
+     Fixed info column + flexible main content — NOT a bento grid.
+     Same pattern as GitHub/Linear profile pages.
+  ────────────────────────────────────────────────────────────── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .detail-grid {
+      grid-template-columns: 20rem 1fr; /* 320px info column + flexible content */
+    }
+  }
+
+  /* ── Tables ────────────────────────────────────────────────── */
+  .table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

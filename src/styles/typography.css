@@ -1,0 +1,63 @@
+/* src/styles/typography.css
+   ─────────────────────────────────────────────
+   Ready-made text treatments — font-size + weight + line-height + color
+   bundled together, so this combination isn't repeated inline everywhere.
+───────────────────────────────────────────── */
+
+@layer utilities {
+  /* Mono font for numbers, IDs, codes — moved here from base.css since
+     it's an applied utility class, not an automatic document default */
+  .font-mono,
+  [data-mono],
+  .tabular-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Page title — h1 equivalent */
+  .text-page-title {
+    font-size: var(--text-2xl); /* 28px */
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--foreground);
+  }
+
+  /* Section/card title */
+  .text-section-title {
+    font-size: var(--text-lg); /* 18px */
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--foreground);
+  }
+
+  /* Dashboard heading (stat cards, charts) */
+  .text-dashboard-heading {
+    font-size: var(--text-2xl); /* 28px */
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--foreground);
+  }
+
+  /* Helper / caption text */
+  .text-caption {
+    font-size: var(--text-xs); /* 12px */
+    color: var(--muted-foreground);
+    line-height: var(--leading-normal);
+  }
+
+  /* Table cell text */
+  .text-table-cell {
+    font-size: var(--text-sm); /* 14px */
+    color: var(--foreground);
+  }
+
+  /* Stat number (big dashboard numbers) */
+  .text-stat-number {
+    font-family: var(--font-mono);
+    font-size: var(--text-3xl); /* 36px */
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--foreground);
+  }
+}
