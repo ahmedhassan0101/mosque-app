@@ -1,20 +1,16 @@
 // src\schemas\group.schema.ts
-import { ACTIVITIES } from "@/constants";
 import z from "zod";
-import { nameSchema } from "./global.schema";
+import { rules } from "./common-rules";
 
 export const groupSchema = z.object({
-  name: nameSchema,
-  activity: z.enum(ACTIVITIES.values, {
-    message: "يرجى اختيار نوع النشاط.",
-  }),
+  name: rules.name,
+  activity: rules.activity,
   teacherId: z.string().min(1, "يرجى اختيار المعلم المسؤول."),
-  appointment: z.string().min(2, "موعد المجموعة مطلوب"),
+  appointment: z
+    .string({ message: "موعد المجموعة مطلوب" })
+    .min(2, "موعد المجموعة مطلوب")
+    .trim(),
   studentIds: z.array(z.string(), "يرجى اختيار الطلاب"),
-  notes: z
-    .string()
-    .max(500, "الملاحظات طويلة جداً.")
-    .optional()
-    .or(z.literal("")),
+  notes: rules.note,
 });
 export type GroupInput = z.infer<typeof groupSchema>;

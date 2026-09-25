@@ -1,26 +1,25 @@
 import { z } from "zod";
-import { nameSchema } from "./global.schema";
+import { rules } from "./common-rules";
+
 export const updateMosqueSchema = z.object({
-  name: nameSchema,
-  address: z.string().min(5, "العنوان مطلوب"),
-  phone: z.string().regex(/^[0-9+\-\s]{7,15}$/, "رقم هاتف غير صالح"),
+  name: rules.name,
+  address: rules.address,
+  phone: rules.phone,
 });
 
 export const updateUserRoleSchema = z.object({
-  userId: z.string().min(1),
-  newRole: z.enum(["ADMIN", "SUPERVISOR"] as const),
+  userId: rules.id,
+  newRole: rules.enum(["ADMIN", "SUPERVISOR"], "يرجى اختيار الصلاحية المطلوبة"),
 });
 
 export const removeUserSchema = z.object({
-  userId: z.string().min(1),
+  userId: rules.id,
 });
-
-
 
 export const resetPasswordSchema = z
   .object({
-    token: z.string().min(1),
-    password: z.string().min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل"),
+    token: rules.token,
+    password: rules.password,
     confirmPassword: z.string(),
   })
   .refine((d) => d.password === d.confirmPassword, {

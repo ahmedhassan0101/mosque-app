@@ -1,4 +1,4 @@
-// src\schemas\global.schema.ts
+
 import { ACTIVITIES } from "@/constants";
 import { z } from "zod";
 

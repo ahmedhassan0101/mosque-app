@@ -1,23 +1,18 @@
 // src/schemas/session.schema.ts
 import { z } from "zod";
 import { BEHAVIORS } from "@/constants";
-import {
-  activitySchema,
-  ayahSchema,
-  dateSchema,
-  noteSchema,
-  stringSchema,
-} from "./global.schema";
+
+import { rules } from "./common-rules";
 
 // ─── Content sub-schema ───────────────────────────────────────────────────────
 
 const contentSchema = z.object({
-  title: stringSchema,
-  book: stringSchema,
-  fromSurah: stringSchema,
-  fromAyah: ayahSchema,
-  toSurah: stringSchema,
-  toAyah: ayahSchema,
+  title: rules.optionalString,
+  book: rules.optionalString,
+  fromSurah: rules.optionalSurah,
+  fromAyah: rules.optionalAyah,
+  toSurah: rules.optionalSurah,
+  toAyah: rules.optionalAyah,
 });
 
 // ─── Main schema ──────────────────────────────────────────────────────────────
@@ -27,17 +22,15 @@ export const sessionSchema = z
     groupIds: z
       .array(z.string().min(1, "معرّف المجموعة غير صالح."))
       .min(1, "يجب اختيار مجموعة واحدة على الأقل."),
-    activity: activitySchema, // done
-    date: dateSchema, // done
+    activity: rules.activity,
+    date: rules.date,
     teacherId: z
       .string({ message: "يرجى اختيار المعلم." })
       .min(1, "يرجى اختيار المعلم."),
     attendedStudentIds: z.array(z.string()),
-    content: contentSchema, // done
-    behaviorTags: z.array(
-      z.enum(BEHAVIORS.values, { message: "تصنيف غير صالح." }), // done
-    ),
-    notes: noteSchema, // done
+    content: contentSchema,
+    behaviorTags: z.array(rules.behaviorTag),
+    notes: rules.note,
   })
 
   /**
@@ -57,7 +50,7 @@ export const sessionSchema = z
       if (!content.fromSurah?.trim()) {
         ctx.addIssue({
           code: "custom",
-        
+
           path: ["content", "fromSurah"],
           message: "سورة البداية مطلوبة لهذا النشاط.",
         });

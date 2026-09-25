@@ -1,60 +1,32 @@
 import { z } from "zod";
-import { dateSchema, nameSchema } from "./global.schema";
-
-/**
- * Guardian sub-schema — represents a parent/guardian contact.
- * Both fields are required: relation (e.g. "أب") and phone number.
- */
+import { rules } from "./common-rules";
+import { GENDERS, LEVELS } from "@/constants";
 
 const guardianSchema = z.object({
-  relation: z
-    .string({ message: "صلة القرابة مطلوبة." })
-    .min(1, "يرجى تحديد صلة القرابة (مثال: أب، أم)."),
-  phone: z
-    .string({ message: "رقم الهاتف مطلوب." })
-    .min(10, "رقم الهاتف غير صحيح، يجب أن يكون 10 أرقام على الأقل."),
+  relation: rules.relation,
+  phone: rules.phone,
 });
 
 export const studentSchema = z.object({
-  name: nameSchema,
-
-  birthDate:dateSchema,
-
-  gender: z.enum(["male", "female"], {
-    message: "يرجى اختيار الجنس.",
-  }),
-
+  name: rules.name,
+  birthDate: rules.date,
+  gender: rules.enum(GENDERS.values, "يرجى اختيار الجنس."),
   guardians: z
     .array(guardianSchema)
     .min(1, "يجب إضافة ولي أمر واحد على الأقل."),
-
-  level: z.enum(["beginner", "intermediate", "advanced"], {
-    message: "يرجى اختيار المستوى.",
-  }),
-
-  phone: z
-    .string()
-    .max(11, "رقم الهاتف طويل جداً.")
-    .optional()
-    .or(z.literal("")),
-  image: z.url("رابط الصورة غير صالح.").optional().or(z.literal("")),
-  address: z
-    .string()
-    .max(200, "العنوان طويل جداً.")
-    .optional()
-    .or(z.literal("")),
-  notes: z
-    .string()
-    .max(500, "الملاحظات طويلة جداً.")
-    .optional()
-    .or(z.literal("")),
-
-  currentSurah: z.string().optional().or(z.literal("")),
-  currentAyah: z
-    .number()
-    .int("رقم الآية يجب أن يكون عدداً صحيحاً.")
-    .min(1, "رقم الآية يبدأ من 1.")
-    .optional(),
+  level: rules.enum(LEVELS.values, "يرجى اختيار المستوى."),
+  phone: rules.phone,
+  image: rules.image,
+  address: rules.optionalString,
+  notes: rules.note,
+  currentSurah: rules.optionalSurah,
+  currentAyah: rules.optionalAyah,
+  // currentSurah: z.string().optional().or(z.literal("")),
+  // currentAyah: z
+  //   .number()
+  //   .int("رقم الآية يجب أن يكون عدداً صحيحاً.")
+  //   .min(1, "رقم الآية يبدأ من 1.")
+  //   .optional(),
 });
 
 export type StudentInput = z.infer<typeof studentSchema>;

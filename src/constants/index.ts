@@ -52,17 +52,30 @@ export const ROLES = createOptions({
   SUPER_ADMIN: "مدير عام",
 });
 
+export const PROGRESS_TRENDS = createOptions({
+  up: "يتقدم",
+  stable: "مستقر",
+  down: "متراجع",
+});
+
+export const TAJWEED_RATINGS = createOptions({
+  excellent: "ممتاز",
+  very_good: "جيد جداً",
+  good: "جيد",
+  needs_practice: "يحتاج تدريب",
+});
 
 export type ActivityType = keyof typeof ACTIVITIES.labels;
 export type BehaviorType = keyof typeof BEHAVIORS.labels;
 export type GenderType = keyof typeof GENDERS.labels;
 export type levelType = keyof typeof LEVELS.labels;
 export type RolesType = keyof typeof ROLES.labels;
+export type ProgressTrendType = keyof typeof PROGRESS_TRENDS.labels;
+export type TajweedRatingType = keyof typeof TAJWEED_RATINGS.labels;
 export type Provider = "credentials" | "google";
 
 /** Required marker shown in the header row */
 export const REQUIRED_MARKER = " *";
-
 
 // src/constants/import.ts
 /**
@@ -99,5 +112,3 @@ export const COLUMN_HEADERS = {
   CURRENT_AYAH: "رقم الآية",
   NOTES: "ملاحظات",
 } as const;
-
-

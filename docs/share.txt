@@ -1,483 +1,2173 @@
-export const getStudentById = cache(
-  async (id: string): Promise<StudentSerialized | null> => {
-    try {
-      await connectDB();
-      const mosqueId = await getMosqueId();
+"use client";
 
-      const student = await Student.findOne({ _id: id, mosqueId }).lean();
-      if (!student) return null;
+import * as React from "react";
+import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 
-      return serialize(student) as StudentSerialized;
-    } catch (error) {
-      console.error("[getStudentById]:", error);
-      return null;
-    }
-  },
-);
--------------------------------
+import { cn } from "@/lib/utils/utils";
+import { Button } from "@/components/ui/button";
 
-// src/app/(dashboard)/dashboard/students/[id]/page.tsx
-import { Suspense } from "react";
-import Link from "next/link";
-import { ChevronLeft, Home } from "lucide-react";
-import type { Metadata } from "next";
-
-import { getStudentById } from "@/queries/student.queries";
-import { StudentProfileContent } from "@/components/students/StudentProfileContent";
-import { StudentProfileSkeleton } from "@/components/students/StudentProfileSkeleton";
-
-type StudentProfilePageProps = {
-  params: Promise<{ id: string }>;
-};
-
-export async function generateMetadata({
-  params,
-}: StudentProfilePageProps): Promise<Metadata> {
-  const { id } = await params;
-  const student = await getStudentById(id);
-  return { title: student ? `ملف: ${student.name}` : "ملف الطالب" };
+function AlertDialog({
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
+  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
 }
 
-export default async function StudentProfilePage({
-  params,
-}: StudentProfilePageProps) {
-  const { id } = await params;
-  // Pre-fetch for breadcrumb — React cache() deduplicates with the call inside Content
-  const student = await getStudentById(id);
-
+function AlertDialogTrigger({
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Trigger>) {
   return (
-    <div className="container-detail" dir="rtl">
-      {/* ── Breadcrumb ── */}
-      <nav
-        aria-label="مسار التنقل"
-        className="flex items-center gap-1.5 text-sm text-muted-foreground"
-      >
-        <Link
-          href="/dashboard"
-          className="hover:text-foreground transition-colors flex items-center gap-1"
-        >
-          <Home size={13} />
-          <span>الرئيسية</span>
-        </Link>
-        <ChevronLeft size={13} className="rotate-180" />
-        <Link
-          href="/dashboard/students"
-          className="hover:text-foreground transition-colors"
-        >
-          الطلاب
-        </Link>
-        <ChevronLeft size={13} className="rotate-180" />
-        <span className="text-foreground font-medium truncate max-w-45">
-          {student?.name ?? "الملف الشخصي"}
-        </span>
-      </nav>
-      {/* ── Bento Grid — streamed ── */}
-      <Suspense fallback={<StudentProfileSkeleton />}>
-        <StudentProfileContent id={id} />
-      </Suspense>
-    </div>
+    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />
   );
 }
--------------------
-// src/components/students/StudentProfileContent.tsx
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+
+function AlertDialogPortal({
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {
+  return (
+    <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
+  );
+}
+
+function AlertDialogOverlay({
+  className,
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
+  return (
+    <AlertDialogPrimitive.Overlay
+      data-slot="alert-dialog-overlay"
+      className={cn(
+        "fixed inset-0 z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertDialogContent({
+  className,
+  size = "default",
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Content> & {
+  size?: "default" | "sm";
+}) {
+  return (
+    <AlertDialogPortal>
+      <AlertDialogOverlay />
+      <AlertDialogPrimitive.Content
+        data-slot="alert-dialog-content"
+        data-size={size}
+        className={cn(
+          "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          className,
+        )}
+        {...props}
+      />
+    </AlertDialogPortal>
+  );
+}
+
+function AlertDialogHeader({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-dialog-header"
+      className={cn(
+        "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertDialogFooter({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-dialog-footer"
+      className={cn(
+        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertDialogMedia({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-dialog-media"
+      className={cn(
+        "mb-2 inline-flex size-10 items-center justify-center rounded-md bg-muted sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-6",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertDialogTitle({
+  className,
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
+  return (
+    <AlertDialogPrimitive.Title
+      data-slot="alert-dialog-title"
+      className={cn(
+        "text-base font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertDialogDescription({
+  className,
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Description>) {
+  return (
+    <AlertDialogPrimitive.Description
+      data-slot="alert-dialog-description"
+      className={cn(
+        "text-sm text-balance text-muted-foreground md:text-pretty *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertDialogAction({
+  className,
+  variant = "default",
+  size = "default",
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Action> &
+  Pick<React.ComponentProps<typeof Button>, "variant" | "size">) {
+  return (
+    <Button variant={variant} size={size} asChild>
+      <AlertDialogPrimitive.Action
+        data-slot="alert-dialog-action"
+        className={cn(className)}
+        {...props}
+      />
+    </Button>
+  );
+}
+
+function AlertDialogCancel({
+  className,
+  variant = "outline",
+  size = "default",
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Cancel> &
+  Pick<React.ComponentProps<typeof Button>, "variant" | "size">) {
+  return (
+    <Button variant={variant} size={size} asChild>
+      <AlertDialogPrimitive.Cancel
+        data-slot="alert-dialog-cancel"
+        className={cn(className)}
+        {...props}
+      />
+    </Button>
+  );
+}
+
+export {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogOverlay,
+  AlertDialogPortal,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+};
+
+----
+// components/ui/alert.tsx
+
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils/utils";
+
+/*
+  Alert — Design System Override
+  ─────────────────────────────────────────────
+  قرار الاتساقية: نعدل على shadcn alert الأصلي بدل الـ custom auth alert
+  السبب: component واحد في كل المشروع — أسهل maintenance
+
+  Variants المضافة (مش في shadcn الأصلي):
+    success → for email verification، account creation، etc.
+    warning → for incomplete profile، pending action، etc.
+    info    → for tips، guidance، informational messages
+
+  الـ variant الأصلي:
+    default     → neutral informational (slate)
+    destructive → error messages (red)
+
+  الاستخدام في الـ auth:
+    <Alert variant="destructive">
+      <AlertDescription>البريد الإلكتروني أو كلمة المرور غير صحيحة</AlertDescription>
+    </Alert>
+
+    <Alert variant="info">
+      <AlertDescription>تم إرسال رمز التحقق إلى بريدك الإلكتروني</AlertDescription>
+    </Alert>
+
+  بنية الـ component:
+    <Alert variant="...">
+      <AlertIcon />         ← اختياري — icon يتناسب مع الـ variant
+      <AlertTitle />        ← اختياري — عنوان الـ alert
+      <AlertDescription />  ← الرسالة الأساسية
+    </Alert>
+  ─────────────────────────────────────────────
+*/
+
+const alertVariants = cva(
+  [
+    // Layout
+    "relative flex w-full gap-3 rounded-md border p-3",
+    // Typography base
+    "text-sm",
+    // RTL icon alignment
+    "[&>svg]:mt-0.5 [&>svg]:shrink-0",
+    "[&>svg:not([class*='size-'])]:size-4",
+  ],
+  {
+    variants: {
+      variant: {
+        /*
+          default:
+          Neutral informational — slate colors.
+          للـ tips أو general information.
+        */
+        default:
+          "border-border bg-muted/40 text-foreground [&>svg]:text-muted-foreground",
+
+        /*
+          destructive:
+          Error messages — login failed, validation errors, server errors.
+          Red tint خفيف بدون solid background.
+        */
+        destructive:
+          "border-destructive/30 bg-destructive/5 text-destructive [&>svg]:text-destructive dark:border-destructive/40 dark:bg-destructive/10",
+
+        /*
+          success:
+          Confirmation messages — email sent, account created, password reset.
+          Emerald — consistent مع الـ primary brand color.
+        */
+        success:
+          "border-success/30 bg-success/5 text-success [&>svg]:text-success dark:border-success/40 dark:bg-success/10",
+
+        /*
+          warning:
+          Caution messages — email not verified, incomplete profile.
+          Amber.
+        */
+        warning:
+          "border-warning/30 bg-warning/5 text-warning [&>svg]:text-warning dark:border-warning/40 dark:bg-warning/10",
+
+        /*
+          info:
+          Informational — instructions، tips، what happens next.
+          Blue — مختلف عن الـ primary لتمييز المعلومة عن الـ action.
+        */
+        info:
+          "border-info/30 bg-info/5 text-info [&>svg]:text-info dark:border-info/40 dark:bg-info/10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+function Alert({
+  className,
+  variant,
+  ...props
+}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+  return (
+    <div
+      data-slot="alert"
+      role="alert"
+      className={cn(alertVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
+
+function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-title"
+      className={cn("text-sm font-medium leading-snug", className)}
+      {...props}
+    />
+  );
+}
+
+function AlertDescription({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-description"
+      className={cn(
+        "text-sm leading-normal opacity-90",
+        "[&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:opacity-100",
+        "[&_p:not(:last-child)]:mb-2",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+/*
+  AlertIcon — helper wrapper للـ icon داخل الـ alert
+  الـ icon اللون بيجي تلقائياً من الـ variant عبر [&>svg]:text-{color}
+  الاستخدام:
+    import { CheckCircle } from "lucide-react"
+    <Alert variant="success">
+      <CheckCircle />
+      <AlertDescription>تم بنجاح</AlertDescription>
+    </Alert>
+*/
+
+export { Alert, AlertTitle, AlertDescription };
+---
+import * as React from "react";
+import { cn } from "@/lib/utils/utils";
+import { Slot } from "radix-ui";
+import { ChevronLeftIcon, MoreHorizontalIcon } from "lucide-react";
+
+function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
+  return (
+    <nav
+      aria-label="breadcrumb"
+      data-slot="breadcrumb"
+      className={cn(className)}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
+  return (
+    <ol
+      data-slot="breadcrumb-list"
+      className={cn(
+        "flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-muted-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
+  return (
+    <li
+      data-slot="breadcrumb-item"
+      className={cn("inline-flex items-center gap-1", className)}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbLink({
+  asChild,
+  className,
+  ...props
+}: React.ComponentProps<"a"> & {
+  asChild?: boolean;
+}) {
+  const Comp = asChild ? Slot.Root : "a";
+
+  return (
+    <Comp
+      data-slot="breadcrumb-link"
+      className={cn(
+        "rounded-sm outline-none transition-colors hover:text-foreground",
+        "focus-visible:ring-2 focus-visible:ring-ring/25",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="breadcrumb-page"
+      role="link"
+      aria-disabled="true"
+      aria-current="page"
+      className={cn("font-normal text-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+// FIX: default separator was ChevronRightIcon (LTR-only — points
+// "forward" toward the right). For RTL, ChevronLeftIcon points toward
+// "deeper into the hierarchy" — no rotate needed, just the correct icon.
+function BreadcrumbSeparator({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"li">) {
+  return (
+    <li
+      data-slot="breadcrumb-separator"
+      role="presentation"
+      aria-hidden="true"
+      className={cn("[&>svg]:size-3.5", className)}
+      {...props}
+    >
+      {children ?? <ChevronLeftIcon />}
+    </li>
+  );
+}
+
+function BreadcrumbEllipsis({
+  className,
+  ...props
+}: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="breadcrumb-ellipsis"
+      role="presentation"
+      aria-hidden="true"
+      className={cn(
+        "flex size-5 items-center justify-center [&>svg]:size-4",
+        className,
+      )}
+      {...props}
+    >
+      <MoreHorizontalIcon />
+      <span className="sr-only">المزيد</span>
+    </span>
+  );
+}
+
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+};
+
+---
+"use client";
+
+import * as React from "react";
 import {
-  Phone,
-  MapPin,
-  BookOpen,
-  Users,
-  Calendar,
-  Pencil,
-  FileText,
-  BookMarked,
-  Hash,
+  DayPicker,
+  getDefaultClassNames,
+  type DayButton,
+  type Locale,
+} from "react-day-picker";
+
+import { cn } from "@/lib/utils/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronDownIcon,
 } from "lucide-react";
 
-import { getStudentProfile } from "@/queries/student.queries";
-import { calculateAge } from "@/lib/utils/age";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DeleteStudentButton } from "./DeleteStudentButton";
-import type { StudentGroupSummary } from "@/queries/student.queries";
-import { ACTIVITIES, GENDERS, LEVELS } from "@/constants";
+function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  captionLayout = "label",
+  buttonVariant = "ghost",
+  locale,
+  formatters,
+  components,
+  ...props
+}: React.ComponentProps<typeof DayPicker> & {
+  buttonVariant?: React.ComponentProps<typeof Button>["variant"];
+}) {
+  const defaultClassNames = getDefaultClassNames();
 
-interface StudentProfileContentProps {
-  id: string;
-}
-
-/** A single group card in the student's groups section */
-function GroupCard({ group }: { group: StudentGroupSummary }) {
   return (
-    <Link
-      href={`/dashboard/groups/${group.activity}/${group._id}`}
-      className="flex items-start justify-between p-3 border border-border rounded-lg bg-muted/20 hover:border-primary/40 hover:bg-muted/40 transition-all"
-    >
-      <div className="space-y-1">
-        <p className="font-medium text-sm">{group.name}</p>
-        <p className="text-xs text-muted-foreground">
-          المعلم: {group.teacherName}
-        </p>
-        {group.appointment && (
-          <p className="text-xs text-muted-foreground flex items-center gap-1">
-            <Calendar size={11} />
-            {group.appointment}
-          </p>
-        )}
-      </div>
-      <Badge variant="secondary" className="shrink-0 text-xs">
-        {ACTIVITIES.labels[group.activity]}
-      </Badge>
-    </Link>
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn(
+        "group/calendar bg-background p-2 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent",
+        String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
+        String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        className,
+      )}
+      captionLayout={captionLayout}
+      locale={locale}
+      formatters={{
+        formatMonthDropdown: (date) =>
+          date.toLocaleString(locale?.code, { month: "short" }),
+        ...formatters,
+      }}
+      classNames={{
+        root: cn("w-fit", defaultClassNames.root),
+        months: cn(
+          "relative flex flex-col gap-4 md:flex-row",
+          defaultClassNames.months,
+        ),
+        month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
+        nav: cn(
+          "absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1",
+          defaultClassNames.nav,
+        ),
+        button_previous: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "size-(--cell-size) p-0 select-none aria-disabled:opacity-50",
+          defaultClassNames.button_previous,
+        ),
+        button_next: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "size-(--cell-size) p-0 select-none aria-disabled:opacity-50",
+          defaultClassNames.button_next,
+        ),
+        month_caption: cn(
+          "flex h-(--cell-size) w-full items-center justify-center px-(--cell-size)",
+          defaultClassNames.month_caption,
+        ),
+        dropdowns: cn(
+          "flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium",
+          defaultClassNames.dropdowns,
+        ),
+        dropdown_root: cn(
+          "relative rounded-(--cell-radius)",
+          defaultClassNames.dropdown_root,
+        ),
+        dropdown: cn(
+          "absolute inset-0 bg-popover opacity-0",
+          defaultClassNames.dropdown,
+        ),
+        caption_label: cn(
+          "font-medium select-none",
+          captionLayout === "label"
+            ? "text-sm"
+            : "flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
+          defaultClassNames.caption_label,
+        ),
+        table: "w-full border-collapse",
+        weekdays: cn("flex", defaultClassNames.weekdays),
+        weekday: cn(
+          "flex-1 rounded-(--cell-radius) text-[0.8rem] font-normal text-muted-foreground select-none",
+          defaultClassNames.weekday,
+        ),
+        week: cn("mt-2 flex w-full", defaultClassNames.week),
+        week_number_header: cn(
+          "w-(--cell-size) select-none",
+          defaultClassNames.week_number_header,
+        ),
+        week_number: cn(
+          "text-[0.8rem] text-muted-foreground select-none",
+          defaultClassNames.week_number,
+        ),
+        day: cn(
+          "group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius)",
+          props.showWeekNumber
+            ? "[&:nth-child(2)[data-selected=true]_button]:rounded-l-(--cell-radius)"
+            : "[&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius)",
+          defaultClassNames.day,
+        ),
+        range_start: cn(
+          "relative isolate z-0 rounded-l-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:right-0 after:w-4 after:bg-muted",
+          defaultClassNames.range_start,
+        ),
+        range_middle: cn("rounded-none", defaultClassNames.range_middle),
+        range_end: cn(
+          "relative isolate z-0 rounded-r-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:left-0 after:w-4 after:bg-muted",
+          defaultClassNames.range_end,
+        ),
+        today: cn(
+          "rounded-(--cell-radius) bg-muted text-foreground data-[selected=true]:rounded-none",
+          defaultClassNames.today,
+        ),
+        outside: cn(
+          "text-muted-foreground aria-selected:text-muted-foreground",
+          defaultClassNames.outside,
+        ),
+        disabled: cn(
+          "text-muted-foreground opacity-50",
+          defaultClassNames.disabled,
+        ),
+        hidden: cn("invisible", defaultClassNames.hidden),
+        ...classNames,
+      }}
+      components={{
+        Root: ({ className, rootRef, ...props }) => {
+          return (
+            <div
+              data-slot="calendar"
+              ref={rootRef}
+              className={cn(className)}
+              {...props}
+            />
+          );
+        },
+        Chevron: ({ className, orientation, ...props }) => {
+          if (orientation === "left") {
+            return (
+              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
+            );
+          }
+
+          if (orientation === "right") {
+            return (
+              <ChevronRightIcon
+                className={cn("size-4", className)}
+                {...props}
+              />
+            );
+          }
+
+          return (
+            <ChevronDownIcon className={cn("size-4", className)} {...props} />
+          );
+        },
+        DayButton: ({ ...props }) => (
+          <CalendarDayButton locale={locale} {...props} />
+        ),
+        WeekNumber: ({ children, ...props }) => {
+          return (
+            <td {...props}>
+              <div className="flex size-(--cell-size) items-center justify-center text-center">
+                {children}
+              </div>
+            </td>
+          );
+        },
+        ...components,
+      }}
+      {...props}
+    />
   );
 }
 
-/**
- * Async Server Component — fetches and renders the student's Bento Grid profile.
- * Calls notFound() if the student doesn't exist.
- */
-export async function StudentProfileContent({
-  id,
-}: StudentProfileContentProps) {
-  const data = await getStudentProfile(id);
-  if (!data) notFound();
+function CalendarDayButton({
+  className,
+  day,
+  modifiers,
+  locale,
+  ...props
+}: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> }) {
+  const defaultClassNames = getDefaultClassNames();
 
-  const { student, groups } = data;
-  const age = calculateAge(student.birthDate);
-  const initials = student.name
-    .split(" ")
-    .slice(0, 2)
-    .map((w: string) => w[0])
-    .join("");
-
-  // Primary guardian is always the first — others are shown below
-  const [primaryGuardian, ...otherGuardians] = student.guardians ?? [];
+  const ref = React.useRef<HTMLButtonElement>(null);
+  React.useEffect(() => {
+    if (modifiers.focused) ref.current?.focus();
+  }, [modifiers.focused]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4" dir="rtl">
-      {/*    <div className="detail-grid" dir="rtl"> */}
-      {/* ══ 1. Hero Card — spans 2 columns ══════════════════════════════ */}
-      <section
-        aria-label="البيانات الأساسية"
-        className="md:col-span-2 border border-border rounded-xl bg-card overflow-hidden"
+    <Button
+      ref={ref}
+      variant="ghost"
+      size="icon"
+      data-day={day.date.toLocaleDateString(locale?.code)}
+      data-selected-single={
+        modifiers.selected &&
+        !modifiers.range_start &&
+        !modifiers.range_end &&
+        !modifiers.range_middle
+      }
+      data-range-start={modifiers.range_start}
+      data-range-end={modifiers.range_end}
+      data-range-middle={modifiers.range_middle}
+      className={cn(
+        "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
+        defaultClassNames.day,
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Calendar, CalendarDayButton };
+
+----
+// components/ui/sheet.tsx
+"use client";
+
+import * as React from "react";
+import { Dialog as SheetPrimitive } from "radix-ui";
+import { XIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils/utils";
+import { Button } from "@/components/ui/button";
+
+
+function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
+  return <SheetPrimitive.Root data-slot="sheet" {...props} />;
+}
+
+function SheetTrigger({
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
+  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
+}
+
+function SheetClose({
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Close>) {
+  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
+}
+
+function SheetPortal({
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Portal>) {
+  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
+}
+
+function SheetOverlay({
+  className,
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Overlay>) {
+  return (
+    <SheetPrimitive.Overlay
+      data-slot="sheet-overlay"
+      className={cn(
+        "fixed inset-0 z-50 bg-foreground/10",
+        "duration-150",
+        "data-open:animate-in data-open:fade-in-0",
+        "data-closed:animate-out data-closed:fade-out-0",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function SheetContent({
+  className,
+  children,
+  side = "right",
+  showCloseButton = true,
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Content> & {
+  side?: "top" | "right" | "bottom" | "left";
+  showCloseButton?: boolean;
+}) {
+  return (
+    <SheetPortal>
+      <SheetOverlay />
+      <SheetPrimitive.Content
+        data-slot="sheet-content"
+        data-side={side}
+        className={cn(
+          // Base
+          "fixed z-50 flex flex-col gap-4",
+          "bg-popover bg-clip-padding text-sm text-popover-foreground",
+          "shadow-lg dark:shadow-none",
+          "transition duration-200 ease-in-out",
+
+          // Bottom
+          "data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0",
+          "data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=bottom]:border-border",
+
+          // Top
+          "data-[side=top]:inset-x-0 data-[side=top]:top-0",
+          "data-[side=top]:h-auto data-[side=top]:border-b data-[side=top]:border-border",
+
+          // Left — logical: border 
+          "data-[side=left]:inset-y-0 data-[side=left]:inset-s-0",
+          "data-[side=left]:h-full data-[side=left]:w-72",
+          "data-[side=left]:border-e data-[side=left]:border-border",
+
+          // Right — logical: border
+          "data-[side=right]:inset-y-0 data-[side=right]:inset-e-0",
+          "data-[side=right]:h-full data-[side=right]:w-72",
+          "data-[side=right]:border-s data-[side=right]:border-border",
+
+          // Animations
+          "data-open:animate-in data-open:fade-in-0",
+          "data-[side=bottom]:data-open:slide-in-from-bottom-8",
+          "data-[side=left]:data-open:slide-in-from-left-8",
+          "data-[side=right]:data-open:slide-in-from-right-8",
+          "data-[side=top]:data-open:slide-in-from-top-8",
+          "data-closed:animate-out data-closed:fade-out-0",
+          "data-[side=bottom]:data-closed:slide-out-to-bottom-8",
+          "data-[side=left]:data-closed:slide-out-to-left-8",
+          "data-[side=right]:data-closed:slide-out-to-right-8",
+          "data-[side=top]:data-closed:slide-out-to-top-8",
+
+          className
+        )}
+        {...props}
       >
-        <div className="h-1.5 bg-linear-to-l from-primary/50 to-primary" />
-        <div className="p-6">
-          <div className="flex flex-col sm:flex-row items-start gap-4">
-            {/* Avatar */}
-            <div className="relative w-20 h-20 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center shrink-0">
-              {student.image ? (
-                <Image
-                  src={student.image}
-                  alt={student.name}
-                  fill
-                  sizes="80px"
-                  className="object-cover"
-                  priority
-                />
-              ) : (
-                <span className="text-primary font-bold text-2xl">
-                  {initials}
-                </span>
-              )}
-            </div>
+        {children}
 
-            {/* Name + meta */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-3 flex-wrap">
-                <div>
-                  <h2 className="text-xl font-bold">{student.name}</h2>
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    {GENDERS.labels[student.gender]} ·{" "}
-                    {age !== null ? `${age} سنة` : "العمر غير محدد"}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge
-                      className={
-                        student.isActive
-                          ? "bg-success/15 text-success"
-                          : "bg-muted text-muted-foreground"
-                      }
-                    >
-                      {student.isActive ? "نشط" : "غير نشط"}
-                    </Badge>
-                    <Badge variant="outline">
-                      {LEVELS.labels[student.level]}
-                    </Badge>
-                  </div>
-                </div>
+        {showCloseButton && (
+          <SheetPrimitive.Close data-slot="sheet-close" asChild>
+            {/* RTL fix: end-3 بدل left-3 الـ hardcoded */}
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="absolute top-3 inset-e-3"
+            >
+              <XIcon size={15} />
+              <span className="sr-only">إغلاق</span>
+            </Button>
+          </SheetPrimitive.Close>
+        )}
+      </SheetPrimitive.Content>
+    </SheetPortal>
+  );
+}
 
-                {/* Quick actions */}
-                <div className="flex items-center gap-1">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={`/dashboard/students/${id}/edit`}>
-                      <Pencil size={13} className="ml-1.5" />
-                      تعديل
-                    </Link>
-                  </Button>
-                  <DeleteStudentButton
-                    id={id}
-                    name={student.name}
-                    redirectAfterDelete
-                    variant="icon"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="sheet-header"
+      className={cn("flex flex-col gap-0.5 p-4", className)}
+      {...props}
+    />
+  );
+}
 
-          {/* Notes */}
-          {student.notes && (
-            <div className="mt-4 flex items-start gap-2 text-sm text-muted-foreground bg-muted/40 rounded-lg p-3">
-              <FileText size={13} className="shrink-0 mt-0.5" />
-              <p className="leading-relaxed">{student.notes}</p>
-            </div>
+function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="sheet-footer"
+      className={cn("mt-auto flex flex-col gap-2 p-4", className)}
+      {...props}
+    />
+  );
+}
+
+function SheetTitle({
+  className,
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Title>) {
+  return (
+    <SheetPrimitive.Title
+      data-slot="sheet-title"
+      className={cn("text-base font-medium text-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+function SheetDescription({
+  className,
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Description>) {
+  return (
+    <SheetPrimitive.Description
+      data-slot="sheet-description"
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+};
+---
+"use client";
+
+import * as React from "react";
+import { Popover as PopoverPrimitive } from "radix-ui";
+
+import { cn } from "@/lib/utils/utils";
+
+function Popover({
+  ...props
+}: React.ComponentProps<typeof PopoverPrimitive.Root>) {
+  return <PopoverPrimitive.Root data-slot="popover" {...props} />;
+}
+
+function PopoverTrigger({
+  ...props
+}: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
+  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+}
+
+function PopoverContent({
+  className,
+  align = "center",
+  sideOffset = 4,
+  ...props
+}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+  return (
+    <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Content
+        data-slot="popover-content"
+        align={align}
+        sideOffset={sideOffset}
+        className={cn(
+          "z-50 flex w-72 origin-(--radix-popover-content-transform-origin) flex-col gap-2.5",
+          "rounded-lg border border-border bg-popover p-2.5 text-sm text-popover-foreground shadow-md",
+          "outline-hidden duration-100",
+          "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          // FIX: Radix sets data-state="open"/"closed" on Content, not a
+          // bare data-open/data-closed attribute — same bug fixed in
+          // SelectContent. The panel had no enter/exit animation at all.
+          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+          className,
+        )}
+        {...props}
+      />
+    </PopoverPrimitive.Portal>
+  );
+}
+
+function PopoverAnchor({
+  ...props
+}: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
+  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />;
+}
+
+function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="popover-header"
+      className={cn("flex flex-col gap-0.5 text-sm", className)}
+      {...props}
+    />
+  );
+}
+
+// FIX: was typed as h2 props but rendered a <div> — broke heading semantics
+// for anything relying on it (e.g. screen readers). "font-heading" also
+// isn't a registered token in this project (only --font-sans/--font-mono
+// exist), so it silently did nothing.
+function PopoverTitle({ className, ...props }: React.ComponentProps<"h2">) {
+  return (
+    <h2
+      data-slot="popover-title"
+      className={cn("text-sm font-semibold", className)}
+      {...props}
+    />
+  );
+}
+
+function PopoverDescription({
+  className,
+  ...props
+}: React.ComponentProps<"p">) {
+  return (
+    <p
+      data-slot="popover-description"
+      className={cn("text-muted-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+export {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+};
+
+----
+// components/ui/dropdown-menu.tsx
+"use client";
+
+import * as React from "react";
+import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
+import { CheckIcon, ChevronRightIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils/utils";
+
+function DropdownMenu({
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+  return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+}
+
+function DropdownMenuPortal({
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
+  return (
+    <DropdownMenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
+  );
+}
+
+function DropdownMenuTrigger({
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {
+  return (
+    <DropdownMenuPrimitive.Trigger
+      data-slot="dropdown-menu-trigger"
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuContent({
+  className,
+  align = "start",
+  sideOffset = 6,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+  return (
+    <DropdownMenuPrimitive.Portal>
+      <DropdownMenuPrimitive.Content
+        data-slot="dropdown-menu-content"
+        sideOffset={sideOffset}
+        align={align}
+        className={cn(
+          "z-50 max-h-(--radix-dropdown-menu-content-available-height)",
+          "w-(--radix-dropdown-menu-trigger-width) min-w-40",
+          "origin-(--radix-dropdown-menu-content-transform-origin)",
+          "overflow-x-hidden overflow-y-auto rounded-lg",
+          "border border-border bg-popover p-1 text-popover-foreground",
+          "shadow-md dark:shadow-none",
+          "duration-150",
+          "data-[side=bottom]:slide-in-from-top-2",
+          "data-[side=left]:slide-in-from-right-2",
+          "data-[side=right]:slide-in-from-left-2",
+          "data-[side=top]:slide-in-from-bottom-2",
+          "data-[state=closed]:overflow-hidden",
+          "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
+          "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          className
+        )}
+        {...props}
+      />
+    </DropdownMenuPrimitive.Portal>
+  );
+}
+
+function DropdownMenuGroup({
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Group>) {
+  return (
+    <DropdownMenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />
+  );
+}
+
+function DropdownMenuItem({
+  className,
+  inset,
+  variant = "default",
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {
+  inset?: boolean;
+  variant?: "default" | "destructive";
+}) {
+  return (
+    <DropdownMenuPrimitive.Item
+      data-slot="dropdown-menu-item"
+      data-inset={inset}
+      data-variant={variant}
+      className={cn(
+        "group/dropdown-menu-item relative flex cursor-default items-center gap-2",
+        "rounded-md px-2 py-1.5 text-sm outline-hidden select-none",
+        "transition-colors duration-150",
+        "focus:bg-muted focus:text-foreground",
+        "data-inset:ps-7",
+        "data-[variant=destructive]:text-destructive",
+        "data-[variant=destructive]:focus:bg-destructive/10",
+        "data-[variant=destructive]:focus:text-destructive",
+        "data-disabled:pointer-events-none data-disabled:opacity-50",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "[&_svg]:text-muted-foreground",
+        "data-[variant=destructive]:[&_svg]:text-destructive",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuCheckboxItem({
+  className,
+  children,
+  checked,
+  inset,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem> & {
+  inset?: boolean;
+}) {
+  return (
+    <DropdownMenuPrimitive.CheckboxItem
+      data-slot="dropdown-menu-checkbox-item"
+      data-inset={inset}
+      className={cn(
+        "relative flex cursor-default items-center gap-2 rounded-md py-1.5 pe-2 ps-8",
+        "text-sm outline-hidden select-none transition-colors duration-150",
+        "focus:bg-muted focus:text-foreground",
+        "data-inset:ps-7",
+        "data-disabled:pointer-events-none data-disabled:opacity-50",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      checked={checked}
+      {...props}
+    >
+      <span
+        className="pointer-events-none absolute end-2 flex items-center justify-center"
+        data-slot="dropdown-menu-checkbox-item-indicator"
+      >
+        <DropdownMenuPrimitive.ItemIndicator>
+          <CheckIcon size={14} />
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.CheckboxItem>
+  );
+}
+
+function DropdownMenuRadioGroup({
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>) {
+  return (
+    <DropdownMenuPrimitive.RadioGroup
+      data-slot="dropdown-menu-radio-group"
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuRadioItem({
+  className,
+  children,
+  inset,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem> & {
+  inset?: boolean;
+}) {
+  return (
+    <DropdownMenuPrimitive.RadioItem
+      data-slot="dropdown-menu-radio-item"
+      data-inset={inset}
+      className={cn(
+        "relative flex cursor-default items-center gap-2 rounded-md py-1.5 pe-2 ps-8",
+        "text-sm outline-hidden select-none transition-colors duration-150",
+        "focus:bg-muted focus:text-foreground",
+        "data-inset:ps-7",
+        "data-disabled:pointer-events-none data-disabled:opacity-50",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      {...props}
+    >
+      <span
+        className="pointer-events-none absolute end-2 flex items-center justify-center"
+        data-slot="dropdown-menu-radio-item-indicator"
+      >
+        <DropdownMenuPrimitive.ItemIndicator>
+          <CheckIcon size={14} />
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.RadioItem>
+  );
+}
+
+function DropdownMenuLabel({
+  className,
+  inset,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Label> & {
+  inset?: boolean;
+}) {
+  return (
+    <DropdownMenuPrimitive.Label
+      data-slot="dropdown-menu-label"
+      data-inset={inset}
+      className={cn(
+        "px-2 py-1.5 text-xs font-medium text-muted-foreground data-inset:ps-7",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuSeparator({
+  className,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>) {
+  return (
+    <DropdownMenuPrimitive.Separator
+      data-slot="dropdown-menu-separator"
+      className={cn("-mx-1 my-1 h-px bg-border", className)}
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuShortcut({
+  className,
+  ...props
+}: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="dropdown-menu-shortcut"
+      className={cn(
+        // RTL fix: ms-auto بدل ml-auto
+        "ms-auto text-xs tracking-widest text-muted-foreground",
+        "group-focus/dropdown-menu-item:text-foreground",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuSub({
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Sub>) {
+  return <DropdownMenuPrimitive.Sub data-slot="dropdown-menu-sub" {...props} />;
+}
+
+function DropdownMenuSubTrigger({
+  className,
+  inset,
+  children,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.SubTrigger> & {
+  inset?: boolean;
+}) {
+  return (
+    <DropdownMenuPrimitive.SubTrigger
+      data-slot="dropdown-menu-sub-trigger"
+      data-inset={inset}
+      className={cn(
+        "flex cursor-default items-center gap-2 rounded-md px-2 py-1.5",
+        "text-sm outline-hidden select-none transition-colors duration-150",
+        "focus:bg-muted focus:text-foreground",
+        "data-inset:ps-7",
+        "data-open:bg-muted data-open:text-foreground",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      {/* RTL fix: ms-auto بدل ml-auto، والسهم يتقلب تلقائياً مع scale-x */}
+      <ChevronRightIcon size={14} className="ms-auto rtl:-scale-x-100" />
+    </DropdownMenuPrimitive.SubTrigger>
+  );
+}
+
+function DropdownMenuSubContent({
+  className,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {
+  return (
+    <DropdownMenuPrimitive.SubContent
+      data-slot="dropdown-menu-sub-content"
+      className={cn(
+        "z-50 min-w-32 origin-(--radix-dropdown-menu-content-transform-origin)",
+        "overflow-hidden rounded-lg border border-border bg-popover p-1",
+        "text-popover-foreground shadow-md dark:shadow-none",
+        "duration-150",
+        "data-[side=bottom]:slide-in-from-top-2",
+        "data-[side=left]:slide-in-from-right-2",
+        "data-[side=right]:slide-in-from-left-2",
+        "data-[side=top]:slide-in-from-bottom-2",
+        "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
+        "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export {
+  DropdownMenu,
+  DropdownMenuPortal,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+};
+---
+"use client";
+
+import * as React from "react";
+import { Command as CommandPrimitive } from "cmdk";
+
+import { cn } from "@/lib/utils/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { InputGroup, InputGroupAddon } from "@/components/ui/input-group";
+import { SearchIcon, CheckIcon } from "lucide-react";
+
+function Command({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive>) {
+  return (
+    <CommandPrimitive
+      data-slot="command"
+      className={cn(
+        "flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function CommandDialog({
+  title = "Command Palette",
+  description = "Search for a command to run...",
+  children,
+  className,
+  showCloseButton = false,
+  ...props
+}: React.ComponentProps<typeof Dialog> & {
+  title?: string;
+  description?: string;
+  className?: string;
+  showCloseButton?: boolean;
+}) {
+  return (
+    <Dialog {...props}>
+      <DialogHeader className="sr-only">
+        <DialogTitle>{title}</DialogTitle>
+        <DialogDescription>{description}</DialogDescription>
+      </DialogHeader>
+      <DialogContent
+        className={cn(
+          "top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0",
+          className,
+        )}
+        showCloseButton={showCloseButton}
+      >
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CommandInput({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+  return (
+    <div data-slot="command-input-wrapper" className="p-1 pb-0">
+      <InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
+        <CommandPrimitive.Input
+          data-slot="command-input"
+          className={cn(
+            "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+            className,
           )}
-        </div>
-      </section>
-
-      {/* ══ 2. Info Card ══════════════════════════════════════════════════ */}
-      <section
-        aria-label="بيانات التواصل والعنوان"
-        className="border border-border rounded-xl bg-card p-5 space-y-4"
-      >
-        <h3 className="font-semibold text-sm text-muted-foreground border-b border-border pb-2">
-          بيانات التواصل
-        </h3>
-
-        {/* Student phone */}
-        {student.phone && (
-          <div className="flex items-center gap-2 text-sm">
-            <Phone size={13} className="text-muted-foreground shrink-0" />
-            <span dir="ltr">{student.phone}</span>
-          </div>
-        )}
-
-        {/* Address */}
-        {student.address && (
-          <div className="flex items-start gap-2 text-sm">
-            <MapPin
-              size={13}
-              className="text-muted-foreground shrink-0 mt-0.5"
-            />
-            <span>{student.address}</span>
-          </div>
-        )}
-
-        {/* Primary guardian */}
-        {primaryGuardian ? (
-          <div className="space-y-1 pt-1 border-t border-border">
-            <p className="text-xs text-muted-foreground">
-              ولي الأمر ({primaryGuardian.relation})
-            </p>
-            <p className="text-sm font-medium flex items-center gap-1.5">
-              <Phone size={12} className="text-muted-foreground" />
-              <span dir="ltr">{primaryGuardian.phone}</span>
-            </p>
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">لا توجد بيانات تواصل</p>
-        )}
-
-        {/* Other guardians */}
-        {otherGuardians.length > 0 && (
-          <div className="space-y-2 pt-1 border-t border-border">
-            {otherGuardians.map((g, i) => (
-              <div key={i} className="space-y-0.5">
-                <p className="text-xs text-muted-foreground">{g.relation}</p>
-                <p className="text-sm" dir="ltr">
-                  {g.phone}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* ══ 3. Quran Progress Card ════════════════════════════════════════ */}
-      <section
-        aria-label="متابعة الحفظ"
-        className="border border-border rounded-xl bg-card p-5 space-y-4"
-      >
-        <h3 className="font-semibold text-sm text-muted-foreground border-b border-border pb-2">
-          متابعة الحفظ
-        </h3>
-
-        {student.currentSurah ? (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <BookMarked size={16} className="text-primary shrink-0" />
-              <div>
-                <p className="text-xs text-muted-foreground">السورة الحالية</p>
-                <p className="font-semibold">{student.currentSurah}</p>
-              </div>
-            </div>
-            {student.currentAyah && (
-              <div className="flex items-center gap-2">
-                <Hash size={14} className="text-muted-foreground shrink-0" />
-                <div>
-                  <p className="text-xs text-muted-foreground">رقم الآية</p>
-                  <p className="font-medium">{student.currentAyah}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
-            <BookOpen size={24} className="text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">
-              لم يُسجَّل تقدم في الحفظ بعد
-            </p>
-          </div>
-        )}
-      </section>
-
-      {/* ══ 4. Groups Card — spans 2 columns ═════════════════════════════ */}
-      <section
-        aria-label="المجموعات المسجّل بها"
-        className="md:col-span-2 border border-border rounded-xl bg-card p-5 space-y-3"
-      >
-        <div className="flex items-center justify-between border-b border-border pb-2">
-          <h3 className="font-semibold text-sm text-muted-foreground">
-            المجموعات المسجّل بها
-          </h3>
-          {groups.length > 0 && (
-            <Badge variant="secondary">{groups.length}</Badge>
-          )}
-        </div>
-
-        {groups.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Users size={24} className="text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">
-              الطالب غير مسجّل في أي مجموعة حالياً
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {groups.map((group) => (
-              <GroupCard key={group._id} group={group} />
-            ))}
-          </div>
-        )}
-      </section>
+          {...props}
+        />
+        <InputGroupAddon>
+          <SearchIcon className="size-4 shrink-0 opacity-50" />
+        </InputGroupAddon>
+      </InputGroup>
     </div>
   );
 }
------
-export const getStudentProfile = cache(
-  async (id: string): Promise<StudentProfileData | null> => {
-    try {
-      await connectDB();
-      const mosqueId = await getMosqueId();
 
-      // Parallel fetch: student + their groups
-      const [student, groups] = await Promise.all([
-        Student.findOne({ _id: id, mosqueId }).lean(),
-        Group.find({ studentIds: id, mosqueId })
-          .populate<{
-            teacherId: { _id: unknown; name: string } | null;
-          }>("teacherId", "name")
-          .select("name activity appointment teacherId")
-          .lean(),
-      ]);
+function CommandList({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.List>) {
+  return (
+    <CommandPrimitive.List
+      data-slot="command-list"
+      className={cn(
+        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
 
-      if (!student) return null;
+function CommandEmpty({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+  return (
+    <CommandPrimitive.Empty
+      data-slot="command-empty"
+      className={cn("py-6 text-center text-sm", className)}
+      {...props}
+    />
+  );
+}
 
-      const groupSummaries: StudentGroupSummary[] = groups.map((g) => ({
-        _id: g._id.toString(),
-        name: g.name,
-        activity: g.activity as ActivityType,
-        appointment: g.appointment,
-        // Handle the case where a teacher was deleted (populate returns null)
-        teacherName:
-          g.teacherId &&
-          typeof g.teacherId === "object" &&
-          "name" in g.teacherId
-            ? (g.teacherId as { name: string }).name
-            : "غير محدد",
-      }));
+function CommandGroup({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Group>) {
+  return (
+    <CommandPrimitive.Group
+      data-slot="command-group"
+      className={cn(
+        "overflow-hidden p-1 text-foreground **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
 
-      return {
-        student: serialize(student) as StudentSerialized,
-        groups: groupSummaries,
-        attendance: [],
-        scores: [],
-      };
-    } catch (error) {
-      console.error("[getStudentProfile]:", error);
-      return null;
-    }
+function CommandSeparator({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
+  return (
+    <CommandPrimitive.Separator
+      data-slot="command-separator"
+      className={cn("-mx-1 h-px bg-border", className)}
+      {...props}
+    />
+  );
+}
+
+function CommandItem({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Item>) {
+  return (
+    <CommandPrimitive.Item
+      data-slot="command-item"
+      className={cn(
+        "group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted data-selected:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-foreground",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <CheckIcon className="ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" />
+    </CommandPrimitive.Item>
+  );
+}
+
+function CommandShortcut({
+  className,
+  ...props
+}: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="command-shortcut"
+      className={cn(
+        "ml-auto text-xs tracking-widest text-muted-foreground group-data-selected/command-item:text-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+};
+
+----
+"use client";
+
+import * as React from "react";
+import {
+  DayPicker,
+  getDefaultClassNames,
+  type DayButton,
+  type Locale,
+} from "react-day-picker";
+
+import { cn } from "@/lib/utils/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronDownIcon,
+} from "lucide-react";
+
+function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  captionLayout = "label",
+  buttonVariant = "ghost",
+  locale,
+  formatters,
+  components,
+  ...props
+}: React.ComponentProps<typeof DayPicker> & {
+  buttonVariant?: React.ComponentProps<typeof Button>["variant"];
+}) {
+  const defaultClassNames = getDefaultClassNames();
+
+  return (
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn(
+        "group/calendar bg-background p-2 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent",
+        String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
+        String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        className,
+      )}
+      captionLayout={captionLayout}
+      locale={locale}
+      formatters={{
+        formatMonthDropdown: (date) =>
+          date.toLocaleString(locale?.code, { month: "short" }),
+        ...formatters,
+      }}
+      classNames={{
+        root: cn("w-fit", defaultClassNames.root),
+        months: cn(
+          "relative flex flex-col gap-4 md:flex-row",
+          defaultClassNames.months,
+        ),
+        month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
+        nav: cn(
+          "absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1",
+          defaultClassNames.nav,
+        ),
+        button_previous: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "size-(--cell-size) p-0 select-none aria-disabled:opacity-50",
+          defaultClassNames.button_previous,
+        ),
+        button_next: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "size-(--cell-size) p-0 select-none aria-disabled:opacity-50",
+          defaultClassNames.button_next,
+        ),
+        month_caption: cn(
+          "flex h-(--cell-size) w-full items-center justify-center px-(--cell-size)",
+          defaultClassNames.month_caption,
+        ),
+        dropdowns: cn(
+          "flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium",
+          defaultClassNames.dropdowns,
+        ),
+        dropdown_root: cn(
+          "relative rounded-(--cell-radius)",
+          defaultClassNames.dropdown_root,
+        ),
+        dropdown: cn(
+          "absolute inset-0 bg-popover opacity-0",
+          defaultClassNames.dropdown,
+        ),
+        caption_label: cn(
+          "font-medium select-none",
+          captionLayout === "label"
+            ? "text-sm"
+            : "flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
+          defaultClassNames.caption_label,
+        ),
+        table: "w-full border-collapse",
+        weekdays: cn("flex", defaultClassNames.weekdays),
+        weekday: cn(
+          "flex-1 rounded-(--cell-radius) text-[0.8rem] font-normal text-muted-foreground select-none",
+          defaultClassNames.weekday,
+        ),
+        week: cn("mt-2 flex w-full", defaultClassNames.week),
+        week_number_header: cn(
+          "w-(--cell-size) select-none",
+          defaultClassNames.week_number_header,
+        ),
+        week_number: cn(
+          "text-[0.8rem] text-muted-foreground select-none",
+          defaultClassNames.week_number,
+        ),
+        day: cn(
+          "group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius)",
+          props.showWeekNumber
+            ? "[&:nth-child(2)[data-selected=true]_button]:rounded-l-(--cell-radius)"
+            : "[&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius)",
+          defaultClassNames.day,
+        ),
+        range_start: cn(
+          "relative isolate z-0 rounded-l-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:right-0 after:w-4 after:bg-muted",
+          defaultClassNames.range_start,
+        ),
+        range_middle: cn("rounded-none", defaultClassNames.range_middle),
+        range_end: cn(
+          "relative isolate z-0 rounded-r-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:left-0 after:w-4 after:bg-muted",
+          defaultClassNames.range_end,
+        ),
+        today: cn(
+          "rounded-(--cell-radius) bg-muted text-foreground data-[selected=true]:rounded-none",
+          defaultClassNames.today,
+        ),
+        outside: cn(
+          "text-muted-foreground aria-selected:text-muted-foreground",
+          defaultClassNames.outside,
+        ),
+        disabled: cn(
+          "text-muted-foreground opacity-50",
+          defaultClassNames.disabled,
+        ),
+        hidden: cn("invisible", defaultClassNames.hidden),
+        ...classNames,
+      }}
+      components={{
+        Root: ({ className, rootRef, ...props }) => {
+          return (
+            <div
+              data-slot="calendar"
+              ref={rootRef}
+              className={cn(className)}
+              {...props}
+            />
+          );
+        },
+        Chevron: ({ className, orientation, ...props }) => {
+          if (orientation === "left") {
+            return (
+              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
+            );
+          }
+
+          if (orientation === "right") {
+            return (
+              <ChevronRightIcon
+                className={cn("size-4", className)}
+                {...props}
+              />
+            );
+          }
+
+          return (
+            <ChevronDownIcon className={cn("size-4", className)} {...props} />
+          );
+        },
+        DayButton: ({ ...props }) => (
+          <CalendarDayButton locale={locale} {...props} />
+        ),
+        WeekNumber: ({ children, ...props }) => {
+          return (
+            <td {...props}>
+              <div className="flex size-(--cell-size) items-center justify-center text-center">
+                {children}
+              </div>
+            </td>
+          );
+        },
+        ...components,
+      }}
+      {...props}
+    />
+  );
+}
+
+function CalendarDayButton({
+  className,
+  day,
+  modifiers,
+  locale,
+  ...props
+}: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> }) {
+  const defaultClassNames = getDefaultClassNames();
+
+  const ref = React.useRef<HTMLButtonElement>(null);
+  React.useEffect(() => {
+    if (modifiers.focused) ref.current?.focus();
+  }, [modifiers.focused]);
+
+  return (
+    <Button
+      ref={ref}
+      variant="ghost"
+      size="icon"
+      data-day={day.date.toLocaleDateString(locale?.code)}
+      data-selected-single={
+        modifiers.selected &&
+        !modifiers.range_start &&
+        !modifiers.range_end &&
+        !modifiers.range_middle
+      }
+      data-range-start={modifiers.range_start}
+      data-range-end={modifiers.range_end}
+      data-range-middle={modifiers.range_middle}
+      className={cn(
+        "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
+        defaultClassNames.day,
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Calendar, CalendarDayButton };
+
+---
+import * as React from "react";
+import { cn } from "@/lib/utils/utils";
+import { Slot } from "radix-ui";
+import { ChevronLeftIcon, MoreHorizontalIcon } from "lucide-react";
+
+function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
+  return (
+    <nav
+      aria-label="breadcrumb"
+      data-slot="breadcrumb"
+      className={cn(className)}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
+  return (
+    <ol
+      data-slot="breadcrumb-list"
+      className={cn(
+        "flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-muted-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
+  return (
+    <li
+      data-slot="breadcrumb-item"
+      className={cn("inline-flex items-center gap-1", className)}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbLink({
+  asChild,
+  className,
+  ...props
+}: React.ComponentProps<"a"> & {
+  asChild?: boolean;
+}) {
+  const Comp = asChild ? Slot.Root : "a";
+
+  return (
+    <Comp
+      data-slot="breadcrumb-link"
+      className={cn(
+        "rounded-sm outline-none transition-colors hover:text-foreground",
+        "focus-visible:ring-2 focus-visible:ring-ring/25",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="breadcrumb-page"
+      role="link"
+      aria-disabled="true"
+      aria-current="page"
+      className={cn("font-normal text-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+// FIX: default separator was ChevronRightIcon (LTR-only — points
+// "forward" toward the right). For RTL, ChevronLeftIcon points toward
+// "deeper into the hierarchy" — no rotate needed, just the correct icon.
+function BreadcrumbSeparator({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"li">) {
+  return (
+    <li
+      data-slot="breadcrumb-separator"
+      role="presentation"
+      aria-hidden="true"
+      className={cn("[&>svg]:size-3.5", className)}
+      {...props}
+    >
+      {children ?? <ChevronLeftIcon />}
+    </li>
+  );
+}
+
+function BreadcrumbEllipsis({
+  className,
+  ...props
+}: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="breadcrumb-ellipsis"
+      role="presentation"
+      aria-hidden="true"
+      className={cn(
+        "flex size-5 items-center justify-center [&>svg]:size-4",
+        className,
+      )}
+      {...props}
+    >
+      <MoreHorizontalIcon />
+      <span className="sr-only">المزيد</span>
+    </span>
+  );
+}
+
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+};
+
+----
+"use client";
+
+import * as React from "react";
+import { Separator as SeparatorPrimitive } from "radix-ui";
+
+import { cn } from "@/lib/utils/utils";
+
+function Separator({
+  className,
+  orientation = "horizontal",
+  decorative = true,
+  ...props
+}: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
+  return (
+    <SeparatorPrimitive.Root
+      data-slot="separator"
+      decorative={decorative}
+      orientation={orientation}
+      className={cn(
+        "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Separator };
+
+----
+import { cn } from "@/lib/utils/utils";
+
+function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="skeleton"
+      className={cn("animate-pulse rounded-md bg-muted", className)}
+      {...props}
+    />
+  );
+}
+
+export { Skeleton };
+
+---
+// components/ui/sonner.tsx
+"use client";
+
+import { useTheme } from "next-themes";
+import { Toaster as Sonner, type ToasterProps } from "sonner";
+import {
+  CircleCheck,
+  Info,
+  TriangleAlert,
+  OctagonX,
+  Loader2,
+} from "lucide-react";
+
+/*
+  Toaster — Design System Override
+  ─────────────────────────────────────────────
+  التغييرات عن النسخة الأصلية:
+
+  1. CSS variables تبعنا بدل hardcoded colors
+     --normal-bg      → var(--popover)       الـ card bg
+     --normal-text    → var(--popover-foreground)
+     --normal-border  → var(--border)
+     --border-radius  → var(--radius-md)     8px — أصغر من الـ card radius
+
+  2. الـ icons — محتفظ بيهم، فقط أضفنا text-{color} classes
+     عشان الـ icon يورث لون الـ variant من الـ toast نفسه
+
+  3. font-family → var(--font-sans) للـ Arabic text
+
+  4. position → top-center (مش bottom) لأن RTL والـ Arabic users
+     بيتوقعوا الـ notifications فوق
+
+  الاستخدام:
+    import { toast } from "sonner"
+
+    toast.success("تم حفظ البيانات بنجاح")
+    toast.error("حدث خطأ، حاول مرة أخرى")
+    toast.warning("لم يتم التحقق من البريد الإلكتروني")
+    toast.info("تم إرسال رابط إعادة التعيين")
+    toast.loading("جاري الحفظ...")
+  ─────────────────────────────────────────────
+*/
+
+function Toaster({ ...props }: ToasterProps) {
+  const { theme = "system" } = useTheme();
+
+  return (
+    <Sonner
+      theme={theme as ToasterProps["theme"]}
+      position="top-center"
+      dir="rtl"
+      richColors
+      closeButton
+      icons={{
+        success: <CircleCheck className="size-4 text-success" />,
+        info: <Info className="size-4 text-info" />,
+        warning: <TriangleAlert className="size-4 text-warning" />,
+        error: <OctagonX className="size-4 text-destructive" />,
+        loading: (
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+        ),
+      }}
+      style={
+        {
+          // الـ background والـ text — نفس الـ popover (card floating)
+          "--normal-bg": "var(--popover)",
+          "--normal-text": "var(--popover-foreground)",
+          "--normal-border": "var(--border)",
+          // الـ radius — md (8px) أصغر من الـ card radius
+          "--border-radius": "var(--radius-md)",
+          // Typography
+          fontFamily: "var(--font-sans)",
+          fontSize: "var(--text-sm)", // 13px
+        } as React.CSSProperties
+      }
+      toastOptions={{
+        classNames: {
+          toast: ["border border-border shadow-md", "dark:shadow-none"].join(
+            " ",
+          ),
+          title: "text-sm font-medium text-foreground",
+          description: "text-xs text-muted-foreground",
+          closeButton: [
+            "border-border text-muted-foreground",
+            "hover:text-foreground hover:bg-muted",
+          ].join(" "),
+        },
+      }}
+      {...props}
+    />
+  );
+}
+
+export { Toaster };
+
+----
+"use client";
+
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Tabs as TabsPrimitive } from "radix-ui";
+import { cn } from "@/lib/utils/utils";
+
+
+function Tabs({
+  className,
+  orientation = "horizontal",
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Root>) {
+  return (
+    <TabsPrimitive.Root
+      data-slot="tabs"
+      orientation={orientation}
+      className={cn(
+        "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+const tabsListVariants = cva(
+  [
+    "group/tabs-list inline-flex w-fit items-center justify-center",
+    "text-muted-foreground",
+    "group-data-[orientation=horizontal]/tabs:h-9",
+    "group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col",
+  ],
+  {
+    variants: {
+      variant: {
+     
+        default: "rounded-md bg-muted p-1 gap-0.5",
+
+        line: "gap-1 border-b border-border bg-transparent rounded-none",
+
+      
+        cards: "h-auto w-full gap-3 bg-transparent p-0",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
   },
 );
-------------
-export type StudentProfileData = {
-  student: StudentSerialized;
-  groups: StudentGroupSummary[];
-  attendance: unknown[]; // TODO: typed when Attendance module is ready
-  scores: unknown[]; // TODO: typed when Scores module is ready
-};
+
+function TabsList({
+  className,
+  variant = "default",
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.List> &
+  VariantProps<typeof tabsListVariants>) {
+  return (
+    <TabsPrimitive.List
+      data-slot="tabs-list"
+      data-variant={variant}
+      className={cn(tabsListVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
+
+function TabsTrigger({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+  return (
+    <TabsPrimitive.Trigger
+      data-slot="tabs-trigger"
+      className={cn(
+        [
+          "relative inline-flex items-center justify-center gap-1.5",
+          "whitespace-nowrap text-sm font-medium",
+          "px-3 py-1.5",
+          "transition-colors duration-150",
+          "outline-none",
+          "focus-visible:ring-2 focus-visible:ring-ring/25",
+          "disabled:pointer-events-none disabled:opacity-50",
+          "group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start",
+          "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        ],
+
+        
+        [
+          "group-data-[variant=default]/tabs-list:rounded-md",
+          "group-data-[variant=default]/tabs-list:text-muted-foreground",
+          "group-data-[variant=default]/tabs-list:hover:text-foreground",
+          "group-data-[variant=default]/tabs-list:data-[state=active]:bg-background",
+          "group-data-[variant=default]/tabs-list:data-[state=active]:text-foreground",
+          "group-data-[variant=default]/tabs-list:data-[state=active]:shadow-sm",
+          "group-data-[variant=default]/tabs-list:data-[state=active]:border",
+          "group-data-[variant=default]/tabs-list:data-[state=active]:border-border",
+          "dark:group-data-[variant=default]/tabs-list:data-[state=active]:bg-card",
+        ],
+
+        [
+          "group-data-[variant=line]/tabs-list:rounded-none",
+          "group-data-[variant=line]/tabs-list:border-b-2",
+          "group-data-[variant=line]/tabs-list:border-transparent",
+          "group-data-[variant=line]/tabs-list:pb-2.5",
+          "group-data-[variant=line]/tabs-list:text-muted-foreground",
+          "group-data-[variant=line]/tabs-list:hover:text-foreground",
+          "group-data-[variant=line]/tabs-list:data-[state=active]:border-primary",
+          "group-data-[variant=line]/tabs-list:data-[state=active]:text-primary",
+        ],
+        [
+          "group-data-[variant=cards]/tabs-list:flex-1",
+          "group-data-[variant=cards]/tabs-list:rounded-lg",
+          "group-data-[variant=cards]/tabs-list:border-2",
+          "group-data-[variant=cards]/tabs-list:border-border",
+          "group-data-[variant=cards]/tabs-list:p-4",
+          "group-data-[variant=cards]/tabs-list:text-start",
+          "group-data-[variant=cards]/tabs-list:hover:border-border",
+          "group-data-[variant=cards]/tabs-list:hover:bg-muted/40",
+          "group-data-[variant=cards]/tabs-list:data-[state=active]:border-primary",
+          "group-data-[variant=cards]/tabs-list:data-[state=active]:bg-primary/5",
+          "group-data-[variant=cards]/tabs-list:data-[state=active]:shadow-none",
+          "group-data-[variant=cards]/tabs-list:data-[state=active]:hover:border-primary",
+        ],
+
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function TabsContent({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Content>) {
+  return (
+    <TabsPrimitive.Content
+      data-slot="tabs-content"
+      className={cn("flex-1 outline-none", className)}
+      {...props}
+    />
+  );
+}
+
+export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants };
 
 
 
-// src/types/serialized.ts
-import type { Types } from "mongoose";
 
-import { IGroup, IStudent, ITeacher } from ".";
-
-/**
- * Serialize<T>
- *
- * Recursively converts Mongoose-specific types to JSON-safe primitives.
- * This prevents hydration errors when passing data from Server → Client Components.
- *
- * Recursively converts Mongoose-specific types to JSON-safe primitives.
- * Handles: ObjectId → string, Date → string, null variants, nested objects,
- * and arrays of serializable items.
- *
- * Handles:
- *   - ObjectId              → string
- *   - Date                  → string
- *   - ObjectId | undefined  → string | undefined
- *   - Date | null           → string | null   (supports nullable fields)
- *   - Nested objects        → Serialize<NestedObject>
- *   - Arrays                → Array<Serialize<Item>>
- *   - Primitives            → unchanged
- */
-export type Serialize<T> = {
-  [K in keyof T]: T[K] extends Types.ObjectId
-    ? string
-    : T[K] extends Date
-      ? string
-      : T[K] extends Types.ObjectId | undefined
-        ? string | undefined
-        : T[K] extends Types.ObjectId | null
-          ? string | null
-          : T[K] extends Date | undefined
-            ? string | undefined
-            : T[K] extends Date | null
-              ? string | null
-              : T[K] extends Array<infer U>
-                ? Array<Serialize<U>>
-                : T[K] extends object
-                  ? Serialize<T[K]>
-                  : T[K];
-};
-
-// ─── Centralized Serialized Types ──────────────────────────────────────────
-// Single source of truth — import these everywhere instead of re-deriving.
-
-export type TeacherSerialized = Serialize<ITeacher>;
-export type StudentSerialized = Serialize<IStudent>;
-export type GroupSerialized = Serialize<IGroup>;
-
-
-export type StudentGroupSummary = {
-  _id: string;
-  name: string;
-  activity: ActivityType;
-  appointment?: string;
-  teacherName: string;
-};
 
